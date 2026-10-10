@@ -18,7 +18,7 @@ function sh(name, head) {
   return s;
 }
 const rsvp = () => sh('RSVP', ['ID', 'Waktu', 'Nama', 'Kehadiran', 'Jumlah', 'Ucapan', 'Tipe']);
-const tamu = () => sh('Tamu', ['Nama', 'Maks tamu', 'Kode', 'Link']);
+const tamu = () => sh('Tamu', ['Nama', 'Maks tamu', 'Kode', 'Link', 'Tipe (kosong=Prioritas, isi Umum untuk tamu umum bernama)']);
 
 function onOpen() {
   SpreadsheetApp.getUi().createMenu('Undangan')
@@ -36,10 +36,15 @@ function setup() {
 function buatLink() {
   const s = tamu(), n = s.getLastRow();
   if (n < 2) return;
-  const g = s.getRange(2, 1, n - 1, 4), v = g.getValues();
+  const g = s.getRange(2, 1, n - 1, 5), v = g.getValues();
   v.forEach(r => {
-    if (r[0] && !r[2]) r[2] = Utilities.getUuid().replace(/-/g, '').slice(0, 8);
-    r[3] = r[2] ? SITE_URL + '?k=' + r[2] : '';
+    if (!r[0]) return;
+    if (String(r[4]).toLowerCase() === 'umum') {          // tamu umum bernama: nama tampil di sampul, tanpa kode/hak khusus
+      r[2] = ''; r[3] = SITE_URL + '?to=' + encodeURIComponent(r[0]);
+    } else {                                               // prioritas (default): kode unik + jumlah maks dari kolom B
+      if (!r[2]) r[2] = Utilities.getUuid().replace(/-/g, '').slice(0, 8);
+      r[3] = SITE_URL + '?k=' + r[2];
+    }
   });
   g.setValues(v);
 }

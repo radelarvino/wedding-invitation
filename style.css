@@ -59,7 +59,7 @@ body.open .fab,body.open #pill{opacity:1;visibility:visible;transform:none;trans
 #pillBtn{width:100%;height:100%;display:grid;place-items:center;padding:0;border:0;border-radius:50%;background:none;color:var(--ink);cursor:pointer}
 #pill .lk{position:absolute;left:0;bottom:calc(100% + .6rem);display:flex;flex-direction:column;min-width:10.5rem;padding:.3rem;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 28px rgba(0,0,0,.35);transform-origin:left bottom;transition:opacity .3s,transform .5s cubic-bezier(.2,.9,.25,1.1),visibility 0s}
 #pill.min .lk{opacity:0;transform:translateY(14px) scale(.9);visibility:hidden;pointer-events:none;transition:opacity .25s,transform .3s,visibility 0s .3s}
-#pill a{padding:.6rem 1.1rem;color:var(--ink);text-decoration:none;font-size:.85rem;border-radius:12px;white-space:nowrap}
+#pill a{display:flex;align-items:center;gap:.65rem;padding:.6rem 1.1rem;color:var(--ink);text-decoration:none;font-size:.85rem;border-radius:12px;white-space:nowrap}
 #pill a.on{background:var(--bg2);color:var(--moss)}
 #pillBtn .ic{transition:transform .45s}#pill.min #pillBtn .ic{transform:rotate(180deg)}
 
@@ -78,9 +78,9 @@ body.open .fab,body.open #pill{opacity:1;visibility:visible;transform:none;trans
 .tl summary::-webkit-details-marker{display:none}.tl summary .ic{transition:transform .4s}.tl details[open] summary .ic{transform:rotate(180deg)}.tl details p{margin-top:.5rem}
 #cd{display:flex;justify-content:center;gap:1rem;margin:0 auto 2rem}
 #cd{gap:.7rem}
-#cd div{min-width:68px;padding:.8rem .4rem .6rem;border:1px solid var(--gold);border-radius:14px;background:color-mix(in srgb,var(--card) 60%,transparent);outline:1px solid color-mix(in srgb,var(--gold) 35%,transparent);outline-offset:3px}
-#cd b{display:block;font:500 2rem/1.1 'Playfair Display',Georgia,serif;font-variant-numeric:lining-nums tabular-nums;color:var(--gold)}
-#cd span{display:block;margin-top:.35rem;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--soft)}
+#cd div{min-width:70px;padding:.9rem .3rem .7rem;border:1px solid color-mix(in srgb,var(--blush) 55%,transparent);border-radius:22px;background:color-mix(in srgb,var(--blush) 9%,transparent);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+#cd b{display:block;font:italic 500 2.3rem/1 'Cormorant Garamond',Georgia,serif;font-variant-numeric:lining-nums;color:var(--blush)}
+#cd span{display:block;margin-top:.45rem;font:400 .68rem Jost,sans-serif;letter-spacing:.14em;color:var(--soft)}
 .ev{display:grid;gap:1.4rem}
 .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:1.6rem}
 .card h3{font-size:1.8rem;color:var(--moss)}.card .btn{margin-top:1rem}
@@ -109,8 +109,8 @@ label{font-size:.9rem;color:var(--soft)}
 
 /* hadiah & daftar barang */
 .s-reg{--w:64vw}
-.gifts{display:grid;gap:1rem;max-width:400px;margin:0 auto 2.4rem}
-.gift{display:flex;flex-direction:column;align-items:center;text-align:center}
+.gifts{display:grid;gap:1.1rem;width:min(calc(100vw - 1.6rem),560px);max-width:none;margin:0 0 2.4rem;position:relative;left:50%;translate:-50% 0}
+.gift{display:flex;flex-direction:column;align-items:center;text-align:center;padding:1.9rem 1.5rem}
 .gift b{font:600 1.3rem 'Cormorant Garamond',serif}
 .gift .no{font-size:1.15rem;letter-spacing:.04em;color:var(--ink);margin:.3rem 0 .8rem;word-break:break-all}
 .gift img{width:150px;display:block;margin-bottom:.8rem;border-radius:10px}
@@ -163,3 +163,34 @@ label{font-size:.9rem;color:var(--soft)}
 }
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-delay:0s!important;transition-duration:.01s!important}html{scroll-behavior:auto}#cover{transition:opacity .01s}#cover.out{transform:none;opacity:0}}
 .stage.single .nav{display:none}
+
+/* ===== keterangan section ===== */
+.eyebrow{font:400 .72rem Jost,sans-serif;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem}
+.lead{max-width:30rem;margin:-.2rem auto 2rem;font:italic 1.15rem/1.7 'Cormorant Garamond',serif;color:var(--soft)}
+h2.big{font:italic 400 clamp(3rem,14vw,4.2rem)/1.05 'Cormorant Garamond',serif;margin-bottom:1rem}
+.dt{display:flex;justify-content:center;align-items:center;gap:.9rem;margin:.2rem auto 2.2rem;color:var(--soft);text-transform:uppercase;letter-spacing:.2em;font-size:.78rem}
+.dt b{padding:0 .9rem;border-inline:1px solid var(--gold);font:italic 500 2.6rem/1 'Cormorant Garamond',serif;letter-spacing:0;color:var(--blush)}
+/* kartu acara: ruang foto kedua mempelai */
+.evc{padding:0;overflow:hidden;text-align:center}
+.evp{aspect-ratio:4/5;display:grid;place-items:center;background:linear-gradient(160deg,var(--bg2),color-mix(in srgb,var(--blush) 30%,var(--bg2)));color:var(--soft);font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;border-bottom:1px solid var(--line)}
+.evp img{width:100%;height:100%;object-fit:cover}
+.evb{padding:1.5rem 1.4rem 1.8rem}
+/* hadiah */
+.glogo{height:2.4rem;width:auto;max-width:9rem;object-fit:contain;margin-bottom:.8rem}
+.ddh{margin:1.8rem auto 0;max-width:30rem;padding:0 1.4rem}.ddh h3{font-size:1.9rem;color:var(--moss)}
+.dd[open] .ddh{animation:drop .5s cubic-bezier(.2,.8,.2,1) both}
+/* tombol jeda geser otomatis */
+.pp{position:absolute;bottom:.2rem;left:50%;transform:translateX(-50%);z-index:6;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:color-mix(in srgb,var(--card) 82%,transparent);color:var(--ink);display:grid;place-items:center;cursor:pointer;padding:0}
+.s-wish .car{padding-bottom:3.6rem}.s-gal .car{padding-bottom:3.8rem}
+.stage.single .pp{display:none}
+/* sampul: tulisan artistik dengan animasi masuk & keluar */
+#cover>*:not(#slides){position:relative;animation:rise 1s calc(.3s + var(--i,0)*.14s) cubic-bezier(.2,.7,.2,1) both}
+#cover.leave>*:not(#slides){animation:leave .6s calc(var(--i,0)*.05s) cubic-bezier(.5,0,.8,.4) both}
+@keyframes rise{from{opacity:0;transform:translateY(24px);filter:blur(6px)}}
+@keyframes leave{to{opacity:0;transform:translateY(-28px);filter:blur(6px)}}
+#cover h1{font:400 clamp(3.4rem,17vw,5.4rem)/1.05 'Great Vibes','Cormorant Garamond',cursive;color:var(--ink)}
+#cover h1 .l{display:inline-block;animation:ltr 1s calc(.7s + var(--k)*.09s) cubic-bezier(.2,.7,.2,1) both}
+#cover.leave h1 .l{animation:leave .5s calc(var(--k)*.03s) both}
+@keyframes ltr{from{opacity:0;transform:translateY(.5em) rotate(-6deg);filter:blur(8px)}}
+.nm,.am{display:block}.am{color:var(--gold);font-size:.7em}
+#opLoc{display:flex;align-items:center;gap:.4rem;max-width:22rem;font-size:.85rem}
