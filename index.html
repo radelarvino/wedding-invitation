@@ -4,19 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<meta name="theme-color" content="#3E5B50">
+<meta name="theme-color" content="#111916">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/icon-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <title>Undangan Pernikahan</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="locked">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
 <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></symbol>
 <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></symbol>
-<symbol id="i-contrast" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18a9 9 0 0 0 0-18z" fill="currentColor"/></symbol>
 <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
 <symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></symbol>
 <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
@@ -44,11 +43,10 @@
   <button class="btn" id="openBtn">Buka undangan</button>
 </div>
 
-<div id="pill" role="navigation" aria-label="Navigasi undangan">
-  <a href="#mempelai">Mempelai</a><a href="#acara">Acara</a><a href="#lokasi">Lokasi</a><a href="#rsvp">RSVP</a><a href="#hadiah">Hadiah</a><a href="#galeri">Galeri</a>
+<div id="pill" class="min" role="navigation" aria-label="Navigasi undangan">
+  <div class="lk"><a href="#mempelai">Mempelai</a><a href="#acara">Acara</a><a href="#lokasi">Lokasi</a><a href="#rsvp">RSVP</a><a href="#hadiah">Hadiah</a><a href="#galeri">Galeri</a></div>
   <button id="pillBtn" aria-label="Sembunyikan atau tampilkan navigasi"><svg class="ic" aria-hidden="true"><use href="#i-chevron-down"/></svg></button>
 </div>
-<button class="fab" id="themeBtn" aria-label="Ganti mode terang atau gelap"><svg class="ic" aria-hidden="true"><use href="#i-contrast"/></svg></button>
 <button class="fab" id="audioBtn" aria-label="Putar atau jeda musik"><svg class="ic" aria-hidden="true"><use href="#i-music"/></svg></button>
 
 <main>
@@ -81,7 +79,7 @@
       <div><label for="j" id="jl">Jumlah</label><select id="j"></select></div>
     </div>
     <div><label for="u">Ucapan &amp; doa (opsional)</label><textarea id="u" rows="3" maxlength="300"></textarea></div>
-    <button class="btn" type="submit">Kirim konfirmasi</button>
+    <button class="btn" type="submit" id="sbtn">Kirim konfirmasi</button>
     <div id="msg" role="status"></div>
   </form>
   <div class="stage s-wish rv">
@@ -92,22 +90,18 @@
 
 <section id="hadiah"><h2>Hadiah</h2>
   <p style="margin-bottom:1.8rem">Doa restu Anda sudah menjadi hadiah terbaik. Bila ingin berbagi tanda kasih, kami menerimanya dengan syukur.</p>
-  <div class="stage s-gift rv">
-    <div class="car" id="giftBox"></div>
-    <button class="nav prev" data-d="-1" aria-label="Hadiah sebelumnya"><svg class="ic" aria-hidden="true"><use href="#i-chevron-left"/></svg></button>
-    <button class="nav next" data-d="1" aria-label="Hadiah berikutnya"><svg class="ic" aria-hidden="true"><use href="#i-chevron-right"/></svg></button>
-  </div>
-  <div id="reg" hidden>
-    <h3 class="sub">Barang yang dibutuhkan</h3>
-    <div class="stage s-reg rv">
+  <div class="gifts rv" id="giftBox"></div>
+  <details class="dd" id="reg" hidden>
+    <summary>Barang yang dibutuhkan <svg class="ic" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary>
+    <div class="stage s-reg" data-start>
       <div class="car" id="regList"></div>
       <button class="nav prev" data-d="-1" aria-label="Barang sebelumnya"><svg class="ic" aria-hidden="true"><use href="#i-chevron-left"/></svg></button>
       <button class="nav next" data-d="1" aria-label="Barang berikutnya"><svg class="ic" aria-hidden="true"><use href="#i-chevron-right"/></svg></button>
     </div>
-  </div></section>
+  </details></section>
 
 <section id="galeri"><h2>Galeri</h2>
-  <div class="stage s-gal rv">
+  <div class="stage s-gal rv" data-loop>
     <div class="car" id="gal"></div>
     <button class="nav prev" data-d="-1" aria-label="Foto sebelumnya"><svg class="ic" aria-hidden="true"><use href="#i-chevron-left"/></svg></button>
     <button class="nav next" data-d="1" aria-label="Foto berikutnya"><svg class="ic" aria-hidden="true"><use href="#i-chevron-right"/></svg></button>

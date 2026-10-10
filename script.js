@@ -53,7 +53,8 @@ async function resolveGuest(){
   if(!KEY) return;
   try{
     const g=API?await (await fetch(`${API}?action=guest&k=${encodeURIComponent(KEY)}`)).json():C.demoGuests[KEY];
-    if(g&&g.name) guest={name:g.name,max:g.max||1,priority:true};
+    if(g&&g.name){guest={name:g.name,max:g.max||1,priority:true};
+      if(g.rsvp&&!localStorage.getItem('rsvp:'+KEY))localStorage.setItem('rsvp:'+KEY,JSON.stringify(g.rsvp))}
   }catch(e){}
 }
 
@@ -76,7 +77,7 @@ function render(){
 const person=p=>`<div class="rv"><div class="ph">${p.photo?`<img src="${esc(p.photo)}" alt="${esc(p.nick)}" loading="lazy">`:`<svg viewBox="0 0 100 130" width="80%" fill="var(--line)" aria-hidden="true"><circle cx="50" cy="48" r="22"/><path d="M6 130c0-34 20-48 44-48s44 14 44 48z"/></svg>`}</div><h3>${esc(p.full)}</h3><p>${esc(p.parents)}</p></div>`;
 $('#pair').innerHTML=person(a)+'<div class="amp rv">&amp;</div>'+person(b);
 $('#motive').textContent=C.motive;
-$('#tl').innerHTML=C.story.map(s=>`<div class="rv"><small>${esc(s.date)}</small><h3>${esc(s.t)}</h3><p>${esc(s.d)}</p>${s.full?`<details><summary>Baca cerita lengkap</summary><p>${esc(s.full)}</p></details>`:''}</div>`).join('');
+$('#tl').innerHTML=C.story.map(s=>`<div class="rv"><small>${esc(s.date)}</small><h3>${esc(s.t)}</h3><p>${esc(s.d)}</p>${s.full?`<details><summary>Baca cerita lengkap ${ic('chevron-down')}</summary><p>${esc(s.full)}</p></details>`:''}</div>`).join('');
 $('#venue').textContent=C.venue;
 const q=encodeURIComponent(C.mapQuery);
 $('#mapBtn').href=`https://www.google.com/maps/search/?api=1&query=${q}`;
@@ -100,25 +101,32 @@ function ics(e){
   const l=document.createElement('a');l.href=URL.createObjectURL(new Blob([t],{type:'text/calendar'}));l.download=`${e.name}.ics`;l.click();
 }
 
-/* ===== Slider generik (ucapan, hadiah, barang, galeri) =====
-   Struktur: .stage > .car (daftar item) + tombol .nav[data-d]. Item di tengah ditandai .act.
-   Dipanggil sekali per .stage; refresh dengan  $('#id').mark()  setelah isi diganti. */
+/* ===== Slider generik: .stage > .car + tombol .nav[data-d] =====
+   (default) item aktif di tengah, tombol berputar | data-loop: tak terbatas, mulai dari tengah | data-start: mulai dari kiri */
 function initStage(st){
-  const c=st.querySelector('.car'),cnt=st.parentElement.querySelector('.count');
-  const items=()=>[...c.children];
-  const cur=()=>{const mid=c.scrollLeft+c.clientWidth/2;let bi=0,bd=1e9;
-    items().forEach((el,i)=>{const d=Math.abs(el.offsetLeft+el.offsetWidth/2-mid);if(d<bd){bd=d;bi=i}});return bi};
-  const to=i=>{const el=items()[i];if(el)c.scrollTo({left:el.offsetLeft+el.offsetWidth/2-c.clientWidth/2,behavior:'smooth'})};
-  c.go=d=>{const n=items().length;if(n>1)to((cur()+d+n)%n)};   /* berputar: dari foto terakhir kembali ke pertama */
-  let raf=0;
-  c.mark=()=>{raf=0;const i=cur(),n=items().length;
+  const c=st.querySelector('.car'),cnt=st.parentElement.querySelector('.count'),[pv,nx]=st.querySelectorAll('.nav');
+  const loop='loop' in st.dataset,start='start' in st.dataset,items=()=>[...c.children],total=()=>loop?items().length/3:items().length;
+  const pos=el=>start?el.offsetLeft-(parseFloat(getComputedStyle(c).paddingLeft)||0):el.offsetLeft+el.offsetWidth/2-c.clientWidth/2;
+  const cur=()=>{let bi=0,bd=1e9;items().forEach((el,i)=>{const d=Math.abs(pos(el)-c.scrollLeft);if(d<bd){bd=d;bi=i}});return bi};
+  const to=(i,smooth=true)=>{const el=items()[i];if(el)c.scrollTo({left:pos(el),behavior:smooth?'smooth':'auto'})};
+  c.go=d=>{const n=items().length,i=cur()+d;if(n>1)to(loop||start?Math.max(0,Math.min(n-1,i)):(i+n)%n)};
+  let raf=0,jt,tch=0;
+  c.mark=()=>{raf=0;const i=cur(),t=total();
     items().forEach((el,k)=>el.classList.toggle('act',k===i));
-    if(cnt)cnt.textContent=n?`${i+1} / ${n}`:'';
-    st.classList.toggle('single',n<2)};
-  c.addEventListener('scroll',()=>{raf=raf||requestAnimationFrame(c.mark)},{passive:true});
+    if(cnt)cnt.textContent=t?`${i%t+1} / ${t}`:'';
+    st.classList.toggle('single',t<2);
+    if(start){pv.disabled=c.scrollLeft<4;nx.disabled=c.scrollLeft>c.scrollWidth-c.clientWidth-4}};
+  /* loop: isi digandakan 3x; setelah berhenti di salinan kiri/kanan, lompat diam-diam ke salinan tengah */
+  const recenter=()=>{if(!loop||tch)return;const t=total(),i=cur();if(i>=t&&i<2*t)return;
+    c.style.scrollSnapType='none';c.scrollLeft=pos(items()[i%t+t]);
+    requestAnimationFrame(()=>{c.style.scrollSnapType='';c.mark()})};
+  c.addEventListener('scroll',()=>{raf=raf||requestAnimationFrame(c.mark);clearTimeout(jt);jt=setTimeout(recenter,160)},{passive:true});
+  c.addEventListener('touchstart',()=>tch=1,{passive:true});
+  c.addEventListener('touchend',()=>{tch=0;clearTimeout(jt);jt=setTimeout(recenter,250)},{passive:true});
   addEventListener('resize',c.mark);
   st.addEventListener('click',e=>{const btn=e.target.closest('.nav');if(btn)c.go(+btn.dataset.d)});
   c.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')c.go(-1);if(e.key==='ArrowRight')c.go(1)});
+  if(loop)to(total(),false);else c.scrollLeft=0;
   c.mark();
 }
 
@@ -128,10 +136,10 @@ document.addEventListener('click',e=>{const el=e.target.closest('[data-c]');if(!
 if(C.registry.length){$('#reg').hidden=false;
   $('#regList').innerHTML=C.registry.map(r=>{const d=r.got>=r.need,ok=/^https?:\/\//.test(r.url||'');
     return `<div class="card ri${d?' done':''}"><b>${esc(r.n)}</b><div class="price">Rp ${r.price.toLocaleString('id-ID')}</div><div class="bar"><i style="width:${Math.min(100,r.got/r.need*100)}%"></i></div><small>${d?'Sudah terpenuhi':`${r.got} / ${r.need} terpenuhi`}</small>${!d&&ok?`<a class="btn ghost" href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">Beli</a>`:''}</div>`}).join('')}
-
+$('#reg').addEventListener('toggle',()=>{const l=$('#regList');l.mark&&l.mark()});
 /* galeri + lightbox */
 const N=C.gallery.length||5;
-$('#gal').innerHTML=Array.from({length:N},(_,i)=>`<div class="slide" data-i="${i}">${C.gallery[i]?`<img src="${esc(C.gallery[i])}" alt="Foto ${i+1}" loading="lazy">`:`Foto ${i+1}`}</div>`).join('');
+$('#gal').innerHTML=Array.from({length:N*3},(_,k)=>{const i=k%N;return `<div class="slide" data-i="${i}">${C.gallery[i]?`<img src="${esc(C.gallery[i])}" alt="Foto ${i+1}" loading="lazy">`:`Foto ${i+1}`}</div>`}).join('');
 let li=0;const lb=$('#lb');
 function showLb(i){if(!C.gallery.length)return;li=(i+N)%N;lb.querySelector('img').src=C.gallery[li];lb.classList.add('show')}
 $('#gal').onclick=e=>{const s=e.target.closest('.slide');if(s)showLb(+s.dataset.i)};
@@ -139,12 +147,13 @@ $('#lbx').onclick=()=>lb.classList.remove('show');$('#lbp').onclick=()=>showLb(l
 addEventListener('keydown',e=>{if(!lb.classList.contains('show'))return;if(e.key==='Escape')lb.classList.remove('show');if(e.key==='ArrowLeft')showLb(li-1);if(e.key==='ArrowRight')showLb(li+1)});
 
 /* ucapan & RSVP */
-const wishCard=w=>`<div class="card wish"><b>${esc(w.nama)}</b><span>${esc(w.hadir||'')}</span><p style="margin-top:.4rem">${esc(w.ucapan)}</p></div>`;
+const wishCard=w=>`<div class="card wish"><b>${esc(w.nama)}</b><p style="margin-top:.4rem">${esc(w.ucapan)}</p></div>`;
 const demo=[{nama:"Keluarga Besar",hadir:"Hadir",ucapan:"Barakallahu lakuma wa baraka alaikuma wa jama'a bainakuma fii khair."},{nama:"Sahabat Kampus",hadir:"Hadir",ucapan:"Selamat menempuh hidup baru, semoga sakinah, mawaddah, warahmah."}];
 let wishes=[];
-const drawWishes=()=>{$('#wishes').innerHTML=(wishes.length?wishes:demo).map(wishCard).join('');$('#wishes').mark()};
+const none=[{nama:"Belum ada ucapan",hadir:"",ucapan:"Jadilah yang pertama mengirim doa dan ucapan."}];
+const drawWishes=()=>{$('#wishes').innerHTML=(API?(wishes.length?wishes:none):[...wishes,...demo]).map(wishCard).join('');$('#wishes').mark()};
 async function loadWishes(){
-  if(API){try{wishes=(await (await fetch(API)).json()).reverse().filter(w=>w.ucapan)}catch(e){}}
+  if(API){try{wishes=(await (await fetch(API)).json()).filter(w=>w.ucapan)}catch(e){}}
   drawWishes();
 }
 
@@ -153,20 +162,27 @@ $$('.stage').forEach(initStage);
 /* ucapan bergeser otomatis, berhenti saat disentuh/diarahkan kursor */
 setInterval(()=>{const c=$('#wishes');if(document.hidden||c.matches(':hover,:focus-within'))return;c.go(1)},5000);
 
+/* RSVP & ucapan: satu per tamu/perangkat. Setelah terkirim hanya bisa diedit; server menimpa baris dengan id yang sama */
 const RK='rsvp:'+(KEY||'umum');
-function restoreRsvp(){let r;try{r=JSON.parse(localStorage.getItem(RK))}catch(e){}
+const DID=(()=>{try{let d=localStorage.getItem('did');if(!d){d=crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2);localStorage.setItem('did',d)}return d}catch(e){return 'x'+Math.random().toString(36).slice(2)}})();
+let myW=null;
+const saved=()=>{try{return JSON.parse(localStorage.getItem(RK))}catch(e){return null}};
+function restoreRsvp(){const r=saved();
   $('#sum').hidden=!r;$('#rsvpOpen').hidden=!!r;$('#rsvpForm').hidden=true;
   if(r)$('#sumTxt').textContent=r.hadir==='Hadir'?`Terima kasih, ${r.nama}. Anda mengonfirmasi hadir (${r.jumlah} orang).`:`Terima kasih atas kabarnya, ${r.nama}.`}
 $('#rsvpOpen').onclick=()=>{$('#rsvpOpen').hidden=true;$('#rsvpForm').hidden=false;$('#n').focus()};
-$('#edit').onclick=()=>{$('#sum').hidden=true;$('#rsvpForm').hidden=false};
+$('#edit').onclick=()=>{const r=saved()||{};
+  $('#n').value=r.nama||$('#n').value;$('#k').value=r.hadir||'Hadir';$('#u').value=r.ucapan||'';
+  if(r.jumlah)$('#j').value=r.jumlah;$('#j').disabled=$('#k').value!=='Hadir';
+  $('#sbtn').textContent='Simpan perubahan';$('#sum').hidden=true;$('#rsvpForm').hidden=false};
 $('#k').onchange=e=>{$('#j').disabled=e.target.value!=='Hadir'};
 $('#rsvpForm').addEventListener('submit',async e=>{
   e.preventDefault();
-  const d={nama:$('#n').value.trim(),hadir:$('#k').value,jumlah:$('#k').value==='Hadir'?+$('#j').value:0,ucapan:$('#u').value.trim(),k:KEY||''};
+  const d={nama:$('#n').value.trim(),hadir:$('#k').value,jumlah:$('#k').value==='Hadir'?+$('#j').value:0,ucapan:$('#u').value.trim(),k:KEY||'',d:DID};
   const btn=e.submitter;btn.disabled=true;$('#msg').textContent='Mengirim…';
   try{
     if(API) await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(d)});
-    if(d.ucapan){wishes.unshift(d);drawWishes()}
+    wishes=wishes.filter(w=>w!==myW);myW=d.ucapan?d:null;if(myW)wishes.unshift(myW);drawWishes();if(API)await loadWishes();
     try{localStorage.setItem(RK,JSON.stringify(d))}catch(_){}
     $('#msg').textContent='';if(!API)toast('Mode demo: data belum tersimpan. SCRIPT_URL harus berisi URL Web App Apps Script (https://script.google.com/macros/s/.../exec)');
     restoreRsvp();
@@ -234,10 +250,8 @@ addEventListener('wheel',e=>{
 },{passive:true});
 addEventListener('touchstart',e=>{ty=isOpen()&&scrollY<=0?e.touches[0].clientY:null},{passive:true});
 addEventListener('touchmove',e=>{if(ty!==null&&e.touches[0].clientY-ty>150)showCover()},{passive:true});
-$('#pillBtn').onclick=()=>{const p=$('#pill');p.classList.toggle('min');$('#pillBtn').innerHTML=ic(p.classList.contains('min')?'chevron-up':'chevron-down')};
-const root=document.documentElement;
-if(matchMedia('(prefers-color-scheme:dark)').matches)root.dataset.theme='dark';
-$('#themeBtn').onclick=()=>root.dataset.theme=root.dataset.theme==='dark'?'light':'dark';
+$('#pillBtn').onclick=()=>$('#pill').classList.toggle('min');
+document.addEventListener('click',e=>{const p=$('#pill');if(!p.contains(e.target)||e.target.closest('a'))p.classList.add('min')});
 const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.15});
 const nav=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting)$$('#pill a').forEach(l=>l.classList.toggle('on',l.hash==='#'+x.target.id))}),{threshold:.5});
 $$('main section').forEach(s=>nav.observe(s));
