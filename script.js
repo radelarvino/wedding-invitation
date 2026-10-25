@@ -362,6 +362,12 @@ function renderContent() {
   initFloral();
   $$(".person h3").forEach(splitText);
   splitText($("#nick"));
+  const nickEl2 = $("#nick");
+  if (nickEl2) {
+    nickEl2.querySelectorAll(".ch").forEach(c => { if (!c.textContent.trim()) c.classList.add("sp"); });
+    const n = nickEl2.querySelectorAll(".ch").length;
+    nickEl2.style.setProperty("--end", `${(0.35 + n * 0.12).toFixed(2)}s`);
+  }
 }
 
 /**
@@ -1659,18 +1665,27 @@ function initFloral() {
 }
 
 
-/* ====== 12c. KELOPAK SAKURA BERJATUHAN ======
-   Satu kanvas ringan: kelopak bergoyang pelan mengikuti angin, berputar dan
-   "terbalik" seperti kelopak sungguhan. Sprite digambar sekali lalu dipakai
-   ulang, jumlahnya menyesuaikan lebar layar, dan berhenti saat tab tersembunyi. */
+/* ====== 12c. HUJAN BUNGA SAKURA ======
+   Satu kanvas ringan. Bentuk bunga diambil dari assets/sakura.svg (siluet satu
+   warna) lalu diwarnai pink sekali saja menjadi sprite kecil; tiap frame hanya
+   menyalin sprite itu. Kecepatan jatuh, ukuran, dan kejernihan mengikuti
+   "kedalaman" (dekat = besar, cepat, jelas) sehingga terasa seperti hujan
+   kelopak yang tertiup angin. Jumlahnya menyesuaikan lebar layar & perangkat,
+   dan loop berhenti total saat tab tersembunyi. */
 function initPetals() {
   const cv = $("#petals");
   if (!cv || reduceMotion) return;
   const ctx = cv.getContext("2d");
   if (!ctx) return;
-  const DPR = Math.min(devicePixelRatio || 1, 1.75);
+
+  const lowEnd = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 4) <= 2;
+  const DPR = Math.min(devicePixelRatio || 1, lowEnd ? 1 : 1.5);
   let W = innerWidth, H = innerHeight;
+  let sized = false;
   const resize = () => {
+    /* Abaikan perubahan tinggi kecil (bilah alamat ponsel naik-turun) agar kanvas tidak dialokasikan ulang */
+    if (sized && W === innerWidth && Math.abs(H - innerHeight) < 120) return;
+    sized = true;
     W = innerWidth;
     H = innerHeight;
     cv.width = Math.round(W * DPR);
@@ -1679,89 +1694,116 @@ function initPetals() {
   resize();
   addEventListener("resize", resize, { passive: true });
 
-  const PAL = [["#fff8fb", "#f8cddb", "#ee9ab5"], ["#fffafb", "#fbd9e4", "#f1a9c0"], ["#fff2f6", "#f3b4c8", "#e58aab"]];
-  const sprites = PAL.map(([c0, c1, c2]) => {
+  /* Tiga rona pink; warna diberikan ke siluet dengan source-in */
+  const PAL = [["#ffffff", "#ffe0ea", "#f7b2c8"], ["#fffafb", "#ffd3e0", "#f5a3bf"], ["#fff0f5", "#fbc3d4", "#f08fb0"]];
+  const SW = 64;
+  const buildSprites = img => PAL.map(([c0, c1, c2]) => {
+    const SH = img ? Math.round(SW * img.naturalHeight / img.naturalWidth) : SW;
     const s = document.createElement("canvas");
-    s.width = s.height = 64;
+    s.width = SW;
+    s.height = SH;
     const g = s.getContext("2d");
-    g.translate(32, 58);
-    g.scale(2.8, 2.8);
-    const path = new Path2D("M0 0C-5 -5 -8.5 -13 -4.8 -17.5C-3.2 -19 -1.1 -18.2 0 -16C1.1 -18.2 3.2 -19 4.8 -17.5C8.5 -13 5 -5 0 0Z");
-    const grad = g.createLinearGradient(0, 0, 0, -19);
-    grad.addColorStop(0, c2);
-    grad.addColorStop(0.45, c1);
-    grad.addColorStop(1, c0);
+    if (img) {
+      g.drawImage(img, 0, 0, SW, SH);
+      g.globalCompositeOperation = "source-in";
+    } else {
+      /* Cadangan bila berkas SVG tidak termuat: kelopak sederhana */
+      g.translate(SW / 2, SH - 4);
+      g.scale(2.8, 2.8);
+      g.fillStyle = c1;
+      g.fill(new Path2D("M0 0C-5 -5 -8.5 -13 -4.8 -17.5C-3.2 -19 -1.1 -18.2 0 -16C1.1 -18.2 3.2 -19 4.8 -17.5C8.5 -13 5 -5 0 0Z"));
+      g.setTransform(1, 0, 0, 1, 0, 0);
+      return s;
+    }
+    const grad = g.createLinearGradient(0, 0, SW, SH);
+    grad.addColorStop(0, c0);
+    grad.addColorStop(0.5, c1);
+    grad.addColorStop(1, c2);
     g.fillStyle = grad;
-    g.fill(path);
-    g.lineWidth = 0.35;
-    g.strokeStyle = "rgba(217,107,144,.35)";
-    g.stroke(path);
-    g.beginPath();
-    g.moveTo(0, -1.5);
-    g.lineTo(0, -12);
-    g.strokeStyle = "rgba(217,107,144,.28)";
-    g.stroke();
+    g.fillRect(0, 0, SW, SH);
     return s;
   });
 
-  const lowEnd = (navigator.hardwareConcurrency || 8) <= 4;
-  const N = Math.round(Math.min(26, Math.max(12, innerWidth / 62)) * (lowEnd ? 0.7 : 1));
-  const make = fresh => {
-    const z = Math.random();
+  const N = Math.round(Math.min(40, Math.max(16, W / 12)) * (lowEnd ? 0.6 : 1));
+  const make = (sprites, fresh) => {
+    const z = Math.random();                       /* 0 = jauh, 1 = dekat */
+    const spr = sprites[(Math.random() * sprites.length) | 0];
+    const base = 13 + z * 17 + Math.random() * 5;   /* lebar tampil (px) */
     return {
-      x: Math.random() * (W + 120) - 60,
-      y: fresh ? -40 - Math.random() * H * 0.25 : Math.random() * H,
-      s: (11 + Math.random() * 11) * (0.62 + z * 0.62),
-      vy: (22 + Math.random() * 22) * (0.7 + z * 0.55),
-      sw: 18 + Math.random() * 34,
-      sf: 0.35 + Math.random() * 0.5,
+      x: Math.random() * (W + 160) - 80,
+      y: fresh ? -30 - Math.random() * H * 0.35 : Math.random() * H,
+      w: base,
+      h: base * spr.height / spr.width,
+      vy: 46 + z * 118 + Math.random() * 26,       /* kecepatan jatuh */
+      sw: 6 + Math.random() * 16,                  /* lebar ayunan */
+      sf: 0.5 + Math.random() * 0.9,               /* frekuensi ayunan */
       ph: Math.random() * 6.283,
       r: Math.random() * 6.283,
-      rs: (Math.random() - 0.5) * 0.9,
-      ff: 0.7 + Math.random() * 1.2,
+      rs: (Math.random() - 0.5) * 1.5,             /* putaran */
+      ff: 1 + Math.random() * 1.6,                 /* kecepatan membalik */
       fp: Math.random() * 6.283,
-      a: (0.55 + Math.random() * 0.4) * (0.65 + z * 0.35),
+      a: 0.62 + z * 0.33,
       z,
-      spr: sprites[(Math.random() * sprites.length) | 0]
+      spr
     };
   };
-  const ps = Array.from({ length: N }, () => make(false));
 
+  let ps = [];
+  let SPR = [];
   let t = 0;
   let last = 0;
   let fade = 0;
+  let raf = 0;
   const frame = now => {
-    requestAnimationFrame(frame);
-    if (document.hidden) { last = 0; return; }
-    const dt = last ? Math.min(0.05, (now - last) / 1000) : 0.016;
+    raf = requestAnimationFrame(frame);
+    const gap = now - last;
+    if (lowEnd && last && gap < 30) return;        /* ~30 fps di perangkat sederhana */
+    const dt = last ? Math.min(0.05, gap / 1000) : 0.016;
     last = now;
     t += dt;
-    fade = Math.min(1, fade + dt / 2.5);
-    const gust = Math.max(0, Math.sin(t * 0.27) * Math.sin(t * 0.11 + 1.3));
-    const wind = 8 + Math.sin(t * 0.17) * 12 + Math.sin(t * 0.43) * 5 + gust * 46;
+    fade = Math.min(1, fade + dt / 2);
+    /* Angin: arah tetap ke kanan-bawah, dengan hembusan yang datang dan pergi */
+    const gust = Math.max(0, Math.sin(t * 0.31) * Math.sin(t * 0.13 + 1.1));
+    const wind = 22 + Math.sin(t * 0.19) * 10 + gust * 38;
 
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     ctx.clearRect(0, 0, W, H);
     for (let i = 0; i < ps.length; i++) {
       const p = ps[i];
-      p.y += (p.vy + Math.sin(t * 1.3 + p.ph) * 6) * dt;
-      p.x += (wind * (0.45 + p.z * 0.55) + Math.cos(t * p.sf + p.ph) * p.sw * p.sf) * dt;
+      p.y += p.vy * dt;
+      p.x += (wind * (0.4 + p.z * 0.6) + Math.cos(t * p.sf + p.ph) * p.sw) * dt;
       p.r += p.rs * dt;
-      if (p.y > H + 40 || p.x < -90 || p.x > W + 90) { ps[i] = make(true); continue; }
-
+      if (p.y > H + 30 || p.x > W + 90) {
+        const q = make(SPR, true);
+        q.x = Math.random() * (W + 160) - 160;     /* masuk dari kiri-atas agar sebaran tetap rata */
+        ps[i] = q;
+        continue;
+      }
       const flip = Math.cos(t * p.ff + p.fp);
-      const edge = Math.min(1, (p.y + 40) / 90, (H + 40 - p.y) / 140);
-      ctx.globalAlpha = p.a * fade * Math.max(0, edge) * (0.72 + 0.28 * Math.abs(flip));
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.r + Math.sin(t * p.sf + p.ph) * 0.55);
-      ctx.scale(0.3 + 0.7 * Math.abs(flip), 1);
-      ctx.drawImage(p.spr, -p.s / 2, -p.s * 0.9, p.s, p.s * 1.12);
-      ctx.restore();
+      ctx.globalAlpha = p.a * fade * (0.7 + 0.3 * Math.abs(flip));
+      const c = Math.cos(p.r), s = Math.sin(p.r);
+      const sy = 0.35 + 0.65 * Math.abs(flip);
+      /* matriks: putar lalu pipihkan sumbu-y (efek kelopak berbalik) */
+      ctx.setTransform(DPR * c, DPR * s, -DPR * s * sy, DPR * c * sy, DPR * p.x, DPR * p.y);
+      ctx.drawImage(p.spr, -p.w / 2, -p.h / 2, p.w, p.h);
     }
     ctx.globalAlpha = 1;
   };
-  requestAnimationFrame(frame);
+
+  const run = () => { if (!raf && !document.hidden && ps.length) { last = 0; raf = requestAnimationFrame(frame); } };
+  const halt = () => { cancelAnimationFrame(raf); raf = 0; };
+  document.addEventListener("visibilitychange", () => (document.hidden ? halt() : run()));
+
+  const begin = img => {
+    SPR = buildSprites(img);
+    ps = Array.from({ length: N }, () => make(SPR, false));
+    run();
+  };
+  const img = new Image();
+  img.decoding = "async";
+  img.onload = () => begin(img);
+  img.onerror = () => begin(null);
+  img.src = "assets/sakura.svg";
 }
 initPetals();
 
@@ -1918,7 +1960,7 @@ function returnToCover() {
   window.scrollTo(0, 0);
 
   // Animasi ulang konten cover
-  cover.querySelectorAll(".anim").forEach(el => {
+  cover.querySelectorAll(".anim, .cover-names .l, .cover-kicker .orn").forEach(el => {
     el.style.animation = "none";
     void el.offsetWidth;
     el.style.animation = "";
