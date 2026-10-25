@@ -1560,17 +1560,45 @@ function initEventPointer(scope = document) {
    kali terlihat, lalu bergoyang pelan seperti tertiup angin selama elemen ada
    di layar. Di luar layar animasi dijeda agar hemat baterai. */
 const FLORAL_ART = `<svg viewBox="0 0 240 240" aria-hidden="true" focusable="false"><g class="wind">
+<circle class="halo" cx="118" cy="62" r="78" fill="url(#flHalo)"/>
 <path d="M-8 14C40 12 84 28 126 66S190 128 214 186" fill="none" stroke="#8a6b6f" stroke-width="2.6" stroke-linecap="round"/>
-<path d="M104 50c6-8 16-10 24-6-5 8-15 10-24 6zM160 106c8-5 18-3 23 3-8 6-18 5-23-3zM196 150c4-8 12-12 20-9-2 9-11 13-20 9z" fill="#9db9d3"/>
+<g transform="translate(104 50)"><path class="lf" style="--bd:0s" d="M0 0c6-8 16-10 24-6-5 8-15 10-24 6z" fill="#9db9d3"/></g><g transform="translate(160 106)"><path class="lf" style="--bd:-1.1s" d="M0 0c8-5 18-3 23 3-8 6-18 5-23-3z" fill="#9db9d3"/></g><g transform="translate(196 150)"><path class="lf" style="--bd:-2.2s" d="M0 0c4-8 12-12 20-9-2 9-11 13-20 9z" fill="#9db9d3"/></g>
 <g class="tw tw1" style="transform-origin:58px 20px"><path d="M58 20C74 4 98 0 120 12" fill="none" stroke="#8a6b6f" stroke-width="1.8" stroke-linecap="round"/>
-<use href="#fl-bloom" transform="translate(119 12) rotate(20) scale(.85)"/>
+<g transform="translate(119 12)"><g class="br" style="--bd:0s"><use href="#fl-bloom" transform="rotate(20) scale(.85)"/></g></g>
 <ellipse cx="138" cy="24" rx="2.3" ry="3.6" fill="#ee9ab5" transform="rotate(-30 138 24)"/></g>
-<use href="#fl-bloom" transform="translate(86 34) rotate(40) scale(.8)"/>
-<use href="#fl-bloom" transform="translate(127 67) rotate(8) scale(1.05)"/>
+<g transform="translate(86 34)"><g class="br" style="--bd:-1.3s"><use href="#fl-bloom" transform="rotate(40) scale(.8)"/></g></g>
+<g transform="translate(127 67)"><g class="br" style="--bd:-2.6s"><use href="#fl-bloom" transform="rotate(8) scale(1.05)"/></g></g>
 <g class="tw tw2" style="transform-origin:136px 76px"><path d="M136 74C158 66 178 72 192 88" fill="none" stroke="#8a6b6f" stroke-width="1.8" stroke-linecap="round"/>
-<use href="#fl-bloom" transform="translate(191 88) rotate(-10) scale(.85)"/>
+<g transform="translate(191 88)"><g class="br" style="--bd:-0.7s"><use href="#fl-bloom" transform="rotate(-10) scale(.85)"/></g></g>
 <ellipse cx="170" cy="62" rx="2.3" ry="3.6" fill="#ee9ab5" transform="rotate(20 170 62)"/></g>
-<use href="#fl-bloom" transform="translate(214 186) rotate(30) scale(.8)"/>
+<g transform="translate(214 186)"><g class="br" style="--bd:-1.9s"><use href="#fl-bloom" transform="rotate(30) scale(.8)"/></g></g>
+</g></svg>`;
+
+/* Ranting bingkai sampul: dua batang menyusuri sisi atas dan sisi kiri bingkai
+   (bergelombang melintasi garis), dengan kuntum, daun, dan tunas di sepanjang batang.
+   Titik (0,0) = sudut bingkai; sudut lain didapat dengan pencerminan (CSS). */
+const bloomG = (x, y, r, s, d) => `<g transform="translate(${x} ${y})"><g class="br" style="--bd:${d}s"><use href="#fl-bloom" transform="rotate(${r}) scale(${s})"/></g></g>`;
+const leafG = (x, y, r, d) => `<g transform="translate(${x} ${y}) rotate(${r})"><path class="lf" style="--bd:${d}s" d="M0 0c6-8 16-10 24-6-5 8-15 10-24 6z" fill="#9db9d3"/></g>`;
+const budG = (x, y, r) => `<ellipse cx="${x}" cy="${y}" rx="2.3" ry="3.6" fill="#ee9ab5" transform="rotate(${r} ${x} ${y})"/>`;
+const COVER_ART = `<svg viewBox="0 0 260 260" aria-hidden="true" focusable="false"><g class="wind">
+<circle class="halo" cx="46" cy="46" r="96" fill="url(#flHalo)" style="transform-origin:46px 46px"/>
+<g class="tw tw1" style="transform-origin:0px 0px">
+<path d="M-6 -4C34 -12 62 16 104 6S170 -10 214 10" fill="none" stroke="#8a6b6f" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M104 6C116 -8 132 -14 150 -9" fill="none" stroke="#8a6b6f" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M170 -4C180 -14 192 -18 204 -15" fill="none" stroke="#8a6b6f" stroke-width="1.3" stroke-linecap="round"/>
+${leafG(56, 8, -22, 0)}${leafG(126, -4, 24, -1.2)}${leafG(180, -6, -16, -0.6)}
+${bloomG(78, 13, 30, 0.9, -1.4)}${bloomG(152, -9, -20, 0.78, -2.6)}${bloomG(214, 10, 15, 0.62, -0.8)}${bloomG(206, -15, 40, 0.5, -3.2)}
+${budG(122, -15, -30)}${budG(36, -9, 20)}${budG(190, 6, 10)}
+</g>
+<g class="tw tw2" style="transform-origin:0px 0px">
+<path d="M-4 -6C-12 34 16 62 6 104S-10 170 10 214" fill="none" stroke="#8a6b6f" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M6 104C-8 116 -14 132 -9 150" fill="none" stroke="#8a6b6f" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M-4 170C-14 180 -18 192 -15 204" fill="none" stroke="#8a6b6f" stroke-width="1.3" stroke-linecap="round"/>
+${leafG(8, 56, 112, -0.4)}${leafG(-4, 126, 66, -1.8)}${leafG(-6, 180, 106, -2.4)}
+${bloomG(13, 78, -30, 0.9, -2.1)}${bloomG(-9, 152, 20, 0.78, -0.5)}${bloomG(10, 214, -15, 0.62, -1.7)}${bloomG(-15, 206, -40, 0.5, -2.9)}
+${budG(-15, 122, 60)}${budG(-9, 36, 70)}${budG(6, 190, 80)}
+</g>
+${bloomG(10, 10, 12, 1.25, 0)}${bloomG(38, 0, -8, 0.7, -2)}${bloomG(0, 38, 8, 0.7, -3.4)}
 </g></svg>`;
 
 /* Ranting di bagian isi undangan baru "mekar" setelah pengunjung benar-benar
@@ -1592,19 +1620,19 @@ addEventListener("scroll", () => {
 }, { passive: true });
 
 function initFloral() {
-  const spots = [["#cover", "tl tr"], [".s-couple", "tl tr"], [".s-event", "tl tr"], [".s-closing", "bl br"]];
+  const spots = [[".cover-frame", "tl tr bl br"], ["#pair > .person:nth-of-type(1) .ph", "tl"], ["#pair > .person:nth-of-type(2) .ph", "tr"], ["#ev .evc:nth-of-type(1)", "tl bl"], ["#ev .evc:nth-of-type(2)", "tr br"], [".s-event", "tl tr"], [".s-closing", "bl br"]];
   spots.forEach(([sel, pos]) => {
     const host = $(sel);
     if (!host || host.dataset.fl) return;
     host.dataset.fl = "1";
-    const isCover = sel === "#cover";
+    const isCover = sel === ".cover-frame";
     const items = pos.split(" ").map(p => {
       const el = document.createElement("span");
       el.className = `floral ${p}`;
       el.setAttribute("aria-hidden", "true");
       el.innerHTML = `<span class="fl-in">${C.floralImg
         ? `<img src="${esc(C.floralImg)}" alt="" draggable="false">`
-        : FLORAL_ART}</span>`;
+        : (isCover ? COVER_ART : FLORAL_ART)}</span>`;
       host.appendChild(el);
       return el;
     });
@@ -1629,6 +1657,113 @@ function initFloral() {
     });
   });
 }
+
+
+/* ====== 12c. KELOPAK SAKURA BERJATUHAN ======
+   Satu kanvas ringan: kelopak bergoyang pelan mengikuti angin, berputar dan
+   "terbalik" seperti kelopak sungguhan. Sprite digambar sekali lalu dipakai
+   ulang, jumlahnya menyesuaikan lebar layar, dan berhenti saat tab tersembunyi. */
+function initPetals() {
+  const cv = $("#petals");
+  if (!cv || reduceMotion) return;
+  const ctx = cv.getContext("2d");
+  if (!ctx) return;
+  const DPR = Math.min(devicePixelRatio || 1, 1.75);
+  let W = innerWidth, H = innerHeight;
+  const resize = () => {
+    W = innerWidth;
+    H = innerHeight;
+    cv.width = Math.round(W * DPR);
+    cv.height = Math.round(H * DPR);
+  };
+  resize();
+  addEventListener("resize", resize, { passive: true });
+
+  const PAL = [["#fff8fb", "#f8cddb", "#ee9ab5"], ["#fffafb", "#fbd9e4", "#f1a9c0"], ["#fff2f6", "#f3b4c8", "#e58aab"]];
+  const sprites = PAL.map(([c0, c1, c2]) => {
+    const s = document.createElement("canvas");
+    s.width = s.height = 64;
+    const g = s.getContext("2d");
+    g.translate(32, 58);
+    g.scale(2.8, 2.8);
+    const path = new Path2D("M0 0C-5 -5 -8.5 -13 -4.8 -17.5C-3.2 -19 -1.1 -18.2 0 -16C1.1 -18.2 3.2 -19 4.8 -17.5C8.5 -13 5 -5 0 0Z");
+    const grad = g.createLinearGradient(0, 0, 0, -19);
+    grad.addColorStop(0, c2);
+    grad.addColorStop(0.45, c1);
+    grad.addColorStop(1, c0);
+    g.fillStyle = grad;
+    g.fill(path);
+    g.lineWidth = 0.35;
+    g.strokeStyle = "rgba(217,107,144,.35)";
+    g.stroke(path);
+    g.beginPath();
+    g.moveTo(0, -1.5);
+    g.lineTo(0, -12);
+    g.strokeStyle = "rgba(217,107,144,.28)";
+    g.stroke();
+    return s;
+  });
+
+  const lowEnd = (navigator.hardwareConcurrency || 8) <= 4;
+  const N = Math.round(Math.min(26, Math.max(12, innerWidth / 62)) * (lowEnd ? 0.7 : 1));
+  const make = fresh => {
+    const z = Math.random();
+    return {
+      x: Math.random() * (W + 120) - 60,
+      y: fresh ? -40 - Math.random() * H * 0.25 : Math.random() * H,
+      s: (11 + Math.random() * 11) * (0.62 + z * 0.62),
+      vy: (22 + Math.random() * 22) * (0.7 + z * 0.55),
+      sw: 18 + Math.random() * 34,
+      sf: 0.35 + Math.random() * 0.5,
+      ph: Math.random() * 6.283,
+      r: Math.random() * 6.283,
+      rs: (Math.random() - 0.5) * 0.9,
+      ff: 0.7 + Math.random() * 1.2,
+      fp: Math.random() * 6.283,
+      a: (0.55 + Math.random() * 0.4) * (0.65 + z * 0.35),
+      z,
+      spr: sprites[(Math.random() * sprites.length) | 0]
+    };
+  };
+  const ps = Array.from({ length: N }, () => make(false));
+
+  let t = 0;
+  let last = 0;
+  let fade = 0;
+  const frame = now => {
+    requestAnimationFrame(frame);
+    if (document.hidden) { last = 0; return; }
+    const dt = last ? Math.min(0.05, (now - last) / 1000) : 0.016;
+    last = now;
+    t += dt;
+    fade = Math.min(1, fade + dt / 2.5);
+    const gust = Math.max(0, Math.sin(t * 0.27) * Math.sin(t * 0.11 + 1.3));
+    const wind = 8 + Math.sin(t * 0.17) * 12 + Math.sin(t * 0.43) * 5 + gust * 46;
+
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    for (let i = 0; i < ps.length; i++) {
+      const p = ps[i];
+      p.y += (p.vy + Math.sin(t * 1.3 + p.ph) * 6) * dt;
+      p.x += (wind * (0.45 + p.z * 0.55) + Math.cos(t * p.sf + p.ph) * p.sw * p.sf) * dt;
+      p.r += p.rs * dt;
+      if (p.y > H + 40 || p.x < -90 || p.x > W + 90) { ps[i] = make(true); continue; }
+
+      const flip = Math.cos(t * p.ff + p.fp);
+      const edge = Math.min(1, (p.y + 40) / 90, (H + 40 - p.y) / 140);
+      ctx.globalAlpha = p.a * fade * Math.max(0, edge) * (0.72 + 0.28 * Math.abs(flip));
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.r + Math.sin(t * p.sf + p.ph) * 0.55);
+      ctx.scale(0.3 + 0.7 * Math.abs(flip), 1);
+      ctx.drawImage(p.spr, -p.s / 2, -p.s * 0.9, p.s, p.s * 1.12);
+      ctx.restore();
+    }
+    ctx.globalAlpha = 1;
+  };
+  requestAnimationFrame(frame);
+}
+initPetals();
 
 
 /* ====== 13. COVER & NAVIGATION ====== */

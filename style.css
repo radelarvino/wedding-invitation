@@ -3716,3 +3716,196 @@ main {
     margin-top: 0.8rem;
   }
 }
+
+/* =====================================================================
+   25. KELOPAK JATUH, GERAK ANGIN, & POSISI RANTING
+   ===================================================================== */
+#petals {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 39;
+  pointer-events: none;
+}
+
+body.locked #petals {
+  z-index: 52;
+}
+
+/* Gerak angin: semua bagian ranting bergerak sendiri-sendiri dengan irama berbeda
+   (ranting, batang, kuntum, daun, halo). Keyframe bertitik banyak supaya terasa
+   seperti hembusan, bukan ayunan mekanis. Hanya transform + opacity (ringan). */
+.floral .halo {
+  opacity: 0.5;
+  transform-origin: 118px 62px;
+}
+
+.floral .br,
+.floral .lf {
+  transform-origin: 0 0;
+}
+
+.floral.run .fl-in {
+  animation: windMain 9s ease-in-out 2.4s infinite both;
+}
+
+.floral.run .tw1 {
+  animation: windTwig 6.4s ease-in-out infinite;
+}
+
+.floral.run .tw2 {
+  animation: windTwig 7.6s ease-in-out -2.4s infinite;
+}
+
+.floral.run .br {
+  animation: bloomSway 5.6s ease-in-out var(--bd, 0s) infinite;
+}
+
+.floral.run .lf {
+  animation: leafFlutter 3.4s ease-in-out var(--bd, 0s) infinite alternate;
+}
+
+.floral.run .halo {
+  animation: haloBreath 4.2s ease-in-out infinite alternate;
+}
+
+@keyframes windMain {
+  0%   { transform: rotate(-3deg) scale(1); }
+  22%  { transform: rotate(3.5deg) scale(1.03); }
+  38%  { transform: rotate(0.5deg) scale(1.01); }
+  61%  { transform: rotate(5deg) scale(1.045); }
+  80%  { transform: rotate(-1deg) scale(1.01); }
+  100% { transform: rotate(-3deg) scale(1); }
+}
+
+@keyframes windTwig {
+  0%   { transform: rotate(-5deg); }
+  24%  { transform: rotate(4.5deg); }
+  46%  { transform: rotate(-2deg); }
+  71%  { transform: rotate(6.5deg); }
+  100% { transform: rotate(-5deg); }
+}
+
+@keyframes bloomSway {
+  0%   { transform: scale(0.93) rotate(-7deg); }
+  22%  { transform: scale(1.12) rotate(5deg); }
+  41%  { transform: scale(1) rotate(-3deg); }
+  63%  { transform: scale(1.2) rotate(8deg); }
+  82%  { transform: scale(0.97) rotate(-5deg); }
+  100% { transform: scale(0.93) rotate(-7deg); }
+}
+
+@keyframes leafFlutter {
+  from { transform: rotate(-12deg); }
+  to   { transform: rotate(11deg); }
+}
+
+@keyframes haloBreath {
+  from { opacity: 0.25; transform: scale(0.88); }
+  to   { opacity: 0.95; transform: scale(1.14); }
+}
+
+/* ---------- Bingkai sampul dibuat ulang: garis ganda + ranting menyusuri keempat sudut ---------- */
+.cover-frame::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(229, 207, 168, 0.16);
+  border-radius: clamp(10px, 2vw, 22px);
+  pointer-events: none;
+}
+
+.cover-frame > .floral {
+  z-index: 2;
+  --fw: clamp(104px, 36vw, 150px);
+}
+
+@media (min-width: 600px) {
+  .cover-frame > .floral {
+    --fw: clamp(150px, 20vw, 220px);
+  }
+}
+
+.cover-frame > .floral.tl { top: 0; left: 0; }
+.cover-frame > .floral.tr { top: 0; right: 0; }
+.cover-frame > .floral.bl { bottom: 0; left: 0; }
+.cover-frame > .floral.br { bottom: 0; right: 0; }
+
+.cover-frame > .floral.tl svg { transition-delay: 1s; }
+.cover-frame > .floral.tr svg { transition-delay: 1.4s; }
+.cover-frame > .floral.bl svg { transition-delay: 1.8s; }
+.cover-frame > .floral.br svg { transition-delay: 2.2s; }
+
+@media (max-width: 599px) and (max-height: 700px) {
+  .cover-frame > .floral {
+    --fw: clamp(92px, 28vw, 118px);
+  }
+}
+
+/* ---------- Ranting menempel di bingkai foto mempelai ---------- */
+.ph > .floral {
+  --fw: clamp(84px, 11vw, 132px);
+}
+
+.ph > .floral.tl {
+  top: calc(var(--fw) * -0.3);
+  left: calc(var(--fw) * -0.62);
+}
+
+.ph > .floral.tr {
+  top: calc(var(--fw) * -0.3);
+  right: calc(var(--fw) * -0.62);
+}
+
+/* ---------- Ranting menempel di border kartu Akad Nikah & Resepsi ----------
+   Kartu tidak lagi memotong isi (overflow), jadi sudut foto dibulatkan sendiri. */
+.evc {
+  overflow: visible;
+}
+
+.evp {
+  border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
+}
+
+.evc > .floral {
+  z-index: 6;
+  --fw: clamp(88px, 10vw, 128px);
+}
+
+.evc > .floral.bl,
+.evc > .floral.br {
+  --fw: clamp(64px, 7.5vw, 96px);
+}
+
+.evc > .floral.tl { top: calc(var(--fw) * -0.22); left: calc(var(--fw) * -0.3); }
+.evc > .floral.tr { top: calc(var(--fw) * -0.22); right: calc(var(--fw) * -0.3); }
+.evc > .floral.bl { bottom: calc(var(--fw) * -0.22); left: calc(var(--fw) * -0.55); }
+.evc > .floral.br { bottom: calc(var(--fw) * -0.22); right: calc(var(--fw) * -0.55); }
+
+@media (max-width: 599px) {
+  .evc > .floral {
+    --fw: 76px;
+  }
+
+  .evc > .floral.tl { left: calc(var(--fw) * -0.12); }
+  .evc > .floral.tr { right: calc(var(--fw) * -0.12); }
+
+  .evc > .floral.bl,
+  .evc > .floral.br {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floral .br,
+  .floral .lf,
+  .floral .halo,
+  .floral .tw {
+    animation: none !important;
+  }
+
+  #petals {
+    display: none;
+  }
+}
