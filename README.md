@@ -10,7 +10,8 @@ Tidak ada proses build. Semua file statis dan bisa langsung diunggah ke GitHub P
 - Verifikasi tamu prioritas lewat kode di Spreadsheet (`?k=KODE`), bukan sekadar nama di URL.
 - Tamu umum bernama bisa memakai tautan `?to=Nama`.
 - RSVP (hadir / berhalangan, jumlah orang, ucapan) yang tersimpan ke Spreadsheet.
-- Hitung mundur, cerita, jadwal acara, peta, hadiah, daftar hadiah, galeri, dan musik.
+- Hitung mundur, cerita, jadwal acara (kartu mengikuti gerak pointer), lokasi dengan tombol buka di Maps, hadiah, daftar hadiah, galeri, dan musik.
+- Ucapan (Wishes) dan galeri (Our Moment) bergeser otomatis tiap 10 detik; keduanya punya tombol jeda, dan Wishes juga berhenti saat pointer di atasnya.
 - Tombol simpan acara ke kalender, salin rekening/alamat, bagikan undangan.
 - Dashboard panitia (`admin.html`) dengan PIN untuk melihat tamu, memfilter, check-in, menambah tamu, menyalin link, dan mengirim WhatsApp.
 - Mode demo otomatis bila `SCRIPT_URL` belum diisi, sehingga tampilan bisa dicoba tanpa Spreadsheet.
@@ -214,7 +215,7 @@ Sebagian besar konten ada di bagian atas `script.js`, objek `C`:
 - `couple` — nama lengkap, nama panggilan, orang tua, dan foto mempelai.
 - `story` — linimasa cerita.
 - `events` — nama acara, tanggal, jam, dan foto. Gunakan `only: "priority"` untuk acara khusus tamu prioritas.
-- `venue`, `mapQuery`, `mapEmbed` — alamat dan peta.
+- `venue`, `mapQuery` — alamat dan kata kunci untuk tombol **Buka di Maps** (tidak ada lagi pratinjau peta di halaman).
 - `generalMax` — kapasitas tamu untuk link `?to=`. Samakan dengan `MAX_UMUM` di `Code.gs`.
 - `gifts`, `registry` — rekening, e-wallet, alamat, dan daftar hadiah.
 - `gallery` — daftar foto, mis. `["assets/foto-1.jpg", "assets/foto-2.jpg"]`.
@@ -250,8 +251,8 @@ Bila foto kosong, undangan memakai monogram dan latar dekoratif, bukan gambar ru
 
 ## Catatan teknis
 
-- Font diambil dari Google Fonts; peta memakai embed Google Maps. Keduanya membutuhkan koneksi internet.
-- Bila peta kosong, coba muat ulang atau matikan pemblokir iklan; iframe Google Maps tidak memengaruhi fungsi RSVP.
+- Font diambil dari Google Fonts dan membutuhkan koneksi internet.
+- Kecepatan geser otomatis: `data-auto="10000"` pada `.s-wish` di `index.html` (Wishes) dan `AUTO_MS` di `initGallery()` pada `script.js` (Our Moment), dalam milidetik.
 - Verifikasi `?k=` memanggil Apps Script. Bila jaringan gagal, halaman tetap tampil sebagai tamu umum, bukan menampilkan nama yang salah.
 - Kode tamu ada di URL. Siapa pun yang memiliki link dapat membuka undangan tersebut, jadi perlakukan link seperti undangan pribadi.
 - Spreadsheet adalah sumber kebenaran. Hindari mengedit kolom otomatis secara manual saat acara berlangsung.

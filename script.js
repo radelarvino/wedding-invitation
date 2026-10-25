@@ -8,7 +8,6 @@ const C = {
   musicVolume: 0.65,                // 0 - 1
   bgImage: "",                      // foto latar opsional, mis. "assets/latar.jpg"
   cover: [],                        // foto sampul opsional (array URL)
-  mapEmbed: "",                     // opsional: URL embed Google Maps pengganti
   couple: [
     {
       full: "Ramiz Qudamah",
@@ -37,8 +36,11 @@ const C = {
     { name: "Akad Nikah", label: "Minggu, 13 Desember 2026", time: "08.00 – 10.00 WIB", start: "2026-12-13T08:00:00+07:00", end: "2026-12-13T10:00:00+07:00", photo: "" },
     { name: "Resepsi", label: "Minggu, 13 Desember 2026", time: "11.00 – 14.00 WIB", start: "2026-12-13T11:00:00+07:00", end: "2026-12-13T14:00:00+07:00", photo: "" }
   ],
-  venue: "Kantor Urusan Agama Kecamatan Tebet, Jakarta Selatan",
-  mapQuery: "Kantor Urusan Agama Kecamatan Tebet",
+  venueName: "Roemah Kraton",
+  venueShort: "Roemah Kraton, Tebet, Jakarta Selatan",
+  venue: "Jl. Tebet Barat Dalam Raya No.34, RT.14/RW.3, Tebet Barat, Kec. Tebet, Kota Jakarta Selatan, DKI Jakarta 12810",
+  venuePhoto: "",                    // opsional: foto asli gedung, mis. "assets/roemah-kraton.jpg" (menggantikan ilustrasi)
+  mapQuery: "Roemah Kraton, Jl. Tebet Barat Dalam Raya No.34, Jakarta Selatan",
   generalMax: 1,                    // kapasitas tamu untuk tautan umum
   demoGuests: { DEMO123: { name: "Budi Santoso", max: 3 } },
   /* Tambah kartu hadiah cukup menambah baris */
@@ -52,7 +54,8 @@ const C = {
     { n: "Mesin cuci portable", price: 689000, got: 1, need: 1, url: "https://contoh.com/mesin-cuci" },
     { n: "Set peralatan masak", price: 440000, got: 0, need: 2, url: "https://contoh.com/set-masak" }
   ],
-  gallery: []                       // mis. ["assets/foto1.jpg", "assets/foto2.jpg"]
+  gallery: [],                     // mis. ["assets/foto1.jpg", "assets/foto2.jpg"]
+  floralImg: ""                     // opsional: PNG/WebP transparan bunga (sudut kiri-atas), mis. "assets/sakura.png"
 };
 
 const [a, b] = C.couple;
@@ -196,7 +199,7 @@ function renderCover() {
   if (opDate) opDate.textContent = (evs[0] || C.events[0]).label;
 
   const opLocSpan = $("#opLoc span");
-  if (opLocSpan) opLocSpan.textContent = C.venue;
+  if (opLocSpan) opLocSpan.textContent = C.venueShort || C.venue;
 
   const guestEl = $("#guest");
   if (guestEl) guestEl.textContent = guest.name;
@@ -242,6 +245,21 @@ function renderCover() {
       }
     }
   }
+}
+
+/**
+ * Memecah teks nama menjadi huruf-huruf yang muncul bergantian saat elemen terlihat
+ * @param {HTMLElement} el - Elemen berisi nama
+ */
+function splitText(el) {
+  if (!el || el.dataset.split) return;
+  const text = el.textContent;
+  el.dataset.split = "1";
+  el.setAttribute("aria-label", text);
+  el.classList.add("split");
+  el.innerHTML = [...text].map((ch, i) =>
+    `<span class="ch" aria-hidden="true" style="--k:${i}">${ch === " " ? "&nbsp;" : esc(ch)}</span>`
+  ).join("");
 }
 
 /**
@@ -306,6 +324,7 @@ function renderContent() {
       const btn = e.target.closest("[data-ics]");
       if (btn) ics(evs[+btn.dataset.ics]);
     };
+    initEventPointer(evEl);
   }
 
   startCountdown(new Date(first.start));
@@ -317,11 +336,16 @@ function renderContent() {
   const mapBtn = $("#mapBtn");
   if (mapBtn) mapBtn.href = `https://www.google.com/maps/search/?api=1&query=${q}`;
 
-  if (C.mapEmbed && $("#map")) $("#map").src = C.mapEmbed;
+  const venueName = $("#venueName");
+  if (venueName) venueName.textContent = C.venueName || "Lokasi Acara";
+  if (C.venuePhoto && $("#venuePhoto")) {
+    $("#venuePhoto").innerHTML = `<img src="${esc(C.venuePhoto)}" alt="${esc(C.venueName || "Lokasi acara")}" loading="lazy">`;
+  }
 
   const tlEl = $("#tl");
   if (tlEl) {
-    tlEl.innerHTML = C.story.map((s, i) => `<article class="tl-item reveal" style="--d:${(i % 2) * 90}ms">
+    tlEl.innerHTML = `<i class="tl-track" aria-hidden="true"></i><i class="tl-line" aria-hidden="true"></i>` + C.story.map((s, i) => `<article class="tl-item reveal" style="--d:${(i % 2) * 90}ms">
+      <span class="tl-dot" aria-hidden="true"></span>
       <div class="tl-card">
         <small>${esc(s.date)}</small>
         <h3>${esc(s.t)}</h3>
@@ -334,6 +358,10 @@ function renderContent() {
   renderGifts();
   renderGallery();
   setupRsvpForm();
+  initTimeline();
+  initFloral();
+  $$(".person h3").forEach(splitText);
+  splitText($("#nick"));
 }
 
 /**
@@ -357,10 +385,10 @@ function renderGifts() {
   if (regEl && regList) {
     if (C.registry.length) {
       regEl.hidden = false;
-      regList.innerHTML = C.registry.map(r => {
+      regList.innerHTML = C.registry.map((r, i) => {
         const done = r.got >= r.need;
         const link = /^https?:\/\//.test(r.url || "");
-        return `<article class="card ri${done ? " done" : ""}">
+        return `<article class="card ri${done ? " done" : ""}" style="--i:${i}">
           <b>${esc(r.n)}</b>
           <div class="price">Rp ${r.price.toLocaleString("id-ID")}</div>
           <div class="bar"><i style="width:${Math.min(100, (r.got / r.need) * 100)}%"></i></div>
@@ -383,10 +411,9 @@ function renderGallery() {
   if (!galEl) return;
   galleryCount = C.gallery.length || 5;
   const slides = [];
-  for (let k = 0; k < galleryCount * 3; k++) {
-    const i = k % galleryCount;
+  for (let i = 0; i < galleryCount; i++) {
     if (C.gallery[i]) {
-      slides.push(`<div class="slide" data-i="${i}" role="button" tabindex="0" aria-label="Lihat foto ${i + 1}"><img src="${esc(C.gallery[i])}" alt="Foto ${i + 1}" loading="lazy"></div>`);
+      slides.push(`<div class="slide" data-i="${i}" role="button" tabindex="0" aria-label="Foto ${i + 1} dari ${galleryCount}"><img src="${esc(C.gallery[i])}" alt="Foto ${i + 1}" loading="lazy" draggable="false"></div>`);
     } else {
       slides.push(`<div class="slide ph" data-i="${i}" style="--gi:${i}"><div class="ph-slide-inner"><span class="slide-mark">${esc(a.nick[0])}<em>&amp;</em>${esc(b.nick[0])}</span><small>Our Moment ${String(i + 1).padStart(2, "0")}</small></div></div>`);
     }
@@ -607,10 +634,20 @@ function initStage(stage) {
       };
     }
 
-    setInterval(() => {
-      if (paused || !visible || document.hidden || touching || car.matches(":hover, :focus-within")) return;
-      car.go(1);
-    }, ms);
+    /* Pewaktu satu-kali yang dipasang ulang: setiap interaksi manual (ketuk panah,
+       geser, scroll, keyboard) memulai ulang hitungan, jadi slide tidak "melompat"
+       sedetik setelah pengunjung menggesernya sendiri. */
+    let autoTimer = 0;
+    const arm = () => {
+      clearTimeout(autoTimer);
+      autoTimer = setTimeout(tick, ms);
+    };
+    const tick = () => {
+      if (!(paused || !visible || document.hidden || touching || car.matches(":hover, :focus-within"))) car.go(1);
+      arm();
+    };
+    ["pointerdown", "wheel", "keydown", "touchstart"].forEach(ev => stage.addEventListener(ev, arm, { passive: true }));
+    arm();
   }
 }
 
@@ -618,16 +655,271 @@ function initStage(stage) {
  * Menginisialisasi semua slider yang ada di halaman
  */
 function initAllStages() {
-  $$(".stage").forEach(initStage);
+  $$(".stage:not(.s-gal)").forEach(initStage);
+  initGallery();
 }
 
-// Saat panel rincian hadiah dibuka, tata letak dihitung ulang
-const regEl = $("#reg");
-if (regEl) {
-  regEl.addEventListener("toggle", () => {
-    const car = $("#regList");
-    if (car && car.mark) setTimeout(car.mark, 30);
+/* Daftar hadiah: buka/tutup beranimasi (panel + panah) */
+const regBox = $("#reg");
+const regToggle = $("#regToggle");
+const regBody = $("#regBody");
+const regLabel = $("#regLabel");
+if (regBox && regToggle && regBody) {
+  regToggle.addEventListener("click", () => {
+    const open = !regBox.classList.contains("open");
+    regBox.classList.toggle("open", open);
+    regToggle.setAttribute("aria-expanded", String(open));
+    regBody.setAttribute("aria-hidden", String(!open));
+    regBody.inert = !open;
+    if (regLabel) regLabel.textContent = open ? "Tutup daftar hadiah" : "Lihat daftar hadiah";
+    const list = $("#regList");
+    if (open && list) {
+      list.scrollLeft = 0;
+      requestAnimationFrame(() => list.mark && list.mark());
+    }
   });
+}
+
+
+/* ====== 7b. GALERI "OUR MOMENT" ======
+   Carousel 3D otomatis: transform + opacity saja (GPU), tanpa scroll-snap.
+   Bergeser sendiri tiap AUTO_MS selama terlihat; ketuk samping untuk pindah,
+   geser jari/mouse atau tombol panah untuk manual. */
+function initGallery() {
+  const stage = $(".s-gal");
+  const car = $("#gal");
+  if (!stage || !car || stage.dataset.ready) return;
+  stage.dataset.ready = "1";
+
+  const slides = [...car.children];
+  const n = slides.length;
+  const countEl = $("#galCount");
+  const pp = stage.querySelector(".pp");
+  const AUTO_MS = 10000; /* bergeser otomatis tiap 10 detik */
+  let cur = 0;
+  let paused = false;
+  let visible = false;
+  let dragging = false;
+  let moved = false;
+  let timer = 0;
+  let startX = 0;
+
+  stage.classList.toggle("single", n < 2);
+
+  const layout = (instant = false) => {
+    if (!n) return;
+    const w = slides[0].offsetWidth;
+    const step = w * 0.62;
+    slides.forEach((el, i) => {
+      let d = (((i - cur) % n) + n) % n;
+      if (d > n / 2) d -= n;
+      const a = Math.abs(d);
+      const x = d === 0 ? 0 : Math.sign(d) * step * (1 + (a - 1) * 0.5);
+      const scale = Math.max(0.7, 1 - a * 0.14);
+      const rot = Math.max(-28, Math.min(28, -d * 14));
+      const op = a === 0 ? 1 : a === 1 ? 0.75 : a === 2 ? 0.4 : 0;
+      const tf = `translate3d(${x.toFixed(1)}px,0,0) rotateY(${rot}deg) scale(${scale.toFixed(3)})`;
+      const wrapped = el._d !== undefined && Math.abs(d - el._d) > 1.5;
+      el._d = d;
+
+      el.style.zIndex = String(10 - a);
+      el.style.pointerEvents = a <= 2 ? "auto" : "none";
+      el.classList.toggle("act", d === 0);
+      el.setAttribute("aria-hidden", d === 0 ? "false" : "true");
+      if (el.getAttribute("role") === "button") el.tabIndex = d === 0 ? 0 : -1;
+
+      if (instant) {
+        el.style.transition = "none";
+        el.style.transform = tf;
+        el.style.opacity = String(op);
+      } else if (wrapped) {
+        /* Slide yang "melompat" ke sisi seberang muncul memudar, tidak terbang melintasi layar */
+        el.style.transition = "none";
+        el.style.opacity = "0";
+        el.style.transform = tf;
+        void el.offsetWidth;
+        el.style.transition = "";
+        requestAnimationFrame(() => { el.style.opacity = String(op); });
+      } else {
+        el.style.transform = tf;
+        el.style.opacity = String(op);
+      }
+    });
+    if (instant) {
+      void car.offsetWidth;
+      slides.forEach(el => { el.style.transition = ""; });
+    }
+    if (countEl) countEl.textContent = `${cur + 1} / ${n}`;
+  };
+
+  const schedule = () => {
+    clearTimeout(timer);
+    if (paused || reduceMotion || n < 2) return;
+    timer = setTimeout(() => {
+      if (visible && !document.hidden && !dragging) go(1);
+      else schedule();
+    }, AUTO_MS);
+  };
+
+  const go = dir => {
+    if (n < 2) return;
+    cur = (cur + dir + n) % n;
+    layout();
+    schedule();
+  };
+
+  new IntersectionObserver(es => {
+    visible = es[0].isIntersecting;
+    if (visible) schedule();
+  }, { threshold: 0.3 }).observe(stage);
+
+  /* Geser jari / mouse */
+  car.addEventListener("pointerdown", e => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    startX = e.clientX;
+    dragging = true;
+    moved = false;
+    car.classList.add("drag");
+  });
+  window.addEventListener("pointermove", e => {
+    if (dragging && Math.abs(e.clientX - startX) > 8) moved = true;
+  }, { passive: true });
+  const endDrag = (e, cancelled) => {
+    if (!dragging) return;
+    dragging = false;
+    car.classList.remove("drag");
+    const dx = e.clientX - startX;
+    if (!cancelled && Math.abs(dx) > 40) {
+      moved = true;
+      go(dx < 0 ? 1 : -1);
+    } else {
+      schedule();
+    }
+  };
+  window.addEventListener("pointerup", e => endDrag(e, false));
+  window.addEventListener("pointercancel", e => endDrag(e, true));
+
+  /* Ketuk: slide tengah = perbesar foto, slide samping = pindah ke sana */
+  car.addEventListener("click", e => {
+    if (moved) {
+      moved = false;
+      return;
+    }
+    const slide = e.target.closest(".slide");
+    if (!slide) return;
+    const i = slides.indexOf(slide);
+    if (i === cur) {
+      if (C.gallery.length) showLightbox(+slide.dataset.i);
+    } else {
+      cur = i;
+      layout();
+      schedule();
+    }
+  });
+
+  stage.addEventListener("click", e => {
+    const btn = e.target.closest(".nav");
+    if (btn) go(+btn.dataset.d);
+  });
+
+  stage.addEventListener("keydown", e => {
+    if (e.key === "ArrowLeft") go(-1);
+    else if (e.key === "ArrowRight") go(1);
+    else if ((e.key === "Enter" || e.key === " ") && e.target.closest(".slide.act") && C.gallery.length) {
+      e.preventDefault();
+      showLightbox(+e.target.closest(".slide").dataset.i);
+    }
+  });
+
+  if (pp) {
+    pp.onclick = () => {
+      paused = !paused;
+      pp.innerHTML = ic(paused ? "play" : "pause");
+      pp.setAttribute("aria-pressed", String(paused));
+      pp.setAttribute("aria-label", paused ? "Putar geser otomatis" : "Jeda geser otomatis");
+      schedule();
+    };
+  }
+
+  let resizeRaf = 0;
+  addEventListener("resize", () => {
+    cancelAnimationFrame(resizeRaf);
+    resizeRaf = requestAnimationFrame(() => layout(true));
+  }, { passive: true });
+
+  car.mark = () => layout(true);
+  layout(true);
+}
+
+
+/* ====== 7c. TIMELINE "THE JOURNEY" ======
+   Garis terisi mengikuti scroll: tumbuh ke bawah saat turun, menyusut saat
+   naik. Titik menyala ketika garis mencapainya. Posisi dihitung dari elemen
+   titik sebenarnya, jadi sejajar di semua ukuran layar. */
+const TL = { el: null, track: null, line: null, items: [], offs: [], lit: [], top: 0, len: 1, active: false, raf: 0, lastP: -1 };
+
+function layoutTimeline() {
+  const t = TL;
+  if (!t.el) return;
+  t.items = [...t.el.querySelectorAll(".tl-item")];
+  if (!t.items.length) return;
+  const ys = t.items.map(it => it.offsetTop + it.querySelector(".tl-dot").offsetTop);
+  t.top = ys[0];
+  t.len = Math.max(1, ys[ys.length - 1] - ys[0]);
+  t.offs = ys.map(y => y - ys[0]);
+  [t.track, t.line].forEach(el => {
+    el.style.top = t.top + "px";
+    el.style.height = t.len + "px";
+  });
+}
+
+function updateTimeline() {
+  const t = TL;
+  t.raf = 0;
+  if (!t.el || !t.items.length) return;
+  const y = innerHeight * 0.62 - (t.el.getBoundingClientRect().top + t.top);
+  const p = Math.min(1, Math.max(0, y / t.len));
+  if (Math.abs(p - t.lastP) > 0.0005) {
+    t.line.style.transform = `scaleY(${p.toFixed(4)})`;
+    t.lastP = p;
+  }
+  t.items.forEach((it, i) => {
+    const on = y >= t.offs[i];
+    if (on !== t.lit[i]) {
+      t.lit[i] = on;
+      it.classList.toggle("lit", on);
+    }
+  });
+}
+
+function initTimeline() {
+  const el = $("#tl");
+  if (!el || TL.el === el) return;
+  TL.el = el;
+  TL.track = el.querySelector(".tl-track");
+  TL.line = el.querySelector(".tl-line");
+  TL.lit = [];
+  TL.lastP = -1;
+  if (!TL.track || !TL.line) return;
+
+  const queue = () => { if (!TL.raf) TL.raf = requestAnimationFrame(updateTimeline); };
+
+  layoutTimeline();
+  queue();
+
+  new IntersectionObserver(es => {
+    TL.active = es[0].isIntersecting;
+    queue(); /* satu pembaruan terakhir saat keluar layar agar garis berakhir di posisi yang benar */
+  }, { rootMargin: "160px 0px" }).observe(el);
+
+  addEventListener("scroll", () => { if (TL.active) queue(); }, { passive: true });
+
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(() => { layoutTimeline(); queue(); }).observe(el);
+  } else {
+    addEventListener("resize", () => { layoutTimeline(); queue(); }, { passive: true });
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { layoutTimeline(); queue(); });
 }
 
 
@@ -914,23 +1206,6 @@ function closeLightbox() {
   document.body.classList.remove("lb-open");
 }
 
-const gal = $("#gal");
-if (gal) {
-  gal.addEventListener("click", e => {
-    const slide = e.target.closest(".slide");
-    if (slide) showLightbox(+slide.dataset.i);
-  });
-  gal.addEventListener("keydown", e => {
-    if (e.key === "Enter" || e.key === " ") {
-      const slide = e.target.closest(".slide");
-      if (slide) {
-        e.preventDefault();
-        showLightbox(+slide.dataset.i);
-      }
-    }
-  });
-}
-
 if ($("#lbx")) $("#lbx").onclick = closeLightbox;
 if ($("#lbp")) $("#lbp").onclick = () => showLightbox(lightboxIndex - 1);
 if ($("#lbn")) $("#lbn").onclick = () => showLightbox(lightboxIndex + 1);
@@ -1110,7 +1385,7 @@ document.addEventListener("visibilitychange", () => {
 });
 
 
-/* ====== 12. ANIMATIONS (REVEAL, TILT, PETALS) ====== */
+/* ====== 12. ANIMATIONS (REVEAL, TILT) ====== */
 const revealObserver = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (!entry.isIntersecting) return;
@@ -1144,6 +1419,7 @@ function startReveals() {
  * @param {HTMLElement|Document} scope - Lingkup pencarian elemen tilt
  */
 function initTilt(scope = document) {
+  return; /* dinonaktifkan: efeknya tertimpa gaya reveal dan hanya menambah beban CPU */
   if (!finePointer || reduceMotion) return;
   const tiltElements = scope.querySelectorAll(".tilt:not([data-tilt]):not(.gift)");
 
@@ -1194,17 +1470,164 @@ function initTilt(scope = document) {
   });
 }
 
-/**
- * Membuat partikel kelopak bunga berguguran di latar belakang
- */
-function makePetals() {
-  const wrap = $("#petals");
-  if (!wrap || reduceMotion) return;
-  const colors = ["var(--gold)", "var(--blush)", "var(--moss)"];
-  wrap.innerHTML = Array.from({ length: 8 }, (_, i) => {
-    const size = 6 + Math.random() * 6;
-    return `<i style="--x:${Math.random() * 100}%;--dl:${(Math.random() * 4).toFixed(1)}s;--du:${(9 + Math.random() * 6).toFixed(1)}s;--sz:${size.toFixed(1)}px;--rot:${Math.round(Math.random() * 360)}deg;--c:${colors[i % 3]}"></i>`;
-  }).join("");
+/* ====== 12a. ANIMASI POINTER — KARTU AKAD NIKAH & RESEPSI ======
+   Kartu diam di tempat; hanya cahaya lembut + garis tepi yang menyala
+   mengikuti titik pointer. Berlaku untuk mouse, pena, dan sentuhan (saat ditekan).
+   Efek baru aktif setelah animasi "reveal" kartu selesai (kelas .pt-ready),
+   supaya tidak bertabrakan dengan transform reveal. Hanya mengubah variabel
+   CSS lewat requestAnimationFrame, sehingga ringan. */
+function initEventPointer(scope = document) {
+  if (reduceMotion) return;
+  scope.querySelectorAll(".evc").forEach(card => {
+    if (card.dataset.pfx) return;
+    card.dataset.pfx = "1";
+
+    let rect = null;
+    let last = null;
+    let raf = 0;
+
+    const arm = () => {
+      if (card.classList.contains("is-in")) card.classList.add("pt-ready");
+    };
+    card.addEventListener("transitionend", e => {
+      if (e.target === card && e.propertyName === "transform") arm();
+    });
+
+    const paint = () => {
+      raf = 0;
+      if (!last) return;
+      if (!rect) rect = card.getBoundingClientRect();
+      const x = Math.min(1, Math.max(0, (last.clientX - rect.left) / (rect.width || 1)));
+      const y = Math.min(1, Math.max(0, (last.clientY - rect.top) / (rect.height || 1)));
+      const s = card.style;
+      s.setProperty("--mx", (x * 100).toFixed(1) + "%");
+      s.setProperty("--my", (y * 100).toFixed(1) + "%");
+    };
+
+    const reset = () => {
+      cancelAnimationFrame(raf);
+      raf = 0;
+      last = null;
+      rect = null;
+      card.classList.remove("pt-on", "pt-press");
+      ["--mx", "--my"].forEach(k => card.style.removeProperty(k));
+    };
+
+    card.addEventListener("pointerenter", e => {
+      arm();
+      if (!card.classList.contains("pt-ready")) return;
+      rect = card.getBoundingClientRect();
+      last = e;
+      card.classList.add("pt-on");
+      raf = raf || requestAnimationFrame(paint);
+    }, { passive: true });
+
+    card.addEventListener("pointermove", e => {
+      if (!card.classList.contains("pt-on")) return;
+      last = e;
+      raf = raf || requestAnimationFrame(paint);
+    }, { passive: true });
+
+    card.addEventListener("pointerdown", e => {
+      arm();
+      if (!card.classList.contains("pt-ready")) return;
+      if (!card.classList.contains("pt-on")) {
+        rect = card.getBoundingClientRect();
+        card.classList.add("pt-on");
+      }
+      last = e;
+      card.classList.add("pt-press");
+      raf = raf || requestAnimationFrame(paint);
+    }, { passive: true });
+
+    const release = e => {
+      card.classList.remove("pt-press");
+      /* Sentuhan tidak punya "hover": setelah jari diangkat, kembalikan kartu */
+      if (e.pointerType && e.pointerType !== "mouse") setTimeout(reset, 380);
+    };
+    card.addEventListener("pointerup", release, { passive: true });
+    card.addEventListener("pointercancel", () => reset(), { passive: true });
+    card.addEventListener("pointerleave", () => reset(), { passive: true });
+
+    /* Posisi kartu berubah saat scroll: ukur ulang pada gerakan berikutnya */
+    addEventListener("scroll", () => { rect = null; }, { passive: true });
+    addEventListener("resize", () => { rect = null; }, { passive: true });
+  });
+}
+
+/* ====== 12b. AKSEN BUNGA SAKURA ======
+   Ranting sakura menempel di sudut elemen. Muncul (mekar) saat elemen pertama
+   kali terlihat, lalu bergoyang pelan seperti tertiup angin selama elemen ada
+   di layar. Di luar layar animasi dijeda agar hemat baterai. */
+const FLORAL_ART = `<svg viewBox="0 0 240 240" aria-hidden="true" focusable="false"><g class="wind">
+<path d="M-8 14C40 12 84 28 126 66S190 128 214 186" fill="none" stroke="#8a6b6f" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M104 50c6-8 16-10 24-6-5 8-15 10-24 6zM160 106c8-5 18-3 23 3-8 6-18 5-23-3zM196 150c4-8 12-12 20-9-2 9-11 13-20 9z" fill="#9db9d3"/>
+<g class="tw tw1" style="transform-origin:58px 20px"><path d="M58 20C74 4 98 0 120 12" fill="none" stroke="#8a6b6f" stroke-width="1.8" stroke-linecap="round"/>
+<use href="#fl-bloom" transform="translate(119 12) rotate(20) scale(.85)"/>
+<ellipse cx="138" cy="24" rx="2.3" ry="3.6" fill="#ee9ab5" transform="rotate(-30 138 24)"/></g>
+<use href="#fl-bloom" transform="translate(86 34) rotate(40) scale(.8)"/>
+<use href="#fl-bloom" transform="translate(127 67) rotate(8) scale(1.05)"/>
+<g class="tw tw2" style="transform-origin:136px 76px"><path d="M136 74C158 66 178 72 192 88" fill="none" stroke="#8a6b6f" stroke-width="1.8" stroke-linecap="round"/>
+<use href="#fl-bloom" transform="translate(191 88) rotate(-10) scale(.85)"/>
+<ellipse cx="170" cy="62" rx="2.3" ry="3.6" fill="#ee9ab5" transform="rotate(20 170 62)"/></g>
+<use href="#fl-bloom" transform="translate(214 186) rotate(30) scale(.8)"/>
+</g></svg>`;
+
+/* Ranting di bagian isi undangan baru "mekar" setelah pengunjung benar-benar
+   menggulir dan ranting itu sendiri terlihat di layar (bukan sekadar bagian
+   induknya mulai tampak). Ranting di sampul mekar saat sampul tampil. */
+let floralScrolled = false;
+const floralPending = [];
+
+function bloomVisibleFlorals() {
+  if (!floralScrolled || !document.body.classList.contains("open")) return;
+  floralPending.forEach(f => { if (f.visible) f.el.classList.add("in"); });
+}
+
+addEventListener("scroll", () => {
+  if (!floralScrolled && scrollY > 24) {
+    floralScrolled = true;
+    bloomVisibleFlorals();
+  }
+}, { passive: true });
+
+function initFloral() {
+  const spots = [["#cover", "tl tr"], [".s-couple", "tl tr"], [".s-event", "tl tr"], [".s-closing", "bl br"]];
+  spots.forEach(([sel, pos]) => {
+    const host = $(sel);
+    if (!host || host.dataset.fl) return;
+    host.dataset.fl = "1";
+    const isCover = sel === "#cover";
+    const items = pos.split(" ").map(p => {
+      const el = document.createElement("span");
+      el.className = `floral ${p}`;
+      el.setAttribute("aria-hidden", "true");
+      el.innerHTML = `<span class="fl-in">${C.floralImg
+        ? `<img src="${esc(C.floralImg)}" alt="" draggable="false">`
+        : FLORAL_ART}</span>`;
+      host.appendChild(el);
+      return el;
+    });
+
+    /* Goyangan angin: hanya saat bagian induknya ada di layar */
+    new IntersectionObserver(es => {
+      const on = es[0].isIntersecting;
+      items.forEach(el => el.classList.toggle("run", on && !reduceMotion));
+      if (isCover && on) items.forEach(el => el.classList.add("in"));
+    }, { threshold: 0.12 }).observe(host);
+
+    if (isCover) return;
+
+    /* Mekar: tiap ranting dipantau sendiri, harus terlihat cukup jauh di dalam layar */
+    items.forEach(el => {
+      const f = { el, visible: false };
+      floralPending.push(f);
+      new IntersectionObserver(es => {
+        f.visible = es[0].isIntersecting;
+        bloomVisibleFlorals();
+      }, { threshold: 0.5, rootMargin: el.classList.contains("bl") || el.classList.contains("br") ? "0px" : "0px 0px -12% 0px" }).observe(el);
+    });
+  });
 }
 
 
@@ -1403,7 +1826,6 @@ addEventListener("scroll", () => {
 
 
 /* ====== 16. INITIALIZATION ====== */
-makePetals();
 resolveGuest()
   .then(() => {
     renderContent();
@@ -1413,7 +1835,6 @@ resolveGuest()
   })
   .then(() => {
     observeReveals();
-    makePetals();
   })
   .catch(err => {
     console.error("Inisialisasi undangan:", err);
