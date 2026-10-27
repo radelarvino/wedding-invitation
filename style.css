@@ -2135,7 +2135,7 @@ textarea {
 
 .wish {
   text-align: left;
-  padding: clamp(1.25rem, 3vw, 1.7rem);
+  padding: clamp(5rem, 5rem , 1.7rem);
 }
 
 .wish-top {
@@ -4075,4 +4075,1598 @@ body.locked #petals {
 @media (prefers-reduced-motion: reduce) {
   .nick .ch { opacity: 1; animation: none !important; }
   .nick .ch::after { display: none; }
+}
+
+
+/* =====================================================================
+   27. FINAL LAYOUT — SATU LAYAR PER SECTION, NAV LENGKAP, & SAKURA ASSET
+   ===================================================================== */
+
+/* Setiap bagian undangan menjadi satu lembar penuh (desktop & ponsel).
+   Padding vertikal dibuat ringkas agar isi selalu berada di tengah layar. */
+main > section {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: clamp(4.2rem, 7.5vh, 5.6rem);
+  padding-bottom: clamp(4.2rem, 7.5vh, 5.6rem);
+}
+
+main > section > .wrap {
+  width: 100%;
+}
+
+/* Aturan padding lama .s-closing (class) mengalahkan main > section, jadi
+   samakan kembali agar penutup tetap satu layar. */
+main > section.s-closing {
+  padding-bottom: clamp(4.2rem, 7.5vh, 5.6rem);
+}
+
+/* Header section lebih ringkas agar tidak mendorong konten keluar layar */
+.sec-head {
+  margin-bottom: clamp(1.05rem, 2.4vh, 1.9rem);
+}
+
+.sec-head h2 {
+  font-size: clamp(2rem, 1.45rem + 2.15vw, 3.2rem);
+  margin: 0.3rem 0 0.55rem;
+  padding-bottom: 0.72rem;
+}
+
+.sec-head h2.big {
+  font-size: clamp(2.25rem, 1.6rem + 3vw, 3.9rem);
+}
+
+.sec-head .lead {
+  max-width: 32rem;
+  font-size: clamp(0.9rem, 0.84rem + 0.2vw, 1.03rem);
+  line-height: 1.65;
+}
+
+.eyebrow {
+  font-size: 0.62rem;
+  letter-spacing: 0.28em;
+}
+
+/* ---------- Welcome: jarak tanggal, kartu tamu, dan tombol ---------- */
+#cover .cover-date {
+  margin-top: clamp(1.85rem, 5vh, 2.7rem);
+}
+
+#cover .guest-card {
+  width: min(100%, 310px);
+  padding: 0.7rem 0.95rem 0.76rem;
+  border-radius: 14px;
+}
+
+#cover .guest {
+  font-size: clamp(1.24rem, 4.6vw, 1.52rem);
+}
+
+#cover .btn-open {
+  margin-top: clamp(1.85rem, 4.8vh, 2.5rem);
+}
+
+#cover .cover-foot {
+  margin-top: clamp(0.55rem, 1.6vh, 0.9rem);
+}
+
+/* ---------- Ayat Al-Qur'an (#home) ---------- */
+#home .wrap {
+  max-width: 760px;
+}
+
+#home .ayat {
+  max-width: 42rem;
+  margin-top: clamp(1rem, 2.6vh, 1.65rem);
+  font-size: clamp(1.4rem, 1.08rem + 1.55vw, 1.95rem);
+  line-height: 1.9;
+}
+
+#home .ayat-id {
+  max-width: 34rem;
+  margin-top: clamp(0.7rem, 1.8vh, 1rem);
+  font-size: clamp(0.86rem, 0.82rem + 0.15vw, 0.96rem);
+  line-height: 1.7;
+}
+
+#home .invite-note {
+  margin-top: clamp(1.1rem, 3vh, 1.9rem);
+  padding: 1.05rem 1.35rem 1.1rem;
+}
+
+#home .invite-note p {
+  font-size: clamp(0.8rem, 0.77rem + 0.12vw, 0.9rem);
+  line-height: 1.7;
+}
+
+#home .mini-orn {
+  width: 28px;
+  height: 28px;
+  margin-bottom: 0.55rem;
+}
+
+#home .mini-orn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ---------- Mempelai: foto & teks dipadatkan, dua kolom sejak ponsel ---------- */
+#mempelai .pair {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: clamp(0.5rem, 2.5vw, 2rem);
+  max-width: 860px;
+  align-items: start;
+}
+
+#mempelai .ph {
+  width: clamp(118px, 17vw, 194px);
+  padding: 5px;
+}
+
+#mempelai .role {
+  margin-top: clamp(0.6rem, 1.7vh, 1rem);
+  font-size: 0.57rem;
+  letter-spacing: 0.24em;
+}
+
+#mempelai .person h3 {
+  margin: 0.22rem 0 0.32rem;
+  font-size: clamp(1.08rem, 0.92rem + 0.9vw, 1.9rem);
+}
+
+#mempelai .parents {
+  max-width: 18rem;
+  font-size: clamp(0.68rem, 0.62rem + 0.18vw, 0.82rem);
+  line-height: 1.6;
+}
+
+#mempelai .amp {
+  align-self: center;
+  font-size: clamp(1.7rem, 4vw, 3.2rem);
+}
+
+#mempelai .motive {
+  max-width: 34rem;
+  margin-top: clamp(0.9rem, 2.4vh, 1.7rem);
+  font-size: clamp(0.88rem, 0.82rem + 0.22vw, 1.05rem);
+  line-height: 1.7;
+}
+
+#mempelai .motive::before {
+  font-size: 2rem;
+  margin-bottom: 0.3rem;
+}
+
+/* ---------- Our Journey: empat kartu sejajar / dua kolom di ponsel ---------- */
+#cerita .tl {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.55rem, 1.2vw, 0.95rem);
+  max-width: 1100px;
+  padding: 0;
+  text-align: left;
+}
+
+#cerita .tl-track,
+#cerita .tl-line,
+#cerita .tl-dot {
+  display: none;
+}
+
+#cerita .tl-item {
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+
+#cerita .tl-card {
+  height: 100%;
+  padding: clamp(0.8rem, 1.5vw, 1.1rem);
+  border-radius: 15px;
+  border-top-color: rgba(229, 207, 168, 0.42);
+}
+
+#cerita .tl-card small {
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+}
+
+#cerita .tl-card h3 {
+  margin: 0.28rem 0 0.35rem;
+  font-size: clamp(1.05rem, 0.9rem + 0.45vw, 1.45rem);
+}
+
+#cerita .tl-card p {
+  font-size: clamp(0.73rem, 0.69rem + 0.12vw, 0.83rem);
+  line-height: 1.55;
+}
+
+/* Detail panjang disembunyikan agar kartu tetap satu layar */
+#cerita .tl-card details {
+  display: none;
+}
+
+/* ---------- Wedding Event: kartu berdampingan & ringkas ---------- */
+#acara .countdown {
+  max-width: 470px;
+  gap: clamp(0.35rem, 1vw, 0.55rem);
+  margin-bottom: clamp(0.7rem, 2vh, 1.1rem);
+}
+
+#acara .cd-cell {
+  padding: 0.72rem 0.25rem 0.62rem;
+  border-radius: 14px;
+}
+
+#acara .cd-cell b {
+  font-size: clamp(1.5rem, 4.4vw, 2.3rem);
+}
+
+#acara .cd-cell span {
+  margin-top: 0.28rem;
+  font-size: 0.53rem;
+  letter-spacing: 0.13em;
+}
+
+#acara .dt {
+  gap: 0.45rem;
+  margin-bottom: clamp(0.85rem, 2.4vh, 1.3rem);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+}
+
+#acara .dt b {
+  padding: 0 0.55rem;
+  font-size: clamp(1.45rem, 3.8vw, 2.1rem);
+}
+
+#acara .ev {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.55rem, 1.4vw, 1rem);
+  max-width: 900px;
+}
+
+#acara .evc {
+  display: flex;
+  flex-direction: column;
+}
+
+#acara .evp {
+  min-height: 0;
+  height: clamp(112px, 18vh, 190px);
+  aspect-ratio: auto;
+}
+
+#acara .evb {
+  padding: 0.75rem 0.85rem 0.95rem;
+}
+
+#acara .ev-eyebrow {
+  gap: 0.32rem;
+  font-size: 0.53rem;
+  letter-spacing: 0.1em;
+}
+
+#acara .ev-eyebrow .ic {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+#acara .evb h3 {
+  margin: 0.28rem 0 0.08rem;
+  font-size: clamp(1rem, 0.86rem + 0.6vw, 1.5rem);
+}
+
+#acara .ev-date {
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+#acara .evb .btn {
+  margin-top: 0.65rem;
+  padding: 0.44rem 0.7rem;
+  font-size: 0.6rem;
+  gap: 0.35rem;
+}
+
+#acara .evp-fallback {
+  gap: 0.35rem;
+}
+
+#acara .evp-fallback .evp-mono {
+  font-size: clamp(1.7rem, 5vw, 3rem);
+}
+
+#acara .evp-fallback .evp-name {
+  font-size: 0.56rem;
+}
+
+/* ---------- Lokasi ---------- */
+#lokasi .venue-card {
+  max-width: 960px;
+}
+
+#lokasi .venue-photo {
+  aspect-ratio: 16 / 10;
+  max-height: 250px;
+}
+
+#lokasi .venue-info {
+  gap: 0.5rem;
+  padding: clamp(0.95rem, 2vw, 1.5rem);
+}
+
+#lokasi .venue-icon {
+  width: 40px;
+  height: 40px;
+}
+
+#lokasi .venue-icon .ic {
+  width: 1rem;
+  height: 1rem;
+}
+
+#lokasi .venue-info h3 {
+  font-size: clamp(1.3rem, 1.1rem + 0.6vw, 1.8rem);
+}
+
+#lokasi .venue-info p {
+  font-size: clamp(0.76rem, 0.72rem + 0.15vw, 0.86rem);
+  line-height: 1.62;
+}
+
+#lokasi .venue-info .btn {
+  margin-top: 0.15rem;
+  padding: 0.52rem 0.9rem;
+  font-size: 0.7rem;
+}
+
+/* ---------- RSVP & Ucapan ---------- */
+.s-rsvp .wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 0 clamp(1rem, 2.4vw, 2rem);
+}
+
+.s-rsvp .sec-head {
+  grid-column: 1 / -1;
+}
+
+.s-rsvp .rsvp-card {
+  grid-column: 1;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: clamp(0.95rem, 2vw, 1.35rem);
+}
+
+.s-rsvp .wishes {
+  grid-column: 2;
+  min-width: 0;
+}
+
+.s-rsvp .wishes-head {
+  margin: 0 0 0.55rem;
+  text-align: left;
+}
+
+.s-rsvp .wishes-head .eyebrow {
+  justify-content: flex-start;
+}
+
+.s-rsvp .sub {
+  margin-top: 0.15rem;
+  font-size: clamp(1.15rem, 1.55vw, 1.45rem);
+}
+
+.s-rsvp .stage {
+  width: 100%;
+  margin-inline: 0;
+}
+
+.s-rsvp .s-wish {
+  --w: min(100%, 340px);
+}
+
+.s-rsvp .s-wish .car {
+  padding-bottom: 2.7rem;
+}
+
+.s-rsvp .wish {
+  padding: clamp(0.8rem, 1.4vw, 1.05rem);
+}
+
+.s-rsvp .wish p {
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.s-rsvp .wish-top {
+  margin-bottom: 0.5rem;
+}
+
+.s-rsvp .avatar {
+  width: 36px;
+  height: 36px;
+  font-size: 0.95rem;
+}
+
+.s-rsvp .wish b {
+  font-size: 1.02rem;
+}
+
+.s-rsvp .rsvp-hint {
+  font-size: 0.8rem;
+}
+
+.s-rsvp .rsvp-card .btn {
+  padding: 0.6rem 1.1rem;
+  font-size: 0.78rem;
+}
+
+.s-rsvp form {
+  gap: 0.55rem;
+}
+
+.s-rsvp input,
+.s-rsvp select,
+.s-rsvp textarea {
+  padding: 0.55rem 0.78rem;
+  font-size: 0.86rem;
+}
+
+.s-rsvp textarea {
+  min-height: 66px;
+}
+
+.s-rsvp .row {
+  gap: 0.5rem;
+}
+
+.s-rsvp #sbtn {
+  min-width: 11rem;
+}
+
+.s-rsvp .wrap:has(#rsvpForm:not([hidden])) .wishes {
+  display: none;
+}
+
+.s-rsvp .wrap:has(#rsvpForm:not([hidden])) .rsvp-card {
+  grid-column: 1 / -1;
+  max-width: 620px;
+  margin-inline: auto;
+}
+
+/* ---------- Hadiah ---------- */
+#hadiah .gifts {
+  gap: clamp(0.55rem, 1.4vw, 0.85rem);
+  max-width: 960px;
+  margin-bottom: clamp(0.7rem, 1.8vh, 1.1rem);
+}
+
+#hadiah .gift {
+  padding: clamp(0.85rem, 1.8vw, 1.2rem) clamp(0.65rem, 1.2vw, 0.95rem);
+}
+
+#hadiah .gift-icon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 0.5rem;
+}
+
+#hadiah .gift-icon .ic {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+#hadiah .gift b {
+  font-size: clamp(1rem, 0.92rem + 0.22vw, 1.18rem);
+}
+
+#hadiah .gift p {
+  font-size: 0.72rem;
+}
+
+#hadiah .gift .no {
+  margin: 0.28rem 0 0.55rem;
+  font-size: clamp(0.78rem, 0.74rem + 0.12vw, 0.9rem);
+}
+
+#hadiah .gift .btn {
+  padding: 0.42rem 0.75rem;
+  font-size: 0.67rem;
+}
+
+#hadiah .dd-toggle {
+  padding: 0.52rem 1rem;
+  font-size: 0.76rem;
+}
+
+/* ---------- Our Moment ---------- */
+#galeri .s-gal {
+  --w: min(26vw, 34vh, 340px);
+}
+
+#galeri .s-gal .car {
+  height: calc(var(--w) * 1.25 + 3.05rem);
+  padding-top: 0.9rem;
+}
+
+#galeri .s-gal .slide {
+  border-radius: 18px;
+}
+
+#galeri .s-gal .pp {
+  bottom: 0.15rem;
+}
+
+#galeri .count {
+  margin-top: 0;
+  font-size: 0.72rem;
+}
+
+/* ---------- Cover floral: ranting sampul tetap, bukan sakura potongan ---------- */
+.cover-frame > .floral.branch {
+  z-index: 2;
+}
+
+/* ---------- Kuntum sakura dari assets/sakura-corner.png ----------
+   Hanya bunga (tanpa tangkai) pada bingkai foto mempelai, kartu Akad Nikah,
+   kartu Resepsi, sudut section acara, dan penutup. */
+.floral.flower {
+  --fw: clamp(92px, 10vw, 132px);
+  z-index: 8;
+}
+
+.floral.flower img {
+  filter: drop-shadow(0 3px 7px rgba(0, 0, 0, 0.32));
+}
+
+#mempelai .ph > .floral.flower {
+  --fw: clamp(92px, 11vw, 128px);
+}
+
+/* Penutup: rumpun diangkat agar kuntumnya benar-benar terlihat di dalam layar,
+   tidak terpotong tepi bawah atau tertutup tombol musik. */
+.s-closing > .floral.flower {
+  --fw: clamp(84px, 9vw, 122px);
+  bottom: 4rem;
+}
+
+.s-closing > .floral.flower.bl {
+  left: 1.25rem;
+}
+
+.s-closing > .floral.flower.br {
+  right: 1.25rem;
+}
+
+#mempelai .ph > .floral.flower.tl {
+  top: calc(var(--fw) * -0.17);
+  left: calc(var(--fw) * -0.3);
+}
+
+#mempelai .ph > .floral.flower.br {
+  right: calc(var(--fw) * -0.3);
+  bottom: calc(var(--fw) * -0.17);
+}
+
+#acara .evc > .floral.flower {
+  --fw: clamp(74px, 8vw, 104px);
+}
+
+#acara .evc > .floral.flower.tl {
+  top: calc(var(--fw) * -0.16);
+  left: calc(var(--fw) * -0.24);
+}
+
+#acara .evc > .floral.flower.tr {
+  top: calc(var(--fw) * -0.16);
+  right: calc(var(--fw) * -0.24);
+}
+
+#acara .evc > .floral.flower.bl {
+  bottom: calc(var(--fw) * -0.16);
+  left: calc(var(--fw) * -0.24);
+}
+
+#acara .evc > .floral.flower.br {
+  right: calc(var(--fw) * -0.24);
+  bottom: calc(var(--fw) * -0.16);
+}
+
+/* ---------- Navbar: semua menu muat dalam satu baris desktop ---------- */
+#pill .lk {
+  max-height: calc(100svh - 7rem);
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+#pill .lk::-webkit-scrollbar {
+  display: none;
+}
+
+#pill .lk a {
+  padding: 0.5rem 0.82rem;
+  font-size: 0.8rem;
+}
+
+#pill .lk a:nth-child(7) {
+  --nav-i: 6;
+}
+
+#pill .lk a:nth-child(8) {
+  --nav-i: 7;
+}
+
+@media (min-width: 1024px) {
+  #pill .lk {
+    max-width: calc(100vw - 7rem);
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  #pill .lk a {
+    width: auto;
+    height: auto;
+    padding: 0.5rem 0.72rem;
+    border-radius: 999px;
+    gap: 0.42rem;
+    font-size: 0.72rem;
+  }
+
+  #pill .lk a span {
+    display: inline;
+  }
+
+  #pill .lk a .ic {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+/* ---------- Footer: nama mempelai masuk dengan lembut (tanpa efek ketik) ---------- */
+.nick.reveal {
+  opacity: 0;
+  transform: translate3d(0, 26px, 0) scale(0.94);
+  filter: blur(10px);
+  transition:
+    opacity 1.1s var(--ease-out),
+    transform 1.35s var(--ease-out),
+    filter 1.1s var(--ease-out);
+}
+
+.nick.reveal.is-in {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+.nick.split .ch,
+.nick.is-in .ch {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+.nick .ch::after,
+.nick.is-in .ch::after {
+  display: none !important;
+}
+
+/* ---------- Latar prewedding ---------- */
+#bg .photo {
+  background-position: center 38%;
+}
+
+#bg .photo.on {
+  opacity: 0.32;
+  filter: saturate(0.88) brightness(0.92);
+}
+
+#slides img {
+  object-position: center 38%;
+}
+
+#slides {
+  opacity: 0.26;
+}
+
+/* ---------- Ponsel ---------- */
+@media (max-width: 599px) {
+  main > section {
+    padding-top: clamp(4.35rem, 8vh, 5.2rem);
+    padding-bottom: clamp(4.2rem, 7.5vh, 5rem);
+  }
+
+  .sec-head {
+    margin-bottom: 0.9rem;
+  }
+
+  .sec-head h2 {
+    font-size: clamp(1.65rem, 6.9vw, 2.15rem);
+    margin-top: 0.22rem;
+    padding-bottom: 0.6rem;
+  }
+
+  .sec-head h2.big {
+    font-size: clamp(1.95rem, 8.4vw, 2.65rem);
+  }
+
+  .sec-head .lead {
+    font-size: 0.81rem;
+    line-height: 1.58;
+  }
+
+  .eyebrow {
+    font-size: 0.56rem;
+    letter-spacing: 0.23em;
+  }
+
+  .eyebrow::before,
+  .eyebrow::after {
+    width: 14px;
+  }
+
+  #cover .cover-date {
+    margin-top: 1.7rem;
+    font-size: 0.74rem;
+    letter-spacing: 0.2em;
+  }
+
+  #cover .cover-loc {
+    margin-top: 0.3rem;
+    margin-bottom: 0.25rem;
+    font-size: 0.74rem;
+  }
+
+  #cover .guest-card {
+    width: min(100%, 294px);
+    max-width: 294px;
+    margin-inline: auto;
+    padding: 0.62rem 0.78rem 0.68rem;
+  }
+
+  #cover .gc-label {
+    font-size: 0.54rem;
+    letter-spacing: 0.1em;
+  }
+
+  #cover .guest {
+    font-size: clamp(1.2rem, 5.2vw, 1.5rem);
+    margin-top: 0.15rem;
+  }
+
+  #cover .guest-card + .btn-open {
+    margin-top: 1.75rem;
+    padding: 0.8rem 1.8rem;
+  }
+
+  #cover .cover-foot {
+    max-width: 16rem;
+    margin-top: 0.65rem;
+    font-size: 0.71rem;
+  }
+
+  #home .ayat {
+    font-size: clamp(1.23rem, 5.2vw, 1.5rem);
+    line-height: 1.82;
+    margin-top: 0.85rem;
+  }
+
+  #home .ayat-id {
+    font-size: 0.79rem;
+    line-height: 1.62;
+    margin-top: 0.65rem;
+  }
+
+  #home .invite-note {
+    margin-top: 0.9rem;
+    padding: 0.8rem 0.9rem 0.85rem;
+  }
+
+  #home .invite-note p {
+    font-size: 0.76rem;
+    line-height: 1.6;
+  }
+
+  #mempelai .pair {
+    gap: 0.25rem;
+  }
+
+  #mempelai .ph {
+    width: clamp(116px, 32vw, 142px);
+  }
+
+  #mempelai .role {
+    font-size: 0.5rem;
+    letter-spacing: 0.18em;
+  }
+
+  #mempelai .person h3 {
+    font-size: clamp(1.02rem, 4.5vw, 1.28rem);
+  }
+
+  #mempelai .parents {
+    font-size: 0.66rem;
+    line-height: 1.52;
+  }
+
+  #mempelai .amp {
+    font-size: 1.45rem;
+  }
+
+  #mempelai .motive {
+    font-size: 0.8rem;
+    line-height: 1.55;
+    margin-top: 0.8rem;
+  }
+
+  #mempelai .motive::before {
+    font-size: 1.5rem;
+    margin-bottom: 0.2rem;
+  }
+
+  #cerita .tl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  #cerita .tl-card {
+    padding: 0.7rem 0.7rem 0.8rem;
+    border-radius: 13px;
+  }
+
+  #cerita .tl-card small {
+    font-size: 0.52rem;
+  }
+
+  #cerita .tl-card h3 {
+    font-size: 0.98rem;
+    margin: 0.22rem 0 0.25rem;
+  }
+
+  #cerita .tl-card p {
+    font-size: 0.68rem;
+    line-height: 1.45;
+  }
+
+  #acara .countdown {
+    max-width: 100%;
+    margin-bottom: 0.6rem;
+  }
+
+  #acara .cd-cell {
+    padding: 0.6rem 0.15rem 0.52rem;
+  }
+
+  #acara .cd-cell b {
+    font-size: clamp(1.3rem, 5.6vw, 1.7rem);
+  }
+
+  #acara .cd-cell span {
+    font-size: 0.48rem;
+  }
+
+  #acara .dt {
+    margin-bottom: 0.8rem;
+    font-size: 0.55rem;
+  }
+
+  #acara .dt b {
+    font-size: 1.4rem;
+    padding: 0 0.42rem;
+  }
+
+  #acara .ev {
+    gap: 0.5rem;
+  }
+
+  #acara .evp {
+    height: clamp(102px, 16.5vh, 145px);
+  }
+
+  #acara .evb {
+    padding: 0.62rem 0.62rem 0.75rem;
+  }
+
+  #acara .ev-eyebrow {
+    font-size: 0.47rem;
+  }
+
+  #acara .evb h3 {
+    font-size: clamp(0.95rem, 4vw, 1.12rem);
+  }
+
+  #acara .ev-date {
+    font-size: 0.62rem;
+  }
+
+  #acara .evb .btn {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.42rem 0.35rem;
+    font-size: 0.55rem;
+  }
+
+  #acara .evp-fallback .evp-mono {
+    font-size: clamp(1.5rem, 6vw, 2.1rem);
+  }
+
+  #acara .evp-fallback .evp-name {
+    font-size: 0.49rem;
+  }
+
+  #lokasi .venue-photo {
+    aspect-ratio: 16 / 9.2;
+  }
+
+  #lokasi .venue-info {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.45rem 0.55rem;
+    padding: 0.85rem;
+  }
+
+  #lokasi .venue-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  #lokasi .venue-info h3 {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+
+  #lokasi .venue-info p {
+    grid-column: 1 / -1;
+    margin: 0.05rem 0 0.15rem;
+    font-size: 0.72rem;
+  }
+
+  #lokasi .venue-info .btn {
+    grid-column: auto;
+    width: 100%;
+    padding: 0.5rem 0.4rem;
+    font-size: 0.63rem;
+  }
+
+  .s-rsvp .wrap {
+    display: block;
+  }
+
+  .s-rsvp .rsvp-card {
+    padding: 0.9rem;
+  }
+
+  .s-rsvp .wishes {
+    margin-top: 0.9rem;
+  }
+
+  .s-rsvp .wishes-head {
+    margin-bottom: 0.4rem;
+    text-align: center;
+  }
+
+  .s-rsvp .wishes-head .eyebrow {
+    justify-content: center;
+  }
+
+  .s-rsvp .s-wish {
+    --w: min(82vw, 330px);
+  }
+
+  .s-rsvp .s-wish .car {
+    padding-bottom: 2.4rem;
+  }
+
+  .s-rsvp .wish {
+    padding: 0.75rem 0.8rem;
+  }
+
+  .s-rsvp .wish p {
+    font-size: 0.74rem;
+    line-height: 1.5;
+  }
+
+  .s-rsvp .rsvp-hint {
+    font-size: 0.75rem;
+  }
+
+  #hadiah .gifts {
+    grid-template-columns: 1fr;
+    max-width: 430px;
+    gap: 0.45rem;
+    margin-inline: auto;
+    margin-bottom: 0.65rem;
+  }
+
+  #hadiah .gift {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr) auto;
+    grid-template-areas:
+      "icon title btn"
+      "icon sub btn"
+      "icon no btn";
+    align-items: center;
+    gap: 0 0.55rem;
+    padding: 0.58rem 0.65rem;
+    text-align: left;
+  }
+
+  #hadiah .gift-icon {
+    grid-area: icon;
+    width: 36px;
+    height: 36px;
+    margin: 0;
+  }
+
+  #hadiah .gift b {
+    grid-area: title;
+    font-size: 0.98rem;
+    line-height: 1.2;
+  }
+
+  #hadiah .gift p {
+    grid-area: sub;
+    margin: 0;
+    font-size: 0.64rem;
+    line-height: 1.35;
+  }
+
+  #hadiah .gift .no {
+    grid-area: no;
+    margin: 0.05rem 0 0;
+    font-size: 0.73rem;
+    line-height: 1.3;
+  }
+
+  #hadiah .gift .btn {
+    grid-area: btn;
+    margin: 0;
+    padding: 0.42rem 0.5rem;
+    font-size: 0.58rem;
+    white-space: nowrap;
+  }
+
+  #hadiah .gift .qr,
+  #hadiah .glogo {
+    display: none;
+  }
+
+  #galeri .s-gal {
+    --w: min(72vw, 27vh);
+  }
+
+  #galeri .s-gal .car {
+    height: calc(var(--w) * 1.25 + 2.7rem);
+    padding-top: 0.7rem;
+  }
+
+  #galeri .count {
+    font-size: 0.66rem;
+  }
+
+  #pill .lk {
+    min-width: 13.2rem;
+    max-height: calc(100svh - 6.5rem);
+    padding: 0.3rem;
+  }
+
+  #pill .lk a {
+    padding: 0.48rem 0.75rem;
+    font-size: 0.76rem;
+    gap: 0.55rem;
+  }
+
+  #mempelai .ph > .floral.flower {
+    --fw: clamp(76px, 23vw, 96px);
+  }
+
+  /* Cukup satu rumpun di sudut luar tiap bingkai agar tidak menutupi nama
+     dan tanda ampersand di tengah. */
+  #mempelai .pair > .person:first-child .ph > .floral.flower.br,
+  #mempelai .pair > .person:last-child .ph > .floral.flower.tl {
+    display: none;
+  }
+
+  #acara .evc > .floral.flower {
+    --fw: clamp(72px, 21vw, 90px);
+  }
+
+  #acara .evc > .floral.flower.bl,
+  #acara .evc > .floral.flower.br {
+    display: none;
+  }
+
+  /* Rumpun di sisi dalam kedua kartu dihilangkan supaya tanggal tidak
+     tertutup dan tidak menumpuk di tengah. */
+  #acara .evc:first-child > .floral.flower.tr,
+  #acara .evc:last-child > .floral.flower.tl {
+    display: none;
+  }
+
+  .s-rsvp .nav {
+    display: none;
+  }
+
+  .s-closing > .floral.flower {
+    display: none;
+  }
+
+  .s-event > .floral.flower {
+    --fw: clamp(70px, 20vw, 96px);
+  }
+}
+
+/* Tablet: Our Journey dua kolom agar teks tetap terbaca */
+@media (min-width: 600px) and (max-width: 899px) {
+  #cerita .tl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Layar desktop lebar: kartu acara horizontal agar lebih ringkas */
+@media (min-width: 900px) {
+  #acara .evc {
+    display: grid;
+    grid-template-columns: 0.86fr 1.14fr;
+  }
+
+  #acara .evp {
+    height: 100%;
+    min-height: 205px;
+    border-right: 1px solid rgba(229, 207, 168, 0.18);
+    border-bottom: 0;
+    border-radius: calc(var(--radius) - 1px) 0 0 calc(var(--radius) - 1px);
+  }
+
+  #acara .evb {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem 1.15rem;
+  }
+
+  #acara .evb .btn {
+    align-self: flex-start;
+  }
+}
+
+/* Rentang layar pendek: kecilkan sedikit lagi tanpa menghilangkan isi */
+@media (max-height: 740px) {
+  main > section {
+    padding-top: 4.1rem;
+    padding-bottom: 4rem;
+  }
+
+  .sec-head {
+    margin-bottom: 0.85rem;
+  }
+
+  #mempelai .ph {
+    width: clamp(104px, 15vw, 158px);
+  }
+
+  #acara .evp {
+    height: clamp(96px, 15vh, 145px);
+  }
+
+  #galeri .s-gal {
+    --w: min(24vw, 32vh, 300px);
+  }
+
+  .s-closing .closing-mark {
+    margin-bottom: 0.8rem;
+  }
+
+  .s-closing .closing-mark svg {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+@media (max-width: 599px) and (max-height: 740px) {
+  #cover .cover-date {
+    margin-top: 1rem;
+  }
+
+  #cover .guest-card {
+    max-width: 300px;
+    padding: 0.62rem 0.75rem 0.68rem;
+  }
+
+  #cover .guest-card + .btn-open {
+    margin-top: 1.05rem;
+  }
+
+  #home .ayat {
+    font-size: 1.18rem;
+  }
+
+  #home .ayat-id {
+    font-size: 0.75rem;
+  }
+
+  #home .invite-note {
+    margin-top: 0.7rem;
+    padding: 0.65rem 0.8rem;
+  }
+
+  #home .invite-note p {
+    font-size: 0.71rem;
+  }
+
+  #mempelai .ph {
+    width: 112px;
+  }
+
+  #mempelai .motive {
+    display: none;
+  }
+
+  #cerita .tl-card p {
+    font-size: 0.65rem;
+  }
+
+  #acara .evp {
+    height: 92px;
+  }
+
+  #acara .ev-date {
+    font-size: 0.58rem;
+  }
+
+  #galeri .s-gal {
+    --w: min(68vw, 25vh);
+  }
+}
+
+/* =====================================================================
+   28. LAYAR SANGAT PENDEK (≤ 600px) — tetap satu layar untuk ponsel kecil
+   ===================================================================== */
+@media (max-height: 600px) {
+  main > section {
+    padding-top: 3.3rem;
+    padding-bottom: 3.1rem;
+  }
+
+  .sec-head {
+    margin-bottom: 0.55rem;
+  }
+
+  .sec-head h2 {
+    font-size: 1.55rem;
+    margin-top: 0.15rem;
+    padding-bottom: 0.4rem;
+  }
+
+  .sec-head h2.big {
+    font-size: 1.85rem;
+  }
+
+  .sec-head .lead {
+    font-size: 0.72rem;
+    line-height: 1.45;
+  }
+
+  .eyebrow {
+    font-size: 0.5rem;
+    letter-spacing: 0.18em;
+  }
+
+  .eyebrow::before,
+  .eyebrow::after {
+    width: 10px;
+  }
+
+  /* Ayat */
+  #home .ayat {
+    font-size: 1.15rem;
+    line-height: 1.65;
+    margin-top: 0.6rem;
+  }
+
+  #home .ayat-id {
+    font-size: 0.72rem;
+    line-height: 1.5;
+    margin-top: 0.45rem;
+  }
+
+  #home .invite-note {
+    margin-top: 0.55rem;
+    padding: 0.55rem 0.7rem;
+  }
+
+  #home .invite-note p {
+    font-size: 0.7rem;
+    line-height: 1.45;
+  }
+
+  #home .mini-orn {
+    display: none;
+  }
+
+  /* Mempelai */
+  #mempelai .pair {
+    gap: 0.15rem;
+  }
+
+  #mempelai .ph {
+    width: 100px;
+  }
+
+  #mempelai .role {
+    margin-top: 0.4rem;
+    font-size: 0.45rem;
+  }
+
+  #mempelai .person h3 {
+    font-size: 0.95rem;
+  }
+
+  #mempelai .parents {
+    font-size: 0.6rem;
+    line-height: 1.4;
+  }
+
+  #mempelai .motive {
+    display: none;
+  }
+
+  /* Our Journey */
+  #cerita .tl-card {
+    padding: 0.5rem 0.55rem 0.6rem;
+  }
+
+  #cerita .tl-card small {
+    font-size: 0.45rem;
+  }
+
+  #cerita .tl-card h3 {
+    font-size: 0.83rem;
+    margin: 0.15rem 0 0.2rem;
+  }
+
+  #cerita .tl-card p {
+    font-size: 0.6rem;
+    line-height: 1.35;
+  }
+
+  /* Wedding Event */
+  #acara .countdown {
+    margin-bottom: 0.35rem;
+    gap: 0.25rem;
+  }
+
+  #acara .cd-cell {
+    padding: 0.4rem 0.1rem 0.35rem;
+  }
+
+  #acara .cd-cell b {
+    font-size: 1.05rem;
+  }
+
+  #acara .cd-cell span {
+    font-size: 0.4rem;
+    margin-top: 0.15rem;
+  }
+
+  #acara .dt {
+    margin-bottom: 0.45rem;
+    font-size: 0.48rem;
+    gap: 0.3rem;
+  }
+
+  #acara .dt b {
+    font-size: 1.1rem;
+    padding: 0 0.35rem;
+  }
+
+  #acara .ev {
+    gap: 0.35rem;
+  }
+
+  #acara .evp {
+    height: 76px;
+  }
+
+  #acara .evb {
+    padding: 0.45rem 0.5rem 0.5rem;
+  }
+
+  #acara .ev-eyebrow {
+    font-size: 0.4rem;
+  }
+
+  #acara .evb h3 {
+    font-size: 0.85rem;
+  }
+
+  #acara .ev-date {
+    font-size: 0.55rem;
+  }
+
+  #acara .evb .btn {
+    margin-top: 0.35rem;
+    padding: 0.35rem 0.3rem;
+    font-size: 0.5rem;
+  }
+
+  /* Lokasi */
+  #lokasi .venue-photo {
+    aspect-ratio: 16 / 7;
+  }
+
+  #lokasi .venue-info {
+    padding: 0.6rem;
+    gap: 0.3rem;
+  }
+
+  #lokasi .venue-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  #lokasi .venue-info h3 {
+    font-size: 1rem;
+  }
+
+  #lokasi .venue-info p {
+    font-size: 0.62rem;
+    line-height: 1.45;
+  }
+
+  #lokasi .venue-info .btn {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.55rem;
+  }
+
+  /* RSVP & Ucapan */
+  .s-rsvp .rsvp-card {
+    padding: 0.65rem;
+  }
+
+  .s-rsvp .rsvp-hint {
+    margin-bottom: 0.25rem;
+    font-size: 0.66rem;
+  }
+
+  .s-rsvp .rsvp-card .btn {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.68rem;
+  }
+
+  .s-rsvp .wishes {
+    margin-top: 0.55rem;
+  }
+
+  .s-rsvp .wishes-head {
+    margin-bottom: 0.15rem;
+  }
+
+  .s-rsvp .sub {
+    font-size: 1rem;
+  }
+
+  .s-rsvp .s-wish {
+    --w: min(76vw, 300px);
+  }
+
+  .s-rsvp .s-wish .car {
+    padding-bottom: 1.8rem;
+  }
+
+  .s-rsvp .wish {
+    padding: 0.55rem 0.65rem;
+  }
+
+  .s-rsvp .wish p {
+    font-size: 0.65rem;
+    line-height: 1.4;
+  }
+
+  .s-rsvp .wish-top {
+    margin-bottom: 0.35rem;
+  }
+
+  .s-rsvp .avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
+
+  .s-rsvp .wish b {
+    font-size: 0.85rem;
+  }
+
+  .s-rsvp .pp {
+    width: 28px;
+    height: 28px;
+    bottom: 0.05rem;
+  }
+
+  /* Hadiah */
+  #hadiah .gifts {
+    gap: 0.35rem;
+    margin-bottom: 0.4rem;
+  }
+
+  #hadiah .gift {
+    padding: 0.5rem 0.55rem;
+  }
+
+  #hadiah .gift-icon {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 0.3rem;
+  }
+
+  #hadiah .gift b {
+    font-size: 0.85rem;
+  }
+
+  #hadiah .gift p {
+    font-size: 0.6rem;
+  }
+
+  #hadiah .gift .no {
+    margin: 0.15rem 0 0.35rem;
+    font-size: 0.7rem;
+  }
+
+  #hadiah .gift .btn {
+    padding: 0.34rem 0.55rem;
+    font-size: 0.55rem;
+  }
+
+  #hadiah .dd-toggle {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.65rem;
+  }
+
+  /* Our Moment */
+  #galeri .s-gal {
+    --w: min(60vw, 25vh);
+  }
+
+  #galeri .s-gal .car {
+    height: calc(var(--w) * 1.25 + 2.2rem);
+    padding-top: 0.4rem;
+  }
+
+  /* Penutup */
+  .s-closing .closing-mark {
+    display: none;
+  }
+
+  .s-closing .closing-text {
+    margin-bottom: 0.5rem;
+    font-size: 0.72rem;
+    line-height: 1.55;
+  }
+
+  .s-closing .nick {
+    margin: 0.65rem 0 0.25rem;
+    font-size: 2rem;
+  }
+
+  .s-closing .closing-actions {
+    margin-top: 0.55rem;
+    gap: 0.35rem;
+  }
+
+  .s-closing .closing-actions .btn {
+    padding: 0.42rem 0.75rem;
+    font-size: 0.62rem;
+  }
+
+  .s-closing .credit {
+    margin-top: 0.6rem;
+    font-size: 0.52rem;
+  }
 }

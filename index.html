@@ -38,6 +38,8 @@
 <symbol id="i-play" viewBox="0 0 24 24"><path d="m7 4 13 8-13 8z"/></symbol>
 <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></symbol>
 <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/><path d="M8 7h8M8 11h6"/></symbol>
+<symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"/><circle cx="18" cy="5" r="3"/><path d="M9 19h6a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6"/></symbol>
 <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"/></symbol>
 <symbol id="i-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
 <symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
@@ -101,12 +103,14 @@
 
 <nav id="pill" class="min" aria-label="Navigasi undangan">
   <div class="lk">
+    <a href="#home"><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg><span>Ayat Al-Qur'an</span></a>
     <a href="#mempelai"><svg class="ic" aria-hidden="true"><use href="#i-heart"/></svg><span>Mempelai</span></a>
-    <a href="#acara"><svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg><span>Acara</span></a>
+    <a href="#cerita"><svg class="ic" aria-hidden="true"><use href="#i-route"/></svg><span>Our Journey</span></a>
+    <a href="#acara"><svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg><span>Wedding Event</span></a>
     <a href="#lokasi"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg><span>Lokasi</span></a>
-    <a href="#rsvp"><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg><span>RSVP</span></a>
+    <a href="#rsvp"><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg><span>RSVP &amp; Ucapan</span></a>
     <a href="#hadiah"><svg class="ic" aria-hidden="true"><use href="#i-gift"/></svg><span>Hadiah</span></a>
-    <a href="#galeri"><svg class="ic" aria-hidden="true"><use href="#i-image"/></svg><span>Galeri</span></a>
+    <a href="#galeri"><svg class="ic" aria-hidden="true"><use href="#i-image"/></svg><span>Our Moment</span></a>
   </div>
   <button id="pillBtn" aria-label="Sembunyikan atau tampilkan navigasi"><svg class="ic" aria-hidden="true"><use href="#i-chevron-down"/></svg></button>
 </nav>
@@ -117,8 +121,7 @@
 <section id="home" class="s-home">
   <div class="wrap narrow">
     <p class="eyebrow reveal">Bismillahirrahmanirrahim</p>
-    <p class="salam reveal" style="--d:80ms">Assalamu’alaikum warahmatullahi wabarakatuh</p>
-    <div class="ayat reveal" style="--d:160ms" lang="ar" dir="rtl">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً</div>
+    <div class="ayat reveal" style="--d:80ms" lang="ar" dir="rtl">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً</div>
     <p class="ayat-id reveal" style="--d:220ms">Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. <span>(QS. Ar-Rum: 21)</span></p>
     <div class="invite-note reveal" style="--d:300ms">
       <span class="mini-orn" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-flower"/></svg></span>
@@ -213,15 +216,17 @@
       </form>
     </div>
 
-    <div class="wishes-head reveal">
-      <div class="eyebrow">Wishes</div>
-      <h3 class="sub">Ucapan &amp; Doa Restu</h3>
-    </div>
-    <div class="stage s-wish reveal" data-auto="10000">
-      <div class="car" id="wishes" aria-live="polite"></div>
-      <button class="nav prev" data-d="-1" aria-label="Ucapan sebelumnya"><svg class="ic" aria-hidden="true"><use href="#i-chevron-left"/></svg></button>
-      <button class="nav next" data-d="1" aria-label="Ucapan berikutnya"><svg class="ic" aria-hidden="true"><use href="#i-chevron-right"/></svg></button>
-      <button class="pp" aria-label="Jeda geser otomatis" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-pause"/></svg></button>
+    <div class="wishes">
+      <div class="wishes-head reveal">
+        <div class="eyebrow">Wishes</div>
+        <h3 class="sub">Ucapan &amp; Doa Restu</h3>
+      </div>
+      <div class="stage s-wish reveal" data-auto="10000">
+        <div class="car" id="wishes" aria-live="polite"></div>
+        <button class="nav prev" data-d="-1" aria-label="Ucapan sebelumnya"><svg class="ic" aria-hidden="true"><use href="#i-chevron-left"/></svg></button>
+        <button class="nav next" data-d="1" aria-label="Ucapan berikutnya"><svg class="ic" aria-hidden="true"><use href="#i-chevron-right"/></svg></button>
+        <button class="pp" aria-label="Jeda geser otomatis" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-pause"/></svg></button>
+      </div>
     </div>
   </div>
 </section>

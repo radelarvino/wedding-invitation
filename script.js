@@ -6,8 +6,8 @@ const C = {
   SCRIPT_URL: "",                    // opsional; lebih mudah diisi di config.js
   music: "",                        // kosong = pakai assets/audio/Glory_of_Love.mp3
   musicVolume: 0.65,                // 0 - 1
-  bgImage: "",                      // foto latar opsional, mis. "assets/latar.jpg"
-  cover: [],                        // foto sampul opsional (array URL)
+  bgImage: "assets/prewed.webp",    // foto prewedding sebagai latar lembut halaman
+  cover: ["assets/prewed.webp"],    // foto prewedding pada layar sampul
   couple: [
     {
       full: "Ramiz Qudamah",
@@ -361,13 +361,6 @@ function renderContent() {
   initTimeline();
   initFloral();
   $$(".person h3").forEach(splitText);
-  splitText($("#nick"));
-  const nickEl2 = $("#nick");
-  if (nickEl2) {
-    nickEl2.querySelectorAll(".ch").forEach(c => { if (!c.textContent.trim()) c.classList.add("sp"); });
-    const n = nickEl2.querySelectorAll(".ch").length;
-    nickEl2.style.setProperty("--end", `${(0.35 + n * 0.12).toFixed(2)}s`);
-  }
 }
 
 /**
@@ -701,7 +694,7 @@ function initGallery() {
   const n = slides.length;
   const countEl = $("#galCount");
   const pp = stage.querySelector(".pp");
-  const AUTO_MS = 10000; /* bergeser otomatis tiap 10 detik */
+  const AUTO_MS = 5000; /* bergeser otomatis tiap 5 detik */
   let cur = 0;
   let paused = false;
   let visible = false;
@@ -1625,41 +1618,54 @@ addEventListener("scroll", () => {
   }
 }, { passive: true });
 
+const FLOWER_ART = `<img src="assets/sakura-corner.png" alt="" draggable="false">`;
+
 function initFloral() {
-  const spots = [[".cover-frame", "tl tr bl br"], ["#pair > .person:nth-of-type(1) .ph", "tl"], ["#pair > .person:nth-of-type(2) .ph", "tr"], ["#ev .evc:nth-of-type(1)", "tl bl"], ["#ev .evc:nth-of-type(2)", "tr br"], [".s-event", "tl tr"], [".s-closing", "bl br"]];
-  spots.forEach(([sel, pos]) => {
-    const host = $(sel);
-    if (!host || host.dataset.fl) return;
-    host.dataset.fl = "1";
-    const isCover = sel === ".cover-frame";
-    const items = pos.split(" ").map(p => {
-      const el = document.createElement("span");
-      el.className = `floral ${p}`;
-      el.setAttribute("aria-hidden", "true");
-      el.innerHTML = `<span class="fl-in">${C.floralImg
-        ? `<img src="${esc(C.floralImg)}" alt="" draggable="false">`
-        : (isCover ? COVER_ART : FLORAL_ART)}</span>`;
-      host.appendChild(el);
-      return el;
-    });
+  /* Ranting sampul tetap memakai ilustrasi batang. Untuk bingkai foto mempelai
+     serta kartu Akad Nikah & Resepsi, dipakai kuntum sakura dari assets/sakura.jpg
+     yang sudah dipotong bersih: hanya bunga, tanpa tangkai dan daun. */
+  const groups = [
+    [".cover-frame", "tl tr bl br", "branch"],
+    ["#pair .person .ph", "tl br", "flower"],
+    ["#ev .evc", "tl tr bl br", "flower"],
+    [".s-event", "tl tr", "flower"],
+    [".s-closing", "bl br", "flower"]
+  ];
 
-    /* Goyangan angin: hanya saat bagian induknya ada di layar */
-    new IntersectionObserver(es => {
-      const on = es[0].isIntersecting;
-      items.forEach(el => el.classList.toggle("run", on && !reduceMotion));
-      if (isCover && on) items.forEach(el => el.classList.add("in"));
-    }, { threshold: 0.12 }).observe(host);
+  groups.forEach(([sel, pos, kind]) => {
+    $$(sel).forEach(host => {
+      if (!host || host.dataset.fl) return;
+      host.dataset.fl = "1";
+      const isCover = kind === "branch";
+      const items = pos.split(" ").map(p => {
+        const el = document.createElement("span");
+        el.className = `floral ${kind} ${p}`;
+        el.setAttribute("aria-hidden", "true");
+        el.innerHTML = `<span class="fl-in">${isCover
+          ? (C.floralImg ? `<img src="${esc(C.floralImg)}" alt="" draggable="false">` : COVER_ART)
+          : FLOWER_ART}</span>`;
+        host.appendChild(el);
+        return el;
+      });
 
-    if (isCover) return;
-
-    /* Mekar: tiap ranting dipantau sendiri, harus terlihat cukup jauh di dalam layar */
-    items.forEach(el => {
-      const f = { el, visible: false };
-      floralPending.push(f);
+      /* Goyangan angin: hanya saat bagian induknya ada di layar */
       new IntersectionObserver(es => {
-        f.visible = es[0].isIntersecting;
-        bloomVisibleFlorals();
-      }, { threshold: 0.5, rootMargin: el.classList.contains("bl") || el.classList.contains("br") ? "0px" : "0px 0px -12% 0px" }).observe(el);
+        const on = es[0].isIntersecting;
+        items.forEach(el => el.classList.toggle("run", on && !reduceMotion));
+        if (isCover && on) items.forEach(el => el.classList.add("in"));
+      }, { threshold: 0.12 }).observe(host);
+
+      if (isCover) return;
+
+      /* Mekar: tiap kuntum dipantau sendiri, harus terlihat cukup jauh di dalam layar */
+      items.forEach(el => {
+        const f = { el, visible: false };
+        floralPending.push(f);
+        new IntersectionObserver(es => {
+          f.visible = es[0].isIntersecting;
+          bloomVisibleFlorals();
+        }, { threshold: 0.35 }).observe(el);
+      });
     });
   });
 }
