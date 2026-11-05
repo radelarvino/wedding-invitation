@@ -9,7 +9,11 @@
 window.WEDDING_CONFIG = {
   SCRIPT_URL: "",
   // Opsional: alamat halaman undangan yang sudah online (dipakai tombol bagikan)
-  SITE_URL: ""
+  SITE_URL: "",
+  // Nomor WhatsApp administrator untuk pengajuan akun moderator.
+  // Tulis dengan kode negara, misalnya 6281234567890.
+  ADMIN_WA: "",
+  ADMIN_NAME: "Administrator"
 };
 
 /* Penanda bahwa JavaScript aktif — agar animasi reveal tidak menyembunyikan

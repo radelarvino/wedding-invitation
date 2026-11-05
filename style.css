@@ -3,6 +3,15 @@
    Tampilan gelap botani elegan, aksen emas & mawar blush
    ===================================================================== */
 
+/* Huruf kaligrafi untuk angka countdown & tanggal akad-resepsi. */
+@font-face {
+  font-family: 'Runethia';
+  src: url('assets/fonts/runethia.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* =====================================================================
    1. ROOT VARIABLES & BASE STYLES
    ===================================================================== */
@@ -1947,6 +1956,7 @@ html.js .sec-head.reveal.is-in,
    ===================================================================== */
 .rsvp-card {
   position: relative;
+  
   max-width: 720px;
   margin: 0 auto;
   padding: clamp(1.3rem, 4vw, 2.3rem);
@@ -2122,7 +2132,10 @@ textarea {
 }
 
 .wishes-head {
-  margin: clamp(2.8rem, 6vw, 4rem) auto 1.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: clamp(2.8rem, 6vw, 4rem) auto 1.5rem;
   text-align: center;
 }
 
@@ -3472,7 +3485,7 @@ main {
   transition: transform 1.5s 1s var(--ease-out);
 }
 
-.nick.is-in::after {
+.nick.nick-in::after {
   transform: scaleX(1);
 }
 
@@ -4621,7 +4634,8 @@ main > section.s-closing {
   z-index: 8;
 }
 
-.floral.flower img {
+.floral.flower img,
+.floral.flower svg {
   filter: drop-shadow(0 3px 7px rgba(0, 0, 0, 0.32));
 }
 
@@ -4654,26 +4668,27 @@ main > section.s-closing {
   bottom: calc(var(--fw) * -0.17);
 }
 
-#acara .evc > .floral.flower {
+#acara .ev > .floral.flower {
   --fw: clamp(74px, 8vw, 104px);
+  z-index: 9;
 }
 
-#acara .evc > .floral.flower.tl {
+#acara .ev > .floral.flower.tl {
   top: calc(var(--fw) * -0.16);
   left: calc(var(--fw) * -0.24);
 }
 
-#acara .evc > .floral.flower.tr {
+#acara .ev > .floral.flower.tr {
   top: calc(var(--fw) * -0.16);
   right: calc(var(--fw) * -0.24);
 }
 
-#acara .evc > .floral.flower.bl {
+#acara .ev > .floral.flower.bl {
   bottom: calc(var(--fw) * -0.16);
   left: calc(var(--fw) * -0.24);
 }
 
-#acara .evc > .floral.flower.br {
+#acara .ev > .floral.flower.br {
   right: calc(var(--fw) * -0.24);
   bottom: calc(var(--fw) * -0.16);
 }
@@ -5174,12 +5189,12 @@ main > section.s-closing {
     display: none;
   }
 
-  #acara .evc > .floral.flower {
+  #acara .ev > .floral.flower {
     --fw: clamp(72px, 21vw, 90px);
   }
 
-  #acara .evc > .floral.flower.bl,
-  #acara .evc > .floral.flower.br {
+  #acara .ev > .floral.flower.bl,
+  #acara .ev > .floral.flower.br {
     display: none;
   }
 
@@ -5528,7 +5543,11 @@ main > section.s-closing {
 
   /* RSVP & Ucapan */
   .s-rsvp .rsvp-card {
-    padding: 0.65rem;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 3.5rem;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .s-rsvp .rsvp-hint {
@@ -5668,5 +5687,2955 @@ main > section.s-closing {
   .s-closing .credit {
     margin-top: 0.6rem;
     font-size: 0.52rem;
+  }
+}
+
+
+/* =====================================================================
+   29. REVISI — NAV IKON, PAUSE TRANSPARAN, RSVP/WISHES SATU HALAMAN,
+   OUR MOMENT PENUH LAYAR, & HUJAN SAKURA DARI ASSETS
+   ===================================================================== */
+
+/* ---------- Navigasi: hanya ikon ----------
+   Teks menu tetap ada di DOM agar nama setiap tautan tetap terbaca oleh
+   pembaca layar, tetapi disembunyikan secara visual di semua ukuran. */
+#pill .lk a span {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Di ponsel/tablet, menu yang terbuka menjadi grid ikon 4 kolom. */
+@media (max-width: 1023.98px) {
+  #pill .lk {
+    display: grid;
+    grid-template-columns: repeat(4, 2.6rem);
+    min-width: 0;
+    gap: 0.22rem;
+    padding: 0.4rem;
+    border-radius: 16px;
+  }
+
+  #pill .lk a {
+    width: 2.6rem;
+    height: 2.6rem;
+    padding: 0;
+    justify-content: center;
+    gap: 0;
+    border-radius: 50%;
+  }
+
+  #pill .lk a .ic {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+}
+
+/* ---------- Tombol musik & jeda: transparan ---------- */
+.fab,
+#audioBtn,
+.pp {
+  background: transparent;
+  border-color: rgba(229, 207, 168, 0.42);
+  box-shadow: none;
+}
+
+.fab:hover,
+.fab:focus-visible,
+#audioBtn:hover,
+.pp:hover,
+.pp:focus-visible {
+  background: rgba(229, 207, 168, 0.09);
+  box-shadow: none;
+}
+
+.fab .ic,
+.pp .ic {
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.7));
+}
+
+/* ---------- RSVP & Wishes: satu halaman, tersusun atas-bawah ---------- */
+.s-rsvp .wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: clamp(0.9rem, 2.2vh, 1.5rem);
+  width: min(100%, 860px);
+}
+
+.s-rsvp .sec-head {
+  margin-bottom: clamp(0.65rem, 1.7vh, 1rem);
+}
+
+.s-rsvp .rsvp-card {
+  grid-column: auto;
+  width: min(100%, 660px);
+  max-width: 660px;
+  margin: 0 auto;
+}
+
+.s-rsvp .wishes,
+.s-rsvp .wishes-wrapper {
+  grid-column: auto;
+  width: min(100%, 780px);
+  min-width: 0;
+  margin: 0 auto;
+}
+
+.s-rsvp .wishes-head {
+  margin: 0 auto clamp(0.5rem, 1.3vh, 0.75rem);
+  text-align: center;
+}
+
+.s-rsvp .wishes-head .eyebrow {
+  justify-content: center;
+}
+
+.s-rsvp .sub {
+  font-size: clamp(1.2rem, 1rem + 0.6vw, 1.55rem);
+}
+
+.s-rsvp .s-wish {
+  --w: min(100%, 520px);
+}
+
+.s-rsvp .s-wish .car {
+  padding-bottom: clamp(2.2rem, 4.2vh, 2.9rem);
+}
+
+.s-rsvp .wish {
+  padding: clamp(0.85rem, 1.5vw, 1.15rem);
+}
+
+.s-rsvp .wish p {
+  font-size: clamp(0.78rem, 0.74rem + 0.1vw, 0.86rem);
+  line-height: 1.6;
+}
+
+/* Form yang terbuka tidak lagi menyembunyikan daftar ucapan. */
+.s-rsvp .wrap:has(#rsvpForm:not([hidden])) .wishes {
+  display: block;
+}
+
+/* ---------- Our Moment: bingkai memenuhi sisa satu layar ---------- */
+#galeri {
+  --gal-pad-top: clamp(3.4rem, 6vh, 4.6rem);
+  --gal-pad-bottom: clamp(1.5rem, 3.2vh, 2.4rem);
+  justify-content: flex-start;
+  padding-top: var(--gal-pad-top);
+  padding-bottom: var(--gal-pad-bottom);
+}
+
+#galeri > .wrap {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: calc(100svh - var(--gal-pad-top) - var(--gal-pad-bottom));
+}
+
+#galeri .sec-head {
+  flex: 0 0 auto;
+  margin-bottom: clamp(0.45rem, 1.2vh, 0.8rem);
+}
+
+#galeri .stage.s-gal {
+  flex: 1 1 auto;
+  display: flex;
+  min-height: 300px;
+  width: calc(100% + var(--pad-x) * 2);
+  margin-inline: calc(var(--pad-x) * -1);
+}
+
+#galeri .s-gal {
+  /* Rasio bingkai (lebar / tinggi). Ponsel memakai bingkai lebih jangkung. */
+  --gal-ar: 0.8;
+  --w: min(78vw, 46vh, 520px);
+}
+
+#galeri .s-gal .car {
+  flex: 1 1 auto;
+  align-self: stretch;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  padding: 0 0 clamp(2.2rem, 4.5vh, 3rem);
+}
+
+#galeri .s-gal .slide {
+  top: 0;
+  height: auto;
+  aspect-ratio: var(--gal-ar);
+}
+
+#galeri .s-gal .pp {
+  bottom: 0.35rem;
+}
+
+#galeri .count {
+  flex: 0 0 auto;
+  margin-top: 0;
+  /* Bingkai sudah memenuhi tinggi section, jadi animasi reveal yang
+     menggeser penghitung ke bawah bisa membuatnya keluar layar. */
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 599px) {
+  #galeri .s-gal {
+    --gal-ar: 0.6;
+    --w: min(94vw, 72vh, 430px);
+  }
+
+  #galeri .stage.s-gal {
+    min-height: 260px;
+  }
+}
+
+
+/* =====================================================================
+   30. PALET NAVY / CREAM / PINK — mengikuti desain Figma
+   Font, struktur, dan komponen tetap dipertahankan; bagian ini hanya
+   mengganti warna, latar, dan jarak agar tiap bagian pas di layar.
+   ===================================================================== */
+:root {
+  color-scheme: light;
+
+  --navy: #0b1633;
+  --navy-2: #101d3f;
+  --navy-3: #172750;
+  --cream: #f0e4cc;
+  --cream-2: #f6ecd7;
+  --cream-3: #e5d5b7;
+  --pink: #ef7ea4;
+  --pink-2: #f6aec4;
+  --pink-3: #fbdfe8;
+  --pink-deep: #d75c86;
+
+  --bg: var(--cream);
+  --bg2: var(--cream-2);
+  --bg3: #f9f0de;
+  --card: #f7ecda;
+  --card2: #f2dfe4;
+  --ink: #17234a;
+  --ivory: #17234a;
+  --soft: #5f6680;
+  --moss: #2c3f70;
+  --sage: #41537c;
+  --blush: #dc648b;
+  --gold: #d96a8f;
+  --gold-2: #b54b6d;
+  --line: rgba(23, 35, 74, 0.13);
+  --line-gold: rgba(217, 106, 143, 0.36);
+  --glow: rgba(239, 126, 164, 0.18);
+}
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+}
+
+::selection {
+  background: rgba(239, 126, 164, 0.32);
+  color: var(--navy);
+}
+
+:focus-visible {
+  outline-color: var(--pink-deep);
+}
+
+/* Latar halaman: cream dengan pendar pink & navy, tanpa foto. */
+#bg {
+  background:
+    radial-gradient(70vmax 58vmax at 8% 4%, rgba(239, 126, 164, 0.13), transparent 62%),
+    radial-gradient(65vmax 65vmax at 95% 38%, rgba(23, 39, 80, 0.09), transparent 66%),
+    radial-gradient(60vmax 55vmax at 16% 98%, rgba(246, 174, 196, 0.14), transparent 64%),
+    linear-gradient(180deg, var(--cream-2) 0%, var(--cream) 55%, #eaddc4 100%);
+}
+
+#bg .photo,
+#slides,
+.cover-veil {
+  display: none !important;
+}
+
+.bg-glow.one {
+  background: radial-gradient(circle, rgba(239, 126, 164, 0.24) 0%, transparent 68%);
+}
+
+.bg-glow.two {
+  background: radial-gradient(circle, rgba(23, 39, 80, 0.14) 0%, transparent 68%);
+}
+
+.bg-glow.three {
+  background: radial-gradient(circle, rgba(246, 174, 196, 0.22) 0%, transparent 68%);
+}
+
+#bg::before,
+#bg::after {
+  border-color: var(--pink);
+  opacity: 0.14;
+}
+
+#bg .grain {
+  opacity: 0.025;
+}
+
+/* ---------------------------------------------------------------------
+   Latar tiap bagian: cream dan navy berselang-seling
+   --------------------------------------------------------------------- */
+main > section::before {
+  display: none;
+}
+
+#home {
+  background:
+    radial-gradient(60% 55% at 50% 18%, rgba(239, 126, 164, 0.08), transparent 65%),
+    var(--cream);
+}
+
+#mempelai {
+  background:
+    radial-gradient(55% 60% at 12% 24%, rgba(239, 126, 164, 0.16), transparent 62%),
+    radial-gradient(50% 55% at 92% 76%, rgba(239, 126, 164, 0.1), transparent 64%),
+    linear-gradient(165deg, #0d1938 0%, var(--navy) 55%, #081126 100%);
+}
+
+#cerita {
+  background:
+    radial-gradient(55% 55% at 88% 12%, rgba(246, 174, 196, 0.14), transparent 66%),
+    var(--cream-2);
+}
+
+#acara {
+  background:
+    radial-gradient(60% 60% at 15% 18%, rgba(239, 126, 164, 0.14), transparent 64%),
+    radial-gradient(55% 55% at 88% 86%, rgba(239, 126, 164, 0.08), transparent 66%),
+    linear-gradient(165deg, #0e1b3e 0%, var(--navy) 58%, #091329 100%);
+}
+
+#lokasi {
+  background:
+    radial-gradient(55% 60% at 50% 8%, rgba(246, 174, 196, 0.15), transparent 66%),
+    var(--cream);
+}
+
+#rsvp {
+  background:
+    radial-gradient(55% 55% at 10% 16%, rgba(239, 126, 164, 0.14), transparent 64%),
+    radial-gradient(55% 55% at 92% 82%, rgba(239, 126, 164, 0.08), transparent 66%),
+    linear-gradient(170deg, var(--navy) 0%, #0c1735 60%, #081126 100%);
+}
+
+#hadiah {
+  background:
+    radial-gradient(55% 55% at 88% 10%, rgba(246, 174, 196, 0.14), transparent 66%),
+    var(--cream-2);
+}
+
+#galeri {
+  background:
+    radial-gradient(55% 55% at 18% 20%, rgba(239, 126, 164, 0.12), transparent 64%),
+    linear-gradient(165deg, #0d1938 0%, var(--navy) 60%, #081126 100%);
+}
+
+#penutup {
+  background:
+    radial-gradient(55% 55% at 50% 100%, rgba(239, 126, 164, 0.15), transparent 68%),
+    linear-gradient(180deg, var(--cream-2) 0%, var(--cream) 60%, #eadcc2 100%);
+}
+
+/* Palet teks pada bagian navy */
+#cover,
+#mempelai,
+#acara,
+#rsvp,
+#galeri {
+  --ink: #f7f0e1;
+  --ivory: #fbf5e9;
+  --soft: #c9cfe0;
+  --moss: #f3cbda;
+  --sage: #e8b6c8;
+  --blush: #f7b0c6;
+  --gold: #f4a9c1;
+  --gold-2: #f7c6d5;
+  --line: rgba(247, 240, 225, 0.18);
+  --line-gold: rgba(244, 169, 193, 0.45);
+  --card: #13224a;
+  --card2: #192b58;
+  --bg: #0d1a3a;
+  --bg2: #13224a;
+  --bg3: #1a2b56;
+  color: var(--ink);
+}
+
+/* Padding tiap bagian dibuat ringkas agar isi pas dalam satu layar. */
+main > section {
+  min-height: 100svh;
+  padding-top: clamp(3.2rem, 6.2vh, 4.6rem);
+  padding-bottom: clamp(3rem, 5.8vh, 4.4rem);
+}
+
+main > section > .wrap {
+  width: 100%;
+}
+
+main > section.s-closing {
+  padding-bottom: clamp(3rem, 5.8vh, 4.4rem);
+}
+
+.sec-head {
+  margin-bottom: clamp(0.85rem, 2vh, 1.4rem);
+}
+
+.sec-head h2 {
+  color: var(--ink);
+  text-shadow: none;
+}
+
+.sec-head:hover h2 {
+  text-shadow: none;
+}
+
+.sec-head h2::after {
+  width: 46px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.sec-head .lead {
+  color: var(--soft);
+}
+
+.eyebrow {
+  color: var(--gold);
+}
+
+/* Tombol utama: pink dengan teks navy, tombol kedua tetap bergaris. */
+.btn {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: linear-gradient(135deg, #f8b3c7 0%, var(--pink) 52%, #dd628c 100%);
+  color: #111d3c;
+  box-shadow: 0 10px 26px rgba(215, 92, 134, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.btn::before {
+  background: linear-gradient(105deg, transparent 25%, rgba(255, 255, 255, 0.55) 48%, rgba(255, 255, 255, 0.18) 52%, transparent 70%);
+}
+
+.btn:hover {
+  box-shadow: 0 14px 32px rgba(215, 92, 134, 0.32), 0 0 0 4px rgba(239, 126, 164, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.btn.ghost {
+  background: transparent;
+  border-color: var(--line-gold);
+  color: var(--ink);
+  box-shadow: none;
+}
+
+.btn.ghost:hover {
+  background: rgba(239, 126, 164, 0.1);
+  border-color: var(--pink);
+  box-shadow: none;
+}
+
+/* ---------------------------------------------------------------------
+   Sampul: navy, tanpa foto, aksen pink & cream
+   --------------------------------------------------------------------- */
+#cover {
+  background:
+    radial-gradient(80vmax 65vmax at 50% -12%, rgba(239, 126, 164, 0.14), transparent 62%),
+    radial-gradient(60vmax 50vmax at 88% 108%, rgba(246, 174, 196, 0.1), transparent 62%),
+    linear-gradient(160deg, #0d1937 0%, #0a142d 54%, #0b1733 100%);
+}
+
+#cover::before {
+  background:
+    radial-gradient(55vmax 40vmax at 20% 20%, rgba(239, 126, 164, 0.1), transparent 65%),
+    radial-gradient(45vmax 45vmax at 90% 85%, rgba(246, 174, 196, 0.08), transparent 65%);
+}
+
+.cover-kicker {
+  color: var(--pink-2);
+}
+
+.cover-names {
+  color: #fbf4e6;
+  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.35);
+}
+
+.cover-names .am {
+  color: var(--pink-2);
+}
+
+.cover-date {
+  color: #f7eadc;
+}
+
+.cover-loc {
+  color: #c9cfe0;
+}
+
+.cover-loc .ic {
+  color: var(--pink-2);
+}
+
+.cover-foot {
+  color: rgba(233, 226, 214, 0.72);
+}
+
+.cover-frame::before {
+  background: linear-gradient(135deg,
+    rgba(246, 174, 196, 0.8) 0%,
+    rgba(247, 240, 225, 0.42) 26%,
+    rgba(247, 240, 225, 0.2) 50%,
+    rgba(247, 240, 225, 0.42) 74%,
+    rgba(246, 174, 196, 0.8) 100%);
+}
+
+#cover .guest-card {
+  background: linear-gradient(150deg, rgba(250, 244, 234, 0.09), rgba(246, 174, 196, 0.05) 60%, rgba(250, 244, 234, 0.03));
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(6px);
+}
+
+#cover .guest-card::after {
+  background: linear-gradient(135deg,
+    rgba(246, 174, 196, 0.65),
+    rgba(247, 240, 225, 0.38) 40%,
+    rgba(247, 240, 225, 0.26) 60%,
+    rgba(246, 174, 196, 0.65));
+}
+
+.gc-label {
+  color: #c9cfe0;
+}
+
+.guest {
+  color: #fbf4e6;
+}
+
+.gc-note {
+  color: #c9cfe0;
+}
+
+.tag {
+  border-color: rgba(246, 174, 196, 0.45);
+  color: var(--pink-2);
+  background: rgba(239, 126, 164, 0.12);
+}
+
+#cover .btn-open {
+  color: #111d3c;
+}
+
+/* ---------------------------------------------------------------------
+   Ayat Al-Qur'an: lembar cream
+   --------------------------------------------------------------------- */
+#home .ayat {
+  color: var(--ink);
+  text-shadow: none;
+}
+
+#home .ayat-id {
+  color: var(--soft);
+}
+
+#home .ayat-id span {
+  color: var(--gold);
+}
+
+#home .invite-note {
+  border: 1px solid var(--line-gold);
+  border-radius: 18px;
+  background: rgba(255, 250, 240, 0.68);
+  box-shadow: 0 18px 44px -28px rgba(23, 35, 74, 0.3);
+}
+
+#home .invite-note p {
+  color: var(--soft);
+}
+
+#home .mini-orn {
+  color: var(--pink-deep);
+  border-color: var(--line-gold);
+  background: rgba(239, 126, 164, 0.08);
+}
+
+/* ---------------------------------------------------------------------
+   Mempelai: navy dengan potret berbingkai lengkung & sakura memanjang
+   --------------------------------------------------------------------- */
+#mempelai {
+  overflow: hidden;
+}
+
+#mempelai > .wrap {
+  position: relative;
+  z-index: 2;
+}
+
+.sakura-branch {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: clamp(150px, 16vw, 235px);
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.92;
+  filter: drop-shadow(0 0 18px rgba(239, 126, 164, 0.18));
+}
+
+.sakura-branch.left {
+  left: clamp(-46px, -1.5vw, 0px);
+}
+
+.sakura-branch.right {
+  right: clamp(-46px, -1.5vw, 0px);
+  transform: scaleX(-1);
+}
+
+.sakura-branch img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+#mempelai .sec-head .lead {
+  color: #c9cfe0;
+}
+
+#mempelai .pair {
+  position: relative;
+  z-index: 1;
+}
+
+#mempelai .ph {
+  width: clamp(140px, 18vw, 205px);
+  padding: 6px;
+  background: linear-gradient(155deg, #fdf2e4 0%, var(--pink-2) 45%, #e76f97 100%);
+  box-shadow:
+    0 6px 14px -2px rgba(0, 0, 0, 0.28),
+    0 26px 58px -10px rgba(0, 0, 0, 0.52),
+    0 0 40px rgba(239, 126, 164, 0.24),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+#mempelai .person:hover .ph {
+  box-shadow:
+    0 10px 20px -2px rgba(0, 0, 0, 0.32),
+    0 32px 70px -12px rgba(0, 0, 0, 0.6),
+    0 0 52px rgba(239, 126, 164, 0.38),
+    inset 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+#mempelai .ph::after {
+  border-color: rgba(11, 22, 51, 0.28);
+}
+
+#mempelai .ph-fallback {
+  background:
+    radial-gradient(70% 70% at 50% 20%, rgba(255, 250, 240, 0.9), transparent 68%),
+    linear-gradient(160deg, #f9e3e9, #f4b6c8);
+  color: var(--navy);
+}
+
+#mempelai .ph-fallback svg {
+  color: var(--pink-deep);
+  opacity: 0.6;
+}
+
+#mempelai .role {
+  color: var(--pink-2);
+}
+
+#mempelai .person h3 {
+  color: #fbf5e9;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+
+#mempelai .parents {
+  color: #c9cfe0;
+}
+
+#mempelai .amp {
+  color: var(--pink-2);
+  text-shadow: 0 0 28px rgba(239, 126, 164, 0.35);
+}
+
+#mempelai .amp::before,
+#mempelai .amp::after {
+  background: linear-gradient(90deg, transparent, rgba(246, 174, 196, 0.55));
+}
+
+#mempelai .amp::after {
+  background: linear-gradient(90deg, rgba(246, 174, 196, 0.55), transparent);
+}
+
+#mempelai .motive {
+  position: relative;
+  z-index: 1;
+  color: #e7dccc;
+}
+
+#mempelai .motive::before {
+  color: var(--pink-2);
+  opacity: 0.8;
+}
+
+#mempelai .ph-corner {
+  border-color: rgba(255, 250, 240, 0.7);
+}
+
+/* Sakura memanjang menyusut di layar sempit agar tidak menutupi teks. */
+@media (max-width: 1023.98px) {
+  .sakura-branch {
+    width: clamp(105px, 17vw, 150px);
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 599px) {
+  #mempelai .ph {
+    width: clamp(112px, 31vw, 150px);
+    padding: 4px;
+  }
+
+  .sakura-branch {
+    width: 92px;
+    opacity: 0.42;
+  }
+
+  .sakura-branch.left {
+    left: -30px;
+  }
+
+  .sakura-branch.right {
+    right: -30px;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Our Journey: garis titik vertikal, kartu cream, animasi per tahun
+   --------------------------------------------------------------------- */
+#cerita .tl {
+  display: block;
+  --tl-x: 0.72rem;
+  --tl-pad: 2.4rem;
+  --dot-y: 1.55rem;
+  position: relative;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 0 0 var(--tl-pad);
+  text-align: left;
+}
+
+#cerita .tl-track,
+#cerita .tl-line,
+#cerita .tl-dot {
+  display: block;
+}
+
+#cerita .tl-track {
+  background: rgba(217, 106, 143, 0.2);
+}
+
+#cerita .tl-line {
+  background: linear-gradient(180deg, var(--pink), #f8bccd);
+  box-shadow: 0 0 12px rgba(239, 126, 164, 0.5);
+}
+
+#cerita .tl-item,
+#cerita .tl-item:nth-of-type(odd),
+#cerita .tl-item:nth-of-type(even) {
+  width: 100%;
+  margin: 0 0 clamp(0.55rem, 1.3vh, 0.85rem);
+  padding: 0;
+  text-align: left;
+}
+
+#cerita .tl-item:last-child {
+  margin-bottom: 0;
+}
+
+#cerita .tl-item .tl-dot {
+  left: calc(var(--tl-x) - var(--tl-pad));
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(217, 106, 143, 0.5);
+  background: var(--cream-2);
+  box-shadow: 0 0 0 4px rgba(239, 126, 164, 0.08);
+}
+
+#cerita .tl-item.lit .tl-dot {
+  border-color: var(--pink-deep);
+  background: var(--pink);
+  box-shadow:
+    0 0 0 5px rgba(239, 126, 164, 0.16),
+    0 0 18px rgba(239, 126, 164, 0.7);
+}
+
+#cerita .tl-card {
+  display: grid;
+  grid-template-columns: 7.2rem minmax(0, 1fr);
+  grid-template-areas:
+    "date title"
+    "date text";
+  column-gap: clamp(0.8rem, 2vw, 1.2rem);
+  align-items: start;
+  height: 100%;
+  padding: clamp(0.72rem, 1.6vh, 0.9rem) clamp(0.9rem, 2vw, 1.15rem);
+  border: 1px solid rgba(217, 106, 143, 0.24);
+  border-radius: 14px;
+  background: rgba(255, 250, 240, 0.82);
+  box-shadow: 0 12px 28px -18px rgba(23, 35, 74, 0.28);
+  text-align: left;
+}
+
+#cerita .tl-item.lit .tl-card {
+  border-color: rgba(217, 106, 143, 0.46);
+  box-shadow: 0 14px 32px -18px rgba(23, 35, 74, 0.34), 0 0 20px rgba(239, 126, 164, 0.08);
+}
+
+#cerita .tl-card small {
+  grid-area: date;
+  padding-top: 0.18rem;
+  font-size: 0.56rem;
+  letter-spacing: 0.16em;
+  color: var(--gold);
+}
+
+#cerita .tl-card h3 {
+  grid-area: title;
+  margin: 0;
+  font-size: clamp(1.12rem, 0.96rem + 0.5vw, 1.38rem);
+  color: var(--ink);
+}
+
+#cerita .tl-card p {
+  grid-area: text;
+  margin-top: 0.12rem;
+  font-size: clamp(0.76rem, 0.72rem + 0.1vw, 0.84rem);
+  line-height: 1.55;
+  color: var(--soft);
+}
+
+#cerita .tl-card details {
+  display: none;
+}
+
+#cerita .tl-item:nth-of-type(odd) .tl-card,
+#cerita .tl-item:nth-of-type(odd) .tl-card details p {
+  text-align: left;
+}
+
+@media (max-width: 599px) {
+  #cerita .tl {
+    --tl-pad: 1.9rem;
+    --dot-y: 1.28rem;
+  }
+
+  #cerita .tl-card {
+    grid-template-columns: 5.2rem minmax(0, 1fr);
+    column-gap: 0.65rem;
+    padding: 0.6rem 0.7rem;
+  }
+
+  #cerita .tl-card small {
+    padding-top: 0.12rem;
+    font-size: 0.48rem;
+    letter-spacing: 0.1em;
+  }
+
+  #cerita .tl-card h3 {
+    font-size: 1rem;
+  }
+
+  #cerita .tl-card p {
+    font-size: 0.68rem;
+    line-height: 1.45;
+  }
+
+  #cerita .tl-item .tl-dot {
+    width: 11px;
+    height: 11px;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Wedding Event: kartu hitung mundur pink transparan di atas navy
+   --------------------------------------------------------------------- */
+#acara .countdown {
+  max-width: 500px;
+  gap: clamp(0.45rem, 1.2vw, 0.68rem);
+  margin-bottom: clamp(0.65rem, 1.8vh, 1rem);
+}
+
+#acara .cd-cell {
+  padding: clamp(0.66rem, 1.7vh, 0.85rem) 0.3rem clamp(0.58rem, 1.4vh, 0.72rem);
+  border: 1px solid rgba(248, 178, 198, 0.55);
+  border-radius: 16px;
+  background:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.03) 42%, rgba(239, 126, 164, 0.13) 100%),
+    linear-gradient(180deg, rgba(239, 126, 164, 0.34) 0%, rgba(239, 126, 164, 0.17) 100%);
+  box-shadow:
+    0 18px 38px -18px rgba(0, 0, 0, 0.5),
+    0 0 24px rgba(239, 126, 164, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(8px);
+}
+
+#acara .cd-cell:hover {
+  border-color: rgba(248, 178, 198, 0.82);
+  box-shadow:
+    0 22px 44px -18px rgba(0, 0, 0, 0.55),
+    0 0 32px rgba(239, 126, 164, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+#acara .cd-cell b {
+  background: none;
+  -webkit-background-clip: border-box;
+  -webkit-text-fill-color: #fff7ea;
+  color: #fff7ea;
+  filter: none;
+  text-shadow: 0 2px 18px rgba(11, 22, 51, 0.28);
+}
+
+#acara .cd-cell span {
+  color: rgba(255, 238, 243, 0.88);
+}
+
+#acara .cd-done {
+  color: var(--pink-2);
+}
+
+#acara .dt {
+  color: rgba(233, 239, 250, 0.82);
+}
+
+#acara .dt b {
+  border-color: rgba(246, 174, 196, 0.45);
+  color: var(--pink-2);
+}
+
+#acara .ev {
+  max-width: 900px;
+}
+
+#acara .evc {
+  overflow: hidden;
+  border: 1px solid rgba(244, 169, 193, 0.38);
+  border-radius: 20px;
+  background: #13224a;
+  box-shadow:
+    0 20px 46px -24px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+#acara .evc:hover {
+  border-color: rgba(244, 169, 193, 0.6);
+  box-shadow:
+    0 28px 60px -24px rgba(0, 0, 0, 0.68),
+    0 0 32px rgba(239, 126, 164, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+#acara .evp {
+  border-bottom: 1px solid rgba(244, 169, 193, 0.28);
+  background:
+    radial-gradient(circle at 50% 45%, rgba(255, 250, 240, 0.7) 0%, transparent 74%),
+    linear-gradient(160deg, #fbe4ea 0%, #f6bccd 58%, #f2a7bd 100%);
+}
+
+#acara .evp-fallback {
+  color: var(--navy);
+  background: transparent;
+}
+
+#acara .evp-fallback .evp-mono {
+  color: var(--navy);
+  text-shadow: none;
+}
+
+#acara .evp-fallback .evp-mono i {
+  color: var(--pink-deep);
+}
+
+#acara .evp-fallback .evp-name {
+  color: rgba(23, 35, 74, 0.68);
+}
+
+#acara .evb {
+  background: rgba(13, 25, 54, 0.55);
+}
+
+#acara .ev-eyebrow {
+  color: var(--pink-2);
+}
+
+#acara .evb h3 {
+  color: #fbf5e9;
+}
+
+#acara .ev-date {
+  color: #c9cfe0;
+}
+
+/* ---------------------------------------------------------------------
+   Lokasi: kartu cream dua kolom dengan ilustrasi bernuansa palette
+   --------------------------------------------------------------------- */
+#lokasi .venue-card {
+  max-width: 1000px;
+  border: 1px solid rgba(217, 106, 143, 0.26);
+  border-radius: 24px;
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 45%, rgba(246, 174, 196, 0.08)),
+    var(--card);
+  box-shadow:
+    0 26px 60px -34px rgba(23, 35, 74, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+#lokasi .venue-card:hover {
+  border-color: rgba(217, 106, 143, 0.46);
+  box-shadow:
+    0 32px 70px -34px rgba(23, 35, 74, 0.48),
+    0 0 30px rgba(239, 126, 164, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+#lokasi .venue-photo {
+  min-width: 0;
+  background: var(--navy);
+}
+
+#lokasi .venue-info {
+  min-width: 0;
+  background: rgba(255, 250, 240, 0.38);
+}
+
+/* Di layar dua kolom, ilustrasi mengisi penuh tinggi kartu. Tanpa ini,
+   aspect-ratio membuat gambar lebih lebar dari kolomnya dan menutupi teks. */
+@media (min-width: 768px) {
+  #lokasi .venue-photo {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    aspect-ratio: auto;
+  }
+}
+
+#lokasi .venue-icon {
+  color: var(--pink-deep);
+  border-color: rgba(217, 106, 143, 0.38);
+  background: rgba(239, 126, 164, 0.1);
+  box-shadow: 0 0 24px rgba(239, 126, 164, 0.14);
+}
+
+#lokasi .venue-info h3 {
+  color: var(--ink);
+}
+
+#lokasi .venue-info p {
+  color: var(--soft);
+}
+
+#lokasi .venue-info .btn.ghost {
+  border-color: rgba(23, 35, 74, 0.28);
+  color: var(--navy);
+}
+
+#lokasi .venue-info .btn.ghost:hover {
+  background: rgba(239, 126, 164, 0.1);
+  border-color: var(--pink-deep);
+}
+
+/* ---------------------------------------------------------------------
+   RSVP & Ucapan: kartu form pink, kotak ucapan cream berbingkai tebal
+   --------------------------------------------------------------------- */
+#rsvp .rsvp-card {
+  width: min(100%, 680px);
+  max-width: 680px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0.08) 44%, rgba(215, 92, 134, 0.1) 100%),
+    linear-gradient(160deg, #fbdce5 0%, #f6b6c9 62%, #f3a4bc 100%);
+  box-shadow:
+    0 30px 68px -30px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+#rsvp .rsvp-card:hover {
+  border-color: rgba(255, 255, 255, 0.48);
+  box-shadow:
+    0 34px 74px -30px rgba(0, 0, 0, 0.6),
+    0 0 34px rgba(239, 126, 164, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+#rsvp .rsvp-card::after {
+  border-color: rgba(23, 35, 74, 0.12);
+}
+
+#rsvp .rsvp-hint {
+  color: rgba(23, 35, 74, 0.72);
+}
+
+#rsvp .rsvp-card .btn {
+  border-color: transparent;
+  background: var(--navy);
+  color: #fbf5e9;
+  box-shadow: 0 12px 26px rgba(11, 22, 51, 0.24);
+}
+
+#rsvp .rsvp-card .btn:hover {
+  box-shadow: 0 16px 32px rgba(11, 22, 51, 0.3), 0 0 0 4px rgba(255, 250, 240, 0.22);
+}
+
+#rsvp .rsvp-card .btn.ghost {
+  background: transparent;
+  border-color: rgba(23, 35, 74, 0.3);
+  color: var(--navy);
+  box-shadow: none;
+}
+
+#rsvp .rsvp-card .btn.ghost:hover {
+  background: rgba(255, 250, 240, 0.32);
+  border-color: var(--navy);
+}
+
+#rsvp label {
+  color: rgba(23, 35, 74, 0.76);
+}
+
+#rsvp label small {
+  color: rgba(23, 35, 74, 0.5);
+}
+
+#rsvp input,
+#rsvp select,
+#rsvp textarea {
+  border-color: rgba(23, 35, 74, 0.16);
+  background-color: rgba(255, 250, 240, 0.74);
+  color: var(--navy);
+}
+
+#rsvp input::placeholder,
+#rsvp textarea::placeholder {
+  color: rgba(23, 35, 74, 0.4);
+}
+
+#rsvp input:focus,
+#rsvp select:focus,
+#rsvp textarea:focus {
+  border-color: rgba(23, 35, 74, 0.55);
+  background-color: #fffaf0;
+  box-shadow: 0 0 0 3px rgba(23, 35, 74, 0.12);
+}
+
+#rsvp select {
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--navy) 50%),
+    linear-gradient(135deg, var(--navy) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 52%, calc(100% - 13px) 52%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+#rsvp .sum-icon {
+  color: var(--navy);
+  border-color: rgba(23, 35, 74, 0.28);
+  background: rgba(255, 250, 240, 0.52);
+  box-shadow: none;
+}
+
+#rsvp .sum p {
+  color: var(--navy);
+}
+
+#rsvp #msg {
+  color: rgba(23, 35, 74, 0.7);
+}
+
+#rsvp #msg.error {
+  color: #8f2442;
+}
+
+#rsvp .wishes {
+  width: min(100%, 780px);
+}
+
+#rsvp .wishes-head .sub {
+  color: #f7d9e2;
+}
+
+#rsvp .s-wish {
+  --w: min(100%, 620px);
+}
+
+#rsvp .wish {
+  width: 100%;
+  padding: clamp(1rem, 2.1vw, 1.35rem) clamp(1.1rem, 2.4vw, 1.55rem);
+  border: 2px solid rgba(247, 174, 196, 0.5);
+  border-radius: 18px;
+  background: rgba(251, 246, 234, 0.98);
+  box-shadow: 0 20px 44px -24px rgba(0, 0, 0, 0.55);
+  color: var(--navy);
+  text-align: left;
+}
+
+#rsvp .wish-top {
+  margin-bottom: 0.55rem;
+}
+
+#rsvp .avatar {
+  color: var(--pink-deep);
+  border-color: rgba(217, 106, 143, 0.4);
+  background: radial-gradient(circle at 30% 20%, rgba(239, 126, 164, 0.2), rgba(246, 174, 196, 0.08));
+}
+
+#rsvp .wish b {
+  color: var(--navy);
+}
+
+#rsvp .wish-badge {
+  color: var(--pink-deep);
+  border-color: rgba(217, 106, 143, 0.34);
+}
+
+#rsvp .wish p {
+  color: #4d5570;
+}
+
+#rsvp .s-wish .nav {
+  background: rgba(11, 22, 51, 0.6);
+  border-color: rgba(247, 174, 196, 0.4);
+  color: #fbf5e9;
+  backdrop-filter: blur(8px);
+}
+
+#rsvp .s-wish .nav:hover {
+  background: rgba(23, 39, 80, 0.85);
+  border-color: var(--pink-2);
+}
+
+#rsvp .s-wish .pp {
+  background: transparent;
+  border-color: rgba(247, 174, 196, 0.5);
+  color: var(--pink-2);
+}
+
+#rsvp .s-wish .pp:hover {
+  background: rgba(239, 126, 164, 0.14);
+  color: #fbf5e9;
+}
+
+/* ---------------------------------------------------------------------
+   Hadiah: kartu cream dengan aksen pink
+   --------------------------------------------------------------------- */
+#hadiah .gift {
+  border: 1px solid rgba(217, 106, 143, 0.24);
+  background:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.08) 45%, rgba(246, 174, 196, 0.08)),
+    var(--card);
+  box-shadow:
+    0 18px 42px -26px rgba(23, 35, 74, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+#hadiah .gift:hover {
+  border-color: rgba(217, 106, 143, 0.48);
+  box-shadow:
+    0 24px 52px -26px rgba(23, 35, 74, 0.4),
+    0 0 24px rgba(239, 126, 164, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+#hadiah .gift-icon {
+  color: var(--pink-deep);
+  border-color: rgba(217, 106, 143, 0.34);
+  background: rgba(239, 126, 164, 0.09);
+}
+
+#hadiah .gift:hover .gift-icon {
+  background: rgba(239, 126, 164, 0.16);
+  border-color: var(--pink-deep);
+}
+
+#hadiah .gift b {
+  color: var(--ink);
+}
+
+#hadiah .gift p {
+  color: var(--soft);
+}
+
+#hadiah .gift .no {
+  color: var(--navy);
+}
+
+#hadiah .gift .btn.ghost {
+  border-color: rgba(217, 106, 143, 0.38);
+  color: var(--pink-deep);
+}
+
+#hadiah .gift .btn.ghost:hover {
+  background: rgba(239, 126, 164, 0.1);
+  border-color: var(--pink-deep);
+}
+
+#hadiah .dd-toggle {
+  border-color: rgba(217, 106, 143, 0.38);
+  color: var(--pink-deep);
+  background: rgba(255, 250, 240, 0.62);
+}
+
+#hadiah .dd-toggle:hover,
+#hadiah .dd.open .dd-toggle {
+  background: rgba(239, 126, 164, 0.1);
+  color: var(--pink-deep);
+  border-color: var(--pink-deep);
+  box-shadow: 0 0 0 4px rgba(239, 126, 164, 0.1);
+}
+
+#hadiah .ddh h3 {
+  color: var(--ink);
+}
+
+#hadiah .ddh p {
+  color: var(--soft);
+}
+
+#hadiah .ri {
+  border-color: rgba(217, 106, 143, 0.24);
+  background: rgba(255, 250, 240, 0.92);
+}
+
+#hadiah .ri b {
+  color: var(--ink);
+}
+
+#hadiah .ri .price {
+  color: var(--ink);
+}
+
+#hadiah .ri small {
+  color: var(--pink-deep);
+}
+
+#hadiah .bar {
+  background: rgba(217, 106, 143, 0.14);
+}
+
+#hadiah .bar i {
+  background: linear-gradient(90deg, var(--pink-2), var(--pink-deep));
+}
+
+/* ---------------------------------------------------------------------
+   Our Moment: bingkai navy dengan garis pink
+   --------------------------------------------------------------------- */
+#galeri {
+  --gal-pad-top: clamp(2.9rem, 5.6vh, 4rem);
+  --gal-pad-bottom: clamp(1.5rem, 3vh, 2.2rem);
+}
+
+#galeri .sec-head .lead {
+  color: #c9cfe0;
+}
+
+#galeri .slide {
+  background: linear-gradient(160deg, #16264c, #0b1633);
+  outline-color: rgba(247, 174, 196, 0.58);
+  box-shadow: 0 22px 52px rgba(0, 0, 0, 0.36);
+}
+
+#galeri .slide.act {
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.46), 0 0 0 1px rgba(247, 174, 196, 0.28);
+}
+
+#galeri .slide.ph {
+  background:
+    radial-gradient(80% 70% at 28% 18%, rgba(239, 126, 164, 0.2), transparent 60%),
+    radial-gradient(70% 70% at 82% 90%, rgba(246, 174, 196, 0.12), transparent 64%),
+    linear-gradient(155deg, #1a2c58, #0d1838);
+}
+
+#galeri .slide.ph::before {
+  border-color: rgba(247, 174, 196, 0.24);
+}
+
+#galeri .slide-mark {
+  color: #f7b1c6;
+  opacity: 1;
+}
+
+#galeri .slide-mark em {
+  color: #fbf5e9;
+}
+
+#galeri .slide small {
+  color: rgba(233, 224, 210, 0.62);
+}
+
+#galeri .count {
+  color: var(--pink-2);
+}
+
+#galeri .nav {
+  background: rgba(11, 22, 51, 0.56);
+  border-color: rgba(247, 174, 196, 0.42);
+  color: #fbf5e9;
+  backdrop-filter: blur(8px);
+}
+
+#galeri .nav:hover {
+  background: rgba(23, 39, 80, 0.86);
+  border-color: var(--pink-2);
+}
+
+#galeri .pp {
+  background: transparent;
+  border-color: rgba(247, 174, 196, 0.5);
+  color: var(--pink-2);
+}
+
+#galeri .pp:hover {
+  background: rgba(239, 126, 164, 0.14);
+  color: #fbf5e9;
+}
+
+/* ---------------------------------------------------------------------
+   Penutup: cream, nama pink, tombol senada
+   --------------------------------------------------------------------- */
+#penutup .closing-mark svg {
+  stroke: var(--pink-deep);
+  opacity: 0.72;
+}
+
+#penutup .closing-text {
+  color: var(--soft);
+}
+
+#penutup .nick {
+  color: var(--pink-deep);
+  text-shadow: none;
+}
+
+#penutup .closing-actions .btn.ghost {
+  border-color: rgba(23, 35, 74, 0.24);
+  color: var(--navy);
+}
+
+#penutup .closing-actions .btn.ghost:hover {
+  background: rgba(239, 126, 164, 0.1);
+  border-color: var(--pink-deep);
+}
+
+#penutup .credit {
+  color: rgba(23, 35, 74, 0.48);
+}
+
+#penutup .credit span {
+  color: var(--pink-deep);
+}
+
+/* ---------------------------------------------------------------------
+   Navigasi & kontrol mengambang: tetap terbaca di cream maupun navy
+   --------------------------------------------------------------------- */
+#pill {
+  background: rgba(11, 22, 51, 0.86);
+  border-color: rgba(246, 174, 196, 0.42);
+  backdrop-filter: blur(9px);
+  box-shadow: 0 10px 28px rgba(11, 22, 51, 0.22);
+}
+
+#pillBtn {
+  color: #f7f0e1;
+}
+
+#pill .lk {
+  background: rgba(11, 22, 51, 0.97);
+  border-color: rgba(246, 174, 196, 0.32);
+  box-shadow: 0 18px 50px rgba(8, 15, 34, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+#pill .lk a {
+  color: #f2eadb;
+}
+
+#pill a .ic {
+  color: var(--pink-2);
+  opacity: 0.95;
+}
+
+#pill a:hover,
+#pill a.on {
+  background: rgba(239, 126, 164, 0.18);
+  color: #fff7ea;
+}
+
+#audioBtn,
+#audioBtn:hover,
+.fab,
+.fab:hover,
+.pp,
+.pp:hover {
+  background: transparent;
+}
+
+#audioBtn,
+.fab {
+  color: #e3688e;
+  border-color: rgba(227, 104, 142, 0.62);
+  box-shadow: none;
+  filter: drop-shadow(0 1px 3px rgba(8, 15, 34, 0.65));
+}
+
+#audioBtn:hover,
+.fab:hover {
+  color: #f6aec4;
+  border-color: rgba(246, 174, 196, 0.85);
+}
+
+#progress {
+  background: rgba(23, 35, 74, 0.06);
+}
+
+#progress i {
+  background: linear-gradient(90deg, var(--pink-deep), var(--pink), var(--pink-2));
+  box-shadow: 0 0 10px rgba(239, 126, 164, 0.55);
+}
+
+/* Aksen bunga yang sudah ada tetap dipakai, hanya dipertajam warnanya. */
+.floral img {
+  filter: saturate(1.18) contrast(1.04);
+}
+
+.floral.flower.tl img,
+.floral.flower.br img {
+  opacity: 0.95;
+}
+
+/* Lightbox & toast mengikuti palette */
+#lb {
+  background: rgba(8, 15, 34, 0.9);
+}
+
+#lb button {
+  background: rgba(11, 22, 51, 0.72);
+  border-color: rgba(246, 174, 196, 0.42);
+  color: #fbf5e9;
+}
+
+#lb button:hover {
+  background: rgba(23, 39, 80, 0.92);
+  color: var(--pink-2);
+}
+
+.toast {
+  background: rgba(11, 22, 51, 0.96);
+  border-color: rgba(246, 174, 196, 0.36);
+  color: #fbf5e9;
+}
+
+/* ---------------------------------------------------------------------
+   Penyesuaian layar pendek agar tetap satu layar tanpa memotong isi
+   --------------------------------------------------------------------- */
+@media (max-height: 720px) {
+  main > section {
+    padding-top: clamp(2.7rem, 5.5vh, 3.4rem);
+    padding-bottom: clamp(2.5rem, 5vh, 3.2rem);
+  }
+
+  main > section.s-closing {
+    padding-bottom: clamp(2.5rem, 5vh, 3.2rem);
+  }
+
+  .sec-head {
+    margin-bottom: clamp(0.6rem, 1.5vh, 0.9rem);
+  }
+
+  .sec-head h2 {
+    margin-top: 0.18rem;
+    margin-bottom: 0.38rem;
+    padding-bottom: 0.55rem;
+  }
+
+  .sec-head .lead {
+    line-height: 1.5;
+  }
+
+  #home .invite-note {
+    margin-top: 0.75rem;
+  }
+
+  #mempelai .motive {
+    margin-top: 0.75rem;
+  }
+
+  #cerita .tl-item,
+  #cerita .tl-item:nth-of-type(odd),
+  #cerita .tl-item:nth-of-type(even) {
+    margin-bottom: 0.5rem;
+  }
+
+  #acara .evp {
+    height: 105px;
+  }
+
+  #rsvp .wish {
+    padding: 0.85rem 1rem;
+  }
+
+  #hadiah .gift {
+    padding: 1rem 0.9rem;
+  }
+}
+
+@media (max-width: 599px) {
+  #mempelai .sec-head .lead {
+    max-width: 21rem;
+  }
+
+  #acara .evp {
+    height: clamp(96px, 15vh, 126px);
+  }
+
+  #hadiah .gift {
+    padding: 0.8rem 0.6rem 0.9rem;
+  }
+
+  #rsvp .wish {
+    border-width: 2px;
+    padding: 0.85rem 0.95rem;
+  }
+
+  #rsvp .sec-head h2 {
+    font-size: clamp(1.65rem, 1.3rem + 1.6vw, 2.2rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sakura-branch {
+    filter: none;
+  }
+}
+
+/* =====================================================================
+   31. FINAL POLISH — halaman per bagian, kontras cream, kontrol transparan
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   Tiap bagian menjadi satu "halaman". Snap membuat bagian berikutnya tidak
+   lagi mengintip/memotong bagian yang sedang dibaca.
+   --------------------------------------------------------------------- */
+html {
+  scroll-snap-type: y proximity;
+  scroll-padding-top: 0;
+}
+
+main > section {
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+  scroll-margin-top: 0;
+}
+
+/* ---------------------------------------------------------------------
+   Bagian terang: warna teks dibuat lebih pekat + mix-blend-mode agar
+   menyatu dengan kertas cream dan tetap terbaca.
+   --------------------------------------------------------------------- */
+#home,
+#cerita,
+#lokasi,
+#hadiah,
+#penutup {
+  --ink: #101b3b;
+  --ivory: #101b3b;
+  --soft: #464d64;
+  --moss: #1f3160;
+  --sage: #38496f;
+  --blush: #bb456c;
+  --gold: #b23f65;
+  --gold-2: #963356;
+  --pink-deep: #b33f66;
+  color: var(--ink);
+}
+
+:is(#home, #cerita, #lokasi, #hadiah, #penutup) :is(
+  h1, h2, h3, h4, h5, h6,
+  p, small, label, b, strong, em, blockquote,
+  .eyebrow, .lead, .ayat, .ayat-id, .nick, .credit, .closing-text,
+  .ayat-id span, .credit span
+) {
+  mix-blend-mode: multiply;
+}
+
+/* ---------------------------------------------------------------------
+   Transisi warna antar-bagian: lapisan tipis di tepi atas/bawah dengan
+   soft-light, sehingga batas cream–navy tidak terlihat seperti potongan.
+   --------------------------------------------------------------------- */
+main > section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, var(--edge-top, transparent) 0, transparent clamp(46px, 9vh, 96px)),
+    linear-gradient(0deg, var(--edge-bottom, transparent) 0, transparent clamp(46px, 9vh, 96px));
+  mix-blend-mode: soft-light;
+  opacity: 1;
+}
+
+#home {
+  --edge-top: rgba(11, 22, 51, 0.34);
+  --edge-bottom: rgba(11, 22, 51, 0.32);
+}
+
+#mempelai {
+  --edge-top: rgba(251, 246, 234, 0.38);
+  --edge-bottom: rgba(251, 246, 234, 0.34);
+}
+
+#cerita {
+  --edge-top: rgba(11, 22, 51, 0.32);
+  --edge-bottom: rgba(11, 22, 51, 0.32);
+}
+
+#acara {
+  --edge-top: rgba(251, 246, 234, 0.38);
+  --edge-bottom: rgba(251, 246, 234, 0.3);
+}
+
+#lokasi {
+  --edge-top: rgba(11, 22, 51, 0.32);
+  --edge-bottom: rgba(11, 22, 51, 0.32);
+}
+
+#rsvp {
+  --edge-top: rgba(251, 246, 234, 0.38);
+  --edge-bottom: rgba(251, 246, 234, 0.3);
+}
+
+#hadiah {
+  --edge-top: rgba(11, 22, 51, 0.32);
+  --edge-bottom: rgba(11, 22, 51, 0.32);
+}
+
+#galeri {
+  --edge-top: rgba(251, 246, 234, 0.38);
+  --edge-bottom: rgba(251, 246, 234, 0.34);
+}
+
+#penutup {
+  --edge-top: rgba(11, 22, 51, 0.32);
+  --edge-bottom: rgba(11, 22, 51, 0.16);
+}
+
+/* ---------------------------------------------------------------------
+   Ranting sakura Mempelai: mendatar di sudut bawah, bukan vertikal.
+   --------------------------------------------------------------------- */
+#mempelai .sakura-branch {
+  top: auto;
+  bottom: 0.1rem;
+  width: min(43vw, 500px);
+  height: auto;
+  aspect-ratio: 820 / 210;
+  opacity: 0.62;
+  filter: drop-shadow(0 0 20px rgba(239, 126, 164, 0.16));
+}
+
+#mempelai .sakura-branch.left {
+  left: clamp(-70px, -3.5vw, -18px);
+}
+
+#mempelai .sakura-branch.right {
+  right: clamp(-70px, -3.5vw, -18px);
+  transform: scaleX(-1);
+}
+
+#mempelai .sakura-branch img {
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+/* ---------------------------------------------------------------------
+   RSVP: kotak isian gelap, tombol simpan lebih proporsional.
+   --------------------------------------------------------------------- */
+#rsvp input,
+#rsvp select,
+#rsvp textarea {
+  color-scheme: dark;
+  border-color: rgba(247, 174, 196, 0.34);
+  background-color: #0a1530;
+  color: #fbf5e9;
+  caret-color: var(--pink-2);
+}
+
+#rsvp input::placeholder,
+#rsvp textarea::placeholder {
+  color: rgba(251, 245, 233, 0.46);
+}
+
+#rsvp input:focus,
+#rsvp select:focus,
+#rsvp textarea:focus {
+  border-color: var(--pink-2);
+  background-color: #12224a;
+  box-shadow: 0 0 0 3px rgba(247, 174, 196, 0.18);
+}
+
+#rsvp select {
+  background-image:
+    linear-gradient(45deg, transparent 50%, #f7aec4 50%),
+    linear-gradient(135deg, #f7aec4 50%, transparent 50%);
+  background-position: calc(100% - 18px) 52%, calc(100% - 13px) 52%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+#rsvp select option {
+  background: #0a1530;
+  color: #fbf5e9;
+}
+
+#sbtn {
+  padding: 0.46rem 1.05rem;
+  min-width: 10.5rem;
+}
+
+/* ---------------------------------------------------------------------
+   Wishes: kartu lebih ramping dan bersudut persegi.
+   --------------------------------------------------------------------- */
+#rsvp .wishes,
+.s-rsvp .wishes,
+.s-rsvp .wishes-wrapper {
+  width: min(100%, 640px);
+}
+
+#rsvp .s-wish {
+  --w: min(100%, 520px);
+}
+
+#rsvp .wish {
+  border-radius: 2px;
+}
+
+/* ---------------------------------------------------------------------
+   Kontrol mengambang: nav & pause transparan dengan aksen pink yang tetap
+   terbaca di atas cream maupun navy.
+   --------------------------------------------------------------------- */
+#pill {
+  background: transparent;
+  border-color: rgba(227, 104, 142, 0.68);
+  box-shadow: none;
+  backdrop-filter: none;
+  filter: drop-shadow(0 1px 3px rgba(8, 15, 34, 0.55));
+}
+
+#pill:hover {
+  border-color: rgba(246, 174, 196, 0.95);
+}
+
+#pillBtn {
+  color: #e3688e;
+}
+
+#pill .lk {
+  background: rgba(11, 22, 51, 0.97);
+  filter: none;
+}
+
+.fab,
+#audioBtn,
+.pp {
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Panah carousel transparan; aksen pink tetap terlihat di semua latar. */
+.stage .nav {
+  background: transparent;
+  border-color: rgba(246, 174, 196, 0.62);
+  color: var(--pink-2);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.stage .nav:hover {
+  background: rgba(239, 126, 164, 0.16);
+  border-color: var(--pink-2);
+}
+
+.stage .nav:disabled {
+  opacity: 0.45;
+}
+
+/* Daftar hadiah: panah dibuat kontras di atas kartu cream dan tetap tampak
+   saat daftar dibuka, termasuk ketika semua kartu kebetulan muat. */
+#hadiah .s-reg .nav,
+#hadiah .s-reg .nav:hover {
+  background: rgba(255, 250, 240, 0.9);
+  border-color: rgba(179, 63, 102, 0.78);
+  color: var(--pink-deep);
+  box-shadow: 0 8px 20px -8px rgba(23, 35, 74, 0.34);
+  opacity: 1;
+}
+
+#hadiah .s-reg .nav:hover {
+  background: var(--pink);
+  border-color: var(--pink-deep);
+  color: #fff7ea;
+}
+
+#hadiah .s-reg .nav:disabled {
+  opacity: 0.62;
+}
+
+#hadiah .dd-toggle .chev {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex: 0 0 auto;
+}
+
+/* ---------------------------------------------------------------------
+   Our Moment: bagian sedikit lebih panjang + bingkai foto lebih besar.
+   --------------------------------------------------------------------- */
+#galeri {
+  min-height: 108svh;
+  --gal-pad-top: clamp(1.5rem, 3.4vh, 2.4rem);
+  --gal-pad-bottom: clamp(1rem, 2.2vh, 1.6rem);
+}
+
+#galeri .sec-head {
+  margin-bottom: clamp(0.3rem, 0.9vh, 0.55rem);
+}
+
+#galeri .s-gal {
+  --w: min(84vw, 54vh, 620px);
+}
+
+#galeri .s-gal .pp {
+  bottom: 1.25rem;
+}
+
+/* Kelopak tetap menjadi aksen, tetapi tidak lagi menutupi ketajaman teks. */
+#petals {
+  opacity: 0.55;
+}
+
+#penutup .credit {
+  color: rgba(16, 27, 59, 0.62);
+}
+
+/* ---------------------------------------------------------------------
+   Layar pendek: Mempelai dirapatkan agar tidak lagi melewati satu layar.
+   --------------------------------------------------------------------- */
+@media (min-width: 768px) and (max-height: 700px) {
+  #mempelai {
+    padding-top: 2.6rem;
+    padding-bottom: 2.4rem;
+  }
+
+  #mempelai .sec-head {
+    margin-bottom: 0.55rem;
+  }
+
+  #mempelai .ph {
+    width: clamp(118px, 22vh, 150px);
+  }
+
+  #mempelai .role {
+    margin-top: 0.55rem;
+    font-size: 0.55rem;
+  }
+
+  #mempelai .person h3 {
+    margin: 0.24rem 0 0.3rem;
+    font-size: clamp(1.12rem, 2.4vh, 1.35rem);
+  }
+
+  #mempelai .parents {
+    font-size: 0.7rem;
+    line-height: 1.45;
+  }
+
+  #mempelai .amp {
+    font-size: clamp(2rem, 5vh, 2.8rem);
+  }
+
+  #mempelai .motive {
+    margin-top: 0.6rem;
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+
+  #mempelai .motive::before {
+    font-size: 1.4rem;
+    margin-bottom: 0.15rem;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Ponsel: ranting tetap mendatar dan tidak menutupi teks.
+   --------------------------------------------------------------------- */
+@media (max-width: 1023.98px) {
+  #mempelai .sakura-branch {
+    width: min(52vw, 380px);
+    opacity: 0.52;
+  }
+}
+
+@media (max-width: 599px) {
+  #mempelai .sakura-branch {
+    width: 60vw;
+    opacity: 0.42;
+    bottom: -0.2rem;
+  }
+
+  #mempelai .sakura-branch.left {
+    left: -10vw;
+  }
+
+  #mempelai .sakura-branch.right {
+    right: -10vw;
+  }
+
+  #rsvp .s-wish {
+    --w: min(100%, 480px);
+  }
+}
+/* =====================================================================
+   32. FINAL FEEDBACK — top-aligned sections, compact wishes, softer cuts
+   ===================================================================== */
+
+/* Mempelai, Acara, Lokasi, dan Hadiah dimulai dari atas seperti Galeri. */
+#mempelai,
+#acara,
+#lokasi,
+#hadiah {
+  justify-content: flex-start;
+  padding-top: clamp(1.5rem, 3.4vh, 2.4rem);
+}
+
+/* Wishes: kotak lebih ramping, sudut membulat, nama di tengah. */
+#rsvp .wishes,
+.s-rsvp .wishes,
+.s-rsvp .wishes-wrapper {
+  width: min(100%, 560px);
+}
+
+#rsvp .s-wish {
+  --w: min(100%, 430px);
+}
+
+#rsvp .wish {
+  border-radius: 16px;
+  padding: clamp(1rem, 2.2vh, 1.3rem) clamp(1.1rem, 2.2vw, 1.45rem);
+  text-align: center;
+}
+
+#rsvp .wish-top {
+  justify-content: center;
+  margin-bottom: 0.55rem;
+}
+
+#rsvp .wish .avatar {
+  display: none;
+}
+
+#rsvp .wish-who {
+  justify-content: center;
+  width: 100%;
+}
+
+#rsvp .wish b {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+#rsvp .wish p {
+  max-width: 36ch;
+  margin-inline: auto;
+  text-align: center;
+}
+
+/* Pause Our Moment diturunkan agar tidak menempel pada bingkai foto. */
+#galeri .s-gal .pp {
+  bottom: -5px;
+}
+
+#galeri .count {
+  margin-top: 10px;
+}
+
+/* Potongan antar-halaman: warna halaman sebelumnya melebur di tepi ATAS
+   halaman berikutnya. Halaman navy tidak pernah menerima warna cream, jadi
+   tidak ada lagi bercak beach di bagian bawah mempelai/acara/rsvp/galeri. */
+main > section::before {
+  display: block;
+  opacity: 1;
+  background:
+    linear-gradient(180deg, var(--seam-top, transparent) 0, transparent clamp(34px, 5.5vh, 64px)),
+    linear-gradient(0deg, var(--seam-bottom, transparent) 0, transparent clamp(34px, 5.5vh, 64px)) !important;
+}
+
+main > section::after {
+  background:
+    linear-gradient(180deg, var(--edge-top, transparent) 0, transparent clamp(34px, 5.5vh, 64px)),
+    linear-gradient(0deg, var(--edge-bottom, transparent) 0, transparent clamp(34px, 5.5vh, 64px));
+  mix-blend-mode: soft-light;
+}
+
+/* Halaman navy: tepi hanya digelapkan tipis, tanpa aksen cream. */
+#mempelai,
+#acara,
+#rsvp,
+#galeri {
+  --seam-top: transparent;
+  --seam-bottom: transparent;
+  --edge-top: rgba(4, 10, 26, 0.42);
+  --edge-bottom: rgba(4, 10, 26, 0.42);
+}
+
+/* Halaman cream: biru dari halaman sebelumnya masuk lewat tepi atas, biru
+   halaman berikutnya lewat tepi bawah. */
+#home {
+  --seam-top: transparent;
+  --seam-bottom: #0d1938;
+  --edge-top: rgba(11, 22, 51, 0.18);
+  --edge-bottom: rgba(11, 22, 51, 0.2);
+}
+
+#cerita {
+  --seam-top: #081126;
+  --seam-bottom: #0e1b3e;
+  --edge-top: rgba(11, 22, 51, 0.18);
+  --edge-bottom: rgba(11, 22, 51, 0.2);
+}
+
+#lokasi {
+  --seam-top: #091329;
+  --seam-bottom: var(--navy);
+  --edge-top: rgba(11, 22, 51, 0.18);
+  --edge-bottom: rgba(11, 22, 51, 0.2);
+}
+
+#hadiah {
+  --seam-top: #081126;
+  --seam-bottom: #0d1938;
+  --edge-top: rgba(11, 22, 51, 0.18);
+  --edge-bottom: rgba(11, 22, 51, 0.2);
+}
+
+#penutup {
+  --seam-top: #081126;
+  --seam-bottom: transparent;
+  --edge-top: rgba(11, 22, 51, 0.18);
+  --edge-bottom: rgba(11, 22, 51, 0.12);
+}
+
+/* Sakura bawah Mempelai ikut tertiup angin seperti ranting lainnya. */
+@keyframes sakuraWind {
+  0%,
+  100% {
+    transform: rotate(-1.5deg) translate3d(0, 0, 0);
+  }
+  28% {
+    transform: rotate(2.2deg) translate3d(3px, -2px, 0);
+  }
+  52% {
+    transform: rotate(-0.4deg) translate3d(-1px, 1px, 0);
+  }
+  76% {
+    transform: rotate(2.8deg) translate3d(4px, -1px, 0);
+  }
+}
+
+#mempelai .sakura-branch img {
+  transform-origin: 50% 100%;
+  animation: sakuraWind 9s ease-in-out 1.6s infinite both;
+  will-change: transform;
+}
+
+#mempelai .sakura-branch.right img {
+  animation-delay: 3.1s;
+}
+
+/* Sampul keluar lebih halus: terangkat sedikit, memudar, lalu blur. */
+#cover {
+  transition:
+    transform 1.05s cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 0.9s ease,
+    filter 1s ease;
+  will-change: transform, opacity, filter;
+}
+
+#cover.out {
+  transform: translate3d(0, -7vh, 0) scale(1.03);
+  opacity: 0;
+  filter: blur(6px);
+}
+
+main {
+  transform: translateY(26px) scale(0.998);
+  filter: blur(4px);
+  transition:
+    opacity 1s 0.1s ease,
+    transform 1.3s 0.1s var(--ease-out),
+    filter 1.1s 0.1s ease;
+}
+
+body.open main {
+  transform: none;
+  filter: none;
+}
+
+@media (max-width: 599px) {
+  #rsvp .wishes {
+    width: 100%;
+  }
+
+  #rsvp .s-wish {
+    --w: min(100%, 320px);
+  }
+
+  #rsvp .wish {
+    border-radius: 14px;
+    padding: 0.95rem 1rem;
+  }
+
+  #rsvp .wish p {
+    font-size: 0.8rem;
+    line-height: 1.62;
+    max-width: 30ch;
+  }
+
+  #galeri .s-gal .pp {
+    bottom: 0.75rem;
+  }
+
+  #galeri .count {
+    margin-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #cover {
+    transition-duration: 0.01ms;
+    filter: none;
+  }
+
+  #cover.out {
+    transform: none;
+    opacity: 0;
+    filter: none;
+  }
+
+  main {
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+
+  #mempelai .sakura-branch img {
+    animation: none;
+  }
+}
+
+/* RSVP tetap satu layar setelah kotak ucapan dipersempit. */
+#rsvp {
+  padding-top: clamp(1.6rem, 4vh, 2.6rem);
+  padding-bottom: clamp(1.5rem, 3.8vh, 2.5rem);
+}
+
+/* Sakura Mempelai tidak boleh memicu scroll vertikal ekstra. */
+#mempelai {
+  overflow: hidden;
+}
+
+/* =====================================================================
+   33. FINAL FEEDBACK — palette beach lebih pekat, tanpa bocor cream,
+   wishes dusty rose, nama footer wipe, sampul swipe-up, kartu ala buku
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   Halaman cream: kartu dibuat lebih hangat, bukan putih susu.
+   --------------------------------------------------------------------- */
+#home .invite-note {
+  background: rgba(246, 236, 215, 0.66);
+}
+
+#cerita .tl-card {
+  background:
+    linear-gradient(150deg, rgba(255, 250, 240, 0.14), rgba(255, 250, 240, 0.02)),
+    var(--bg2);
+}
+
+#lokasi .venue-card {
+  background:
+    linear-gradient(150deg, rgba(255, 250, 240, 0.18), rgba(255, 250, 240, 0.03) 45%, rgba(246, 174, 196, 0.05)),
+    var(--card);
+  box-shadow:
+    0 26px 60px -34px rgba(23, 35, 74, 0.42),
+    inset 0 1px 0 rgba(255, 250, 240, 0.36);
+}
+
+#lokasi .venue-card:hover {
+  box-shadow:
+    0 32px 70px -34px rgba(23, 35, 74, 0.48),
+    0 0 30px rgba(239, 126, 164, 0.1),
+    inset 0 1px 0 rgba(255, 250, 240, 0.42);
+}
+
+#lokasi .venue-info {
+  background: rgba(246, 236, 215, 0.44);
+}
+
+#hadiah .gift {
+  background:
+    radial-gradient(120% 100% at var(--mx, 50%) var(--my, 0%), rgba(244, 207, 170, 0.1), transparent 60%),
+    linear-gradient(155deg, rgba(255, 250, 240, 0.1), rgba(255, 250, 240, 0.02) 45%, rgba(229, 207, 168, 0.03)),
+    var(--card);
+}
+
+/* ---------------------------------------------------------------------
+   Wishes: bingkai dusty rose, isi cream hangat (tidak lagi putih).
+   --------------------------------------------------------------------- */
+#rsvp .wish {
+  border: 2px solid rgba(184, 92, 122, 0.58);
+  background:
+    linear-gradient(180deg, rgba(250, 243, 230, 0.98), rgba(244, 232, 212, 0.98));
+  box-shadow:
+    0 20px 44px -24px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px rgba(184, 92, 122, 0.16),
+    inset 0 1px 0 rgba(255, 252, 246, 0.5);
+}
+
+/* ---------------------------------------------------------------------
+   Footer: nama mempelai masuk dengan wipe berbentuk miring, kiri ke kanan.
+   Dipicu saat elemen .nick (di halaman penutup) masuk viewport.
+   --------------------------------------------------------------------- */
+.nick.reveal {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition: none;
+}
+
+.nick-wipe {
+  display: inline-block;
+  clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+  transform: translate3d(-0.04em, 0, 0);
+  will-change: clip-path, transform;
+}
+
+.nick.reveal.nick-in .nick-wipe {
+  animation: nickWipe 2.8s cubic-bezier(0.45, 0.02, 0.22, 1) both;
+}
+
+@keyframes nickWipe {
+  0% {
+    clip-path: polygon(0 0, -2% 0, -10% 100%, 0 100%);
+    transform: translate3d(-0.05em, 0, 0);
+    opacity: 0.55;
+  }
+  100% {
+    clip-path: polygon(0 0, 112% 0, 100% 100%, 0 100%);
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.nick::after {
+  transform-origin: 0 50%;
+  transition: transform 1.6s 1.5s var(--ease-out);
+}
+
+/* ---------------------------------------------------------------------
+   Welcome -> main: sampul swipe up penuh, konten tetap utuh. Main hanya
+   naik + memudar + settle scale tipis; tanpa blur/filter agar ringan.
+   --------------------------------------------------------------------- */
+#cover {
+  transition: transform 1s cubic-bezier(0.22, 0.78, 0.2, 1);
+  will-change: transform;
+}
+
+#cover.out {
+  transform: translate3d(0, -100%, 0);
+  opacity: 1;
+  filter: none;
+}
+
+#cover.leave .cover-content {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+main {
+  opacity: 0;
+  transform: translate3d(0, 3vh, 0) scale(1.008);
+  filter: none;
+  transition:
+    opacity 0.5s 0.18s ease,
+    transform 1s 0.1s cubic-bezier(0.22, 0.78, 0.2, 1);
+}
+
+body.open main {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* ---------------------------------------------------------------------
+   Kartu Akad & Resepsi: bingkai ganda rose-gold, garis punggung buku,
+   dan lapisan tepi halaman di luar kartu.
+   --------------------------------------------------------------------- */
+#acara .evc {
+  border-color: rgba(244, 169, 193, 0.42);
+  box-shadow:
+    0 20px 46px -24px rgba(0, 0, 0, 0.6),
+    5px 5px 0 -1px rgba(244, 169, 193, 0.16),
+    9px 9px 0 -2px rgba(6, 12, 28, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+#acara .evc:hover {
+  border-color: rgba(244, 169, 193, 0.62);
+  box-shadow:
+    0 28px 60px -24px rgba(0, 0, 0, 0.68),
+    7px 7px 0 -1px rgba(244, 169, 193, 0.18),
+    12px 12px 0 -2px rgba(6, 12, 28, 0.46),
+    0 0 32px rgba(239, 126, 164, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.ev-book-frame {
+  position: absolute;
+  inset: 5px;
+  z-index: 5;
+  pointer-events: none;
+  border: 1px solid rgba(244, 169, 193, 0.52);
+  border-radius: 15px;
+  box-shadow:
+    0 0 0 1px rgba(6, 12, 28, 0.55),
+    inset 0 0 0 1px rgba(6, 12, 28, 0.35),
+    inset 0 0 18px rgba(6, 12, 28, 0.16);
+}
+
+.ev-book-frame::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  pointer-events: none;
+  border: 1px solid rgba(244, 169, 193, 0.22);
+  border-radius: 12px;
+}
+
+.ev-book-frame::after {
+  display: none;
+  content: "";
+  position: absolute;
+  top: 7px;
+  bottom: 7px;
+  left: 43%;
+  width: 22px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(180deg, rgba(244, 169, 193, 0.5) 0 2px, transparent 2px 8px) 50% 0 / 1px 100% no-repeat,
+    linear-gradient(90deg, transparent, rgba(6, 12, 28, 0.55) 32%, rgba(6, 12, 28, 0.55) 68%, transparent);
+  opacity: 0.9;
+}
+
+@media (min-width: 900px) {
+  .ev-book-frame::after {
+    display: block;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Fallback gerak minimal
+   --------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  #cover {
+    transition: none;
+  }
+
+  #cover.out {
+    transform: none;
+    opacity: 0;
+    filter: none;
+  }
+
+  #cover.leave .cover-content {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  main {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+
+  .nick-wipe {
+    clip-path: none;
+    transform: none;
+    will-change: auto;
+  }
+
+  .nick.reveal.nick-in .nick-wipe {
+    animation: none;
+  }
+}
+
+/* =====================================================================
+   34. FEEDBACK — blend lebih tipis, countdown transparan, wishes cream,
+   reveal ringan dua arah, dan Akad/Resepsi sebagai satu buku terbuka
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   Tepi blend antar-halaman dipersempit agar warna cream tidak keruh.
+   --------------------------------------------------------------------- */
+main > section::before {
+  background:
+    linear-gradient(180deg, var(--seam-top, transparent) 0, transparent clamp(14px, 2.2vh, 26px)),
+    linear-gradient(0deg, var(--seam-bottom, transparent) 0, transparent clamp(14px, 2.2vh, 26px)) !important;
+}
+
+main > section::after {
+  background:
+    linear-gradient(180deg, var(--edge-top, transparent) 0, transparent clamp(14px, 2.2vh, 26px)),
+    linear-gradient(0deg, var(--edge-bottom, transparent) 0, transparent clamp(14px, 2.2vh, 26px));
+}
+
+#home,
+#cerita,
+#lokasi,
+#hadiah,
+#penutup {
+  --edge-top: rgba(11, 22, 51, 0.1);
+  --edge-bottom: rgba(11, 22, 51, 0.12);
+}
+
+/* ---------------------------------------------------------------------
+   Countdown: latar transparan, angka & tanggal memakai huruf yang tegas.
+   --------------------------------------------------------------------- */
+#acara .cd-cell {
+  border-color: rgba(248, 178, 198, 0.5);
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+#acara .cd-cell:hover {
+  background: rgba(239, 126, 164, 0.06);
+  border-color: rgba(248, 178, 198, 0.8);
+  box-shadow: none;
+}
+
+#acara .cd-cell b {
+  font: 400 clamp(1.9rem, 5.2vw, 2.9rem)/1.06 'Runethia', var(--font-display);
+  font-style: normal;
+  letter-spacing: 0.01em;
+  color: #fff7ea;
+  -webkit-text-fill-color: #fff7ea;
+  background: none;
+  filter: none;
+  text-shadow: 0 2px 14px rgba(11, 22, 51, 0.32);
+}
+
+#acara .cd-cell span {
+  font-weight: 500;
+  letter-spacing: 0.15em;
+}
+
+#acara .cd-done {
+  font: 400 1.25rem/1.5 'Runethia', var(--font-display);
+  font-style: normal;
+  letter-spacing: 0.02em;
+}
+
+#acara .dt {
+  font: 400 clamp(0.9rem, 1.9vw, 1.05rem)/1.4 'Runethia', var(--font-display);
+  text-transform: none;
+  letter-spacing: 0.06em;
+}
+
+#acara .dt b {
+  font: 400 clamp(2.05rem, 4.9vw, 2.8rem)/1.02 'Runethia', var(--font-display);
+  font-style: normal;
+  letter-spacing: 0.01em;
+}
+
+/* Angka countdown masuk satu per satu saat halaman Acara dibuka. */
+#cd.is-in .cd-cell {
+  animation: cdCellIn 0.46s var(--ease-out) backwards;
+  animation-delay: calc(var(--ci, 0) * 55ms);
+}
+
+@keyframes cdCellIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Wishes: bingkai cream, tanpa pendar pink yang menutupi cream.
+   --------------------------------------------------------------------- */
+#rsvp .wish {
+  border-color: rgba(246, 236, 215, 0.96);
+  border-width: 2px;
+  background:
+    linear-gradient(180deg, #f8efdd 0%, #efe1c8 100%);
+  box-shadow:
+    0 14px 28px -18px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(8, 15, 34, 0.48),
+    inset 0 1px 0 rgba(255, 252, 246, 0.62);
+}
+
+/* Kartu ucapan masuk ringan; kartu tengah menyala saat carousel bergeser. */
+#wishes .wish {
+  opacity: 0.7;
+  transform: scale(0.985);
+  transition:
+    opacity 0.35s ease,
+    transform 0.4s var(--ease-out),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+  animation: wishIn 0.42s var(--ease-out) backwards;
+  animation-delay: var(--d, 0ms);
+}
+
+#wishes .wish.act,
+#wishes .wish:hover {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes wishIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Reveal lebih ringan dan dua arah: terbuka saat masuk, menutup saat
+   berpindah ke objek/bagian lain, lalu terputar lagi saat kembali.
+   --------------------------------------------------------------------- */
+html.js .reveal,
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  transition:
+    opacity 0.42s var(--ease-out),
+    transform 0.52s var(--ease-out);
+  transition-delay: var(--d, 0ms);
+}
+
+html.js .reveal.is-in,
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Nama footer tetap ditangani wipe pada elemen anaknya. */
+#penutup .nick.reveal,
+html.js #penutup .nick.reveal {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+/* ---------------------------------------------------------------------
+   Akad & Resepsi: dua kartu menyatu sebagai satu buku terbuka.
+   Sampul membingkai kedua halaman; punggung buku berada di tengah.
+   --------------------------------------------------------------------- */
+#acara .ev {
+  position: relative;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  padding: clamp(7px, 0.9vw, 12px);
+  border: 1px solid rgba(244, 169, 193, 0.4);
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, rgba(244, 169, 193, 0.08), transparent 16%, transparent 84%, rgba(244, 169, 193, 0.05)),
+    #0c1834;
+  box-shadow:
+    0 28px 58px -34px rgba(0, 0, 0, 0.72),
+    0 0 44px rgba(239, 126, 164, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  isolation: isolate;
+  transition: border-color 0.35s ease, box-shadow 0.45s ease;
+}
+
+#acara .ev:hover {
+  border-color: rgba(248, 190, 208, 0.62);
+  box-shadow:
+    0 32px 64px -34px rgba(0, 0, 0, 0.76),
+    0 0 54px rgba(239, 126, 164, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09);
+}
+
+#acara .ev:hover .ev-book-frame {
+  border-color: rgba(248, 190, 208, 0.58);
+}
+
+/* Garis tipis di dalam sampul. */
+#acara .ev::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  z-index: 2;
+  border: 1px solid rgba(244, 169, 193, 0.18);
+  border-radius: 22px;
+  pointer-events: none;
+}
+
+/* Punggung buku: jahitan putus-putus + bayangan gutter. */
+#acara .ev::after {
+  content: "";
+  position: absolute;
+  top: 7px;
+  bottom: 7px;
+  left: 50%;
+  z-index: 4;
+  width: clamp(18px, 2.2vw, 30px);
+  transform: translateX(-50%);
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(180deg, rgba(244, 169, 193, 0.55) 0 2px, transparent 2px 9px) 50% 6px / 1px calc(100% - 12px) no-repeat,
+    linear-gradient(90deg,
+      transparent,
+      rgba(255, 250, 240, 0.06) 22%,
+      rgba(4, 10, 24, 0.6) 46%,
+      rgba(4, 10, 24, 0.6) 54%,
+      rgba(255, 250, 240, 0.06) 78%,
+      transparent);
+  opacity: 0.96;
+}
+
+/* Tiap kartu adalah satu halaman; sudut luar membulat, sisi punggung rata. */
+#acara .evc {
+  position: relative;
+  min-width: 0;
+  border: 0;
+  border-radius: 20px 0 0 20px;
+  background: #101d3f;
+  box-shadow: none;
+}
+
+#acara .evc:last-child {
+  border-radius: 0 20px 20px 0;
+}
+
+#acara .evc:hover {
+  transform: none;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* Foto tetap tenang agar halaman buku tidak terlepas saat disentuh. */
+#acara .evc:hover .evp {
+  transform: none;
+}
+
+/* Bingkai halaman di dalam sampul. */
+.ev-book-frame {
+  inset: 6px;
+  border-color: rgba(244, 169, 193, 0.46);
+  border-radius: 14px 0 0 14px;
+  box-shadow:
+    inset 0 0 0 1px rgba(4, 10, 24, 0.42),
+    inset 0 0 20px rgba(4, 10, 24, 0.16);
+}
+
+.evc:last-child .ev-book-frame {
+  border-radius: 0 14px 14px 0;
+}
+
+.ev-book-frame::before {
+  inset: 3px;
+  border-color: rgba(244, 169, 193, 0.18);
+  border-radius: 10px 0 0 10px;
+}
+
+.evc:last-child .ev-book-frame::before {
+  border-radius: 0 10px 10px 0;
+}
+
+/* Punggung sudah dibuat oleh sampul, jadi bingkai halaman tidak perlu. */
+.ev-book-frame::after {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  #acara .evc {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  #acara .evp {
+    height: 100%;
+    min-height: 205px;
+    border-right: 0;
+    border-radius: 14px 0 0 14px;
+  }
+
+  #acara .evc:last-child .evp {
+    border-radius: 0;
+  }
+
+  #acara .evb {
+    padding: 1rem 1.1rem;
+  }
+}
+
+/* Jika hanya ada satu acara, jangan tampilkan punggung tengah. */
+#acara .ev:has(.evc:only-child) {
+  grid-template-columns: 1fr;
+}
+
+#acara .ev:has(.evc:only-child) .evc {
+  border-radius: 20px;
+}
+
+#acara .ev:has(.evc:only-child) .ev-book-frame {
+  border-radius: 14px;
+}
+
+#acara .ev:has(.evc:only-child) .ev-book-frame::before {
+  border-radius: 10px;
+}
+
+#acara .ev:has(.evc:only-child)::after {
+  display: none;
+}
+
+@media (max-width: 899px) {
+  #acara .evc {
+    border-radius: 18px 0 0 18px;
+  }
+
+  #acara .evc:last-child {
+    border-radius: 0 18px 18px 0;
+  }
+
+  #acara .evp {
+    border-radius: 13px 0 0 0;
+  }
+
+  #acara .evc:last-child .evp {
+    border-radius: 0 13px 0 0;
+  }
+
+  #acara .ev:has(.evc:only-child) .evc {
+    border-radius: 18px;
+  }
+
+  #acara .ev:has(.evc:only-child) .evp {
+    border-radius: 13px 13px 0 0;
+  }
+}
+
+@media (max-width: 599px) {
+  #acara .ev {
+    padding: 6px;
+    border-radius: 18px;
+  }
+
+  #acara .ev::before {
+    inset: 3px;
+    border-radius: 15px;
+  }
+
+  #acara .ev::after {
+    top: 5px;
+    bottom: 5px;
+    width: 14px;
+  }
+
+  .ev-book-frame {
+    inset: 4px;
+    border-radius: 9px 0 0 9px;
+  }
+
+  .evc:last-child .ev-book-frame {
+    border-radius: 0 9px 9px 0;
+  }
+
+  .ev-book-frame::before {
+    border-radius: 6px 0 0 6px;
+  }
+
+  .evc:last-child .ev-book-frame::before {
+    border-radius: 0 6px 6px 0;
+  }
+
+  #acara .evc {
+    border-radius: 13px 0 0 13px;
+  }
+
+  #acara .evc:last-child {
+    border-radius: 0 13px 13px 0;
+  }
+
+  #acara .ev:has(.evc:only-child) .evc {
+    border-radius: 13px;
+  }
+
+  #acara .ev:has(.evc:only-child) .ev-book-frame,
+  #acara .ev:has(.evc:only-child) .ev-book-frame::before {
+    border-radius: 9px;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Lightbox: animasi menutup, bukan hilang mendadak.
+   --------------------------------------------------------------------- */
+#lb.closing {
+  animation: lbOut 0.2s ease both;
+}
+
+@keyframes lbOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (max-height: 740px) {
+  #acara .ev {
+    padding: 7px;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Fallback gerak minimal untuk tambahan di atas.
+   --------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  #cd.is-in .cd-cell,
+  #wishes .wish {
+    animation: none;
+  }
+
+  #lb.closing {
+    animation: none;
   }
 }

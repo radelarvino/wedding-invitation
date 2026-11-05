@@ -211,7 +211,7 @@ function renderCover() {
   if (guestNote) guestNote.textContent = guest.priority ? `Undangan berlaku untuk ${guest.max} orang` : "";
 
   const nickEl = $("#nick");
-  if (nickEl) nickEl.textContent = `${a.nick} & ${b.nick}`;
+  if (nickEl) nickEl.innerHTML = `<span class="nick-wipe">${esc(a.nick)} &amp; ${esc(b.nick)}</span>`;
 
   const creditNames = $("#creditNames");
   if (creditNames) creditNames.textContent = `${a.nick} & ${b.nick}`;
@@ -309,6 +309,7 @@ function renderContent() {
   const evEl = $("#ev");
   if (evEl) {
     evEl.innerHTML = evs.map((e, i) => `<article class="evc card tilt reveal" style="--d:${i * 120}ms">
+      <span class="ev-book-frame" aria-hidden="true"></span>
       <div class="evp" style="--ei:${i}">
         ${e.photo ? `<img src="${esc(e.photo)}" alt="${esc(e.name)}" loading="lazy">` : `<div class="evp-fallback"><span class="evp-mono">${esc(a.nick.charAt(0))}<i>&amp;</i>${esc(b.nick.charAt(0))}</span><span class="evp-name">${esc(e.name)}</span></div>`}
       </div>
@@ -705,8 +706,23 @@ function initGallery() {
 
   stage.classList.toggle("single", n < 2);
 
+  /* Bingkai foto mengikuti tinggi satu layar. Lebar dihitung dari sisa
+     ruang di bawah judul "Our Moment" supaya bingkai memenuhi halaman
+     tanpa mendorong judul keluar dari layar. */
+  const fit = () => {
+    const stageH = car.clientHeight;
+    const carW = car.clientWidth;
+    if (!stageH || !carW) return;
+    const pad = parseFloat(getComputedStyle(car).paddingBottom) || 0;
+    const ar = parseFloat(getComputedStyle(stage).getPropertyValue("--gal-ar")) || 0.8;
+    const maxW = carW * (innerWidth < 600 ? 0.96 : 0.82);
+    const w = Math.max(160, Math.min((stageH - pad) * ar, maxW, 720));
+    car.style.setProperty("--w", `${Math.round(w)}px`);
+  };
+
   const layout = (instant = false) => {
     if (!n) return;
+    fit();
     const w = slides[0].offsetWidth;
     const step = w * 0.62;
     slides.forEach((el, i) => {
@@ -846,6 +862,14 @@ function initGallery() {
     resizeRaf = requestAnimationFrame(() => layout(true));
   }, { passive: true });
 
+  /* Tinggi section bisa berubah setelah font termuat atau bilah alamat
+     ponsel muncul/hilang; ukur ulang bingkai saat itu terjadi. */
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(() => {
+      if (stage.clientHeight) layout(true);
+    }).observe(stage);
+  }
+
   car.mark = () => layout(true);
   layout(true);
 }
@@ -936,15 +960,14 @@ let myWish = null;
  * @param {Object} w - Objek data ucapan
  * @returns {string} HTML string
  */
-function wishCard(w) {
+function wishCard(w, i = 0) {
   const name = String(w.nama || "Tamu").trim();
   const initial = name.charAt(0).toUpperCase() || "?";
-  return `<article class="card wish">
+  return `<article class="card wish" style="--d:${Math.min(i, 8) * 45}ms">
     <div class="wish-top">
       <span class="avatar" aria-hidden="true">${esc(initial)}</span>
       <div class="wish-who">
         <b>${esc(name)}</b>
-        ${w.hadir === "Hadir" ? `<span class="wish-badge">Hadir</span>` : ""}
       </div>
     </div>
     <p>${esc(w.ucapan)}</p>
@@ -960,7 +983,7 @@ function drawWishes() {
   const list = API
     ? (wishes.length ? wishes : emptyWish)
     : (wishes.length ? [...wishes, ...demoWishes] : demoWishes);
-  wishesEl.innerHTML = list.map(wishCard).join("");
+  wishesEl.innerHTML = list.map((w, i) => wishCard(w, i)).join("");
   wishesEl.mark && wishesEl.mark();
 }
 
@@ -1033,35 +1056,124 @@ function setupRsvpForm() {
  */
 function restoreRsvp() {
   const r = savedRsvp();
-  const sum = $("#sum");
-  const rsvpCta = $("#rsvpCta");
-  const rsvpForm = $("#rsvpForm");
-  const sumTxt = $("#sumTxt");
-  const sbtn = $("#sbtn");
+  const form = $("#rsvpForm");
 
-  if (sum) sum.hidden = !r;
-  if (rsvpCta) rsvpCta.hidden = !!r;
-  if (rsvpForm) rsvpForm.hidden = true;
+  const apply = () => {
+    const sum = $("#sum");
+    const rsvpCta = $("#rsvpCta");
+    const sumTxt = $("#sumTxt");
+    const sbtn = $("#sbtn");
 
-  if (r && sumTxt && sbtn) {
-    const who = r.hadir === "Hadir"
-      ? `Terima kasih, ${r.nama}. Kami mencatat konfirmasi kehadiran Anda untuk ${r.jumlah} orang.`
-      : `Terima kasih atas kabarnya, ${r.nama}. Kami mendoakan yang terbaik untuk Anda.`;
-    sumTxt.textContent = who;
-    sbtn.innerHTML = ic("check") + " Kirim konfirmasi";
+    if (sum) sum.hidden = !r;
+    if (rsvpCta) rsvpCta.hidden = !!r;
+    if (form) form.hidden = true;
+
+    if (r && sumTxt && sbtn) {
+      const who = r.hadir === "Hadir"
+        ? `Terima kasih, ${r.nama}. Kami mencatat konfirmasi kehadiran Anda untuk ${r.jumlah} orang.`
+        : `Terima kasih atas kabarnya, ${r.nama}. Kami mendoakan yang terbaik untuk Anda.`;
+      sumTxt.textContent = who;
+      sbtn.innerHTML = ic("check") + " Kirim konfirmasi";
+    }
+  };
+
+  /* Tutup form dengan animasi yang sama halusnya seperti saat dibuka,
+     lalu tampilkan ringkasan konfirmasi. */
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (form && !form.hidden && !reduce) {
+    const formH = form.getBoundingClientRect().height;
+    form.style.overflow = "hidden";
+    const anim = form.animate(
+      [
+        { height: `${formH}px`, opacity: 1, transform: "none" },
+        { height: "0px", opacity: 0, transform: "translateY(-6px)" }
+      ],
+      { duration: 320, easing: "cubic-bezier(.4,0,.2,1)", fill: "both" }
+    );
+    anim.onfinish = () => {
+      anim.cancel();
+      form.style.height = "";
+      form.style.opacity = "";
+      form.style.transform = "";
+      form.style.overflow = "";
+      apply();
+    };
+  } else {
+    apply();
+  }
+}
+
+/**
+ * Membuka form RSVP dengan animasi tinggi + fade yang halus.
+ * Tombol CTA menyusut lebih dulu, lalu form mengembang dari atas.
+ */
+function openRsvpForm({ focus = true } = {}) {
+  const cta = $("#rsvpCta");
+  const form = $("#rsvpForm");
+  if (!form) return;
+
+  if (!form.hidden) {
+    if (focus) {
+      const n = $("#n");
+      if (n) n.focus({ preventScroll: true });
+    }
+    return;
+  }
+
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const ctaH = cta && !cta.hidden ? cta.getBoundingClientRect().height : 0;
+
+  form.hidden = false;
+  const formH = form.getBoundingClientRect().height;
+  form.style.overflow = "hidden";
+  form.style.height = "0px";
+  form.style.opacity = "0";
+  form.style.transform = "translateY(-8px)";
+  if (cta && ctaH) cta.style.overflow = "hidden";
+
+  const formAnim = form.animate(
+    [
+      { height: "0px", opacity: 0, transform: "translateY(-8px)" },
+      { height: `${formH}px`, opacity: 1, transform: "translateY(0)" }
+    ],
+    { duration: reduce ? 1 : 520, easing: "cubic-bezier(.22,.9,.28,1)", fill: "both" }
+  );
+
+  const ctaAnim = cta && ctaH
+    ? cta.animate(
+        [
+          { height: `${ctaH}px`, opacity: 1 },
+          { height: "0px", opacity: 0 }
+        ],
+        { duration: reduce ? 1 : 320, easing: "ease", fill: "both" }
+      )
+    : null;
+
+  formAnim.onfinish = () => {
+    formAnim.cancel();
+    form.style.height = "";
+    form.style.opacity = "";
+    form.style.transform = "";
+    form.style.overflow = "";
+    if (cta && ctaH) {
+      if (ctaAnim) ctaAnim.cancel();
+      cta.hidden = true;
+      cta.style.overflow = "";
+    }
+  };
+
+  if (reduce) formAnim.finish();
+  if (focus) {
+    setTimeout(() => {
+      const n = $("#n");
+      if (n) n.focus({ preventScroll: true });
+    }, reduce ? 0 : 280);
   }
 }
 
 const rsvpOpenBtn = $("#rsvpOpen");
 if (rsvpOpenBtn) {
-  rsvpOpenBtn.onclick = () => {
-    const rsvpCta = $("#rsvpCta");
-    const rsvpForm = $("#rsvpForm");
-    const n = $("#n");
-    if (rsvpCta) rsvpCta.hidden = true;
-    if (rsvpForm) rsvpForm.hidden = false;
-    if (n) n.focus();
-  };
+  rsvpOpenBtn.onclick = () => openRsvpForm();
 }
 
 const editBtn = $("#edit");
@@ -1074,7 +1186,6 @@ if (editBtn) {
     const j = $("#j");
     const sbtn = $("#sbtn");
     const sum = $("#sum");
-    const rsvpForm = $("#rsvpForm");
 
     if (n) n.value = r.nama || n.value;
     if (k) k.value = r.hadir || "Hadir";
@@ -1083,7 +1194,7 @@ if (editBtn) {
     if (j && k) j.disabled = k.value !== "Hadir";
     if (sbtn) sbtn.innerHTML = ic("check") + " Simpan perubahan";
     if (sum) sum.hidden = true;
-    if (rsvpForm) rsvpForm.hidden = false;
+    openRsvpForm({ focus: false });
   };
 }
 
@@ -1178,6 +1289,7 @@ if (rsvpForm) {
 
 /* ====== 9. LIGHTBOX ====== */
 let lightboxIndex = 0;
+let lbCloseTimer = 0;
 const lb = $("#lb");
 
 /**
@@ -1186,6 +1298,8 @@ const lb = $("#lb");
  */
 function showLightbox(i) {
   if (!C.gallery.length || !lb) return;
+  clearTimeout(lbCloseTimer);
+  lb.classList.remove("closing");
   lightboxIndex = (i + C.gallery.length) % C.gallery.length;
   const img = lb.querySelector("img");
   if (img) {
@@ -1200,9 +1314,19 @@ function showLightbox(i) {
  * Menutup modal lightbox
  */
 function closeLightbox() {
-  if (!lb) return;
-  lb.classList.remove("show");
+  if (!lb || !lb.classList.contains("show") || lb.classList.contains("closing")) return;
   document.body.classList.remove("lb-open");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finish = () => {
+    lb.classList.remove("show", "closing");
+  };
+  if (reduce) {
+    finish();
+    return;
+  }
+  lb.classList.add("closing");
+  clearTimeout(lbCloseTimer);
+  lbCloseTimer = setTimeout(finish, 220);
 }
 
 if ($("#lbx")) $("#lbx").onclick = closeLightbox;
@@ -1387,11 +1511,11 @@ document.addEventListener("visibilitychange", () => {
 /* ====== 12. ANIMATIONS (REVEAL, TILT) ====== */
 const revealObserver = new IntersectionObserver(entries => {
   entries.forEach(entry => {
-    if (!entry.isIntersecting) return;
-    entry.target.classList.add("is-in");
-    revealObserver.unobserve(entry.target);
+    /* Dua arah: elemen terbuka saat masuk layar dan menutup lagi saat
+       pengguna beralih ke bagian lain, lalu animasi masuk diputar ulang. */
+    entry.target.classList.toggle("is-in", entry.isIntersecting);
   });
-}, { threshold: 0.08, rootMargin: "0px 0px -20px 0px" });
+}, { threshold: 0.06, rootMargin: "0px 0px -6% 0px" });
 
 let revealStarted = false;
 
@@ -1401,7 +1525,8 @@ let revealStarted = false;
  */
 function observeReveals(scope = document) {
   if (!revealStarted) return;
-  scope.querySelectorAll(".reveal:not(.is-in)").forEach(el => revealObserver.observe(el));
+  /* Tetap diamati agar kelas is-in bisa dilepas saat elemen keluar layar. */
+  scope.querySelectorAll(".reveal").forEach(el => revealObserver.observe(el));
 }
 
 /**
@@ -1578,7 +1703,7 @@ const FLORAL_ART = `<svg viewBox="0 0 240 240" aria-hidden="true" focusable="fal
    Titik (0,0) = sudut bingkai; sudut lain didapat dengan pencerminan (CSS). */
 const bloomG = (x, y, r, s, d) => `<g transform="translate(${x} ${y})"><g class="br" style="--bd:${d}s"><use href="#fl-bloom" transform="rotate(${r}) scale(${s})"/></g></g>`;
 const leafG = (x, y, r, d) => `<g transform="translate(${x} ${y}) rotate(${r})"><path class="lf" style="--bd:${d}s" d="M0 0c6-8 16-10 24-6-5 8-15 10-24 6z" fill="#9db9d3"/></g>`;
-const budG = (x, y, r) => `<ellipse cx="${x}" cy="${y}" rx="2.3" ry="3.6" fill="#ee9ab5" transform="rotate(${r} ${x} ${y})"/>`;
+const budG = (x, y, r) => `<g transform="translate(${x} ${y}) rotate(${r})"><path d="M0 5C-3.6 2 -4 -4 0 -7 4 -4 3.6 2 0 5Z" fill="#f2a0b9" stroke="#e07f9f" stroke-width=".4"/><path d="M0 -6C.6 -3 .6 1 0 3.6" stroke="#d96b90" stroke-width=".4" stroke-linecap="round" fill="none"/></g>`;
 const COVER_ART = `<svg viewBox="0 0 260 260" aria-hidden="true" focusable="false"><g class="wind">
 <circle class="halo" cx="46" cy="46" r="96" fill="url(#flHalo)" style="transform-origin:46px 46px"/>
 <g class="tw tw1" style="transform-origin:0px 0px">
@@ -1618,7 +1743,19 @@ addEventListener("scroll", () => {
   }
 }, { passive: true });
 
-const FLOWER_ART = `<img src="assets/sakura-corner.png" alt="" draggable="false">`;
+/* Rumpun sakura untuk sudut bingkai: satu tangkai melengkung mengikuti sudut,
+   tiga kuntum yang mekar bertahap, dua kuncup, dan daun. Didesain untuk sudut
+   kiri-atas lalu dicerminkan CSS ke sudut lain, sehingga kuntum duduk tepat di
+   atas garis bingkai tanpa menutupi isi foto. */
+const FLOWER_ART = `<svg viewBox="0 0 240 240" aria-hidden="true" focusable="false"><g class="wind">
+<circle class="halo" cx="70" cy="46" r="62" fill="url(#flHalo)"/>
+<path d="M-8 116C18 104 40 82 56 58 68 40 82 26 104 16" fill="none" stroke="#8a6b6f" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M46 72C32 60 18 56 4 58" fill="none" stroke="#8a6b6f" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M82 34C92 24 104 21 116 24" fill="none" stroke="#8a6b6f" stroke-width="1.4" stroke-linecap="round"/>
+${leafG(24, 66, -8, 0)}${leafG(72, 32, 28, -1.2)}${leafG(104, 54, -26, -2.1)}
+${bloomG(72, 42, 18, 1.4, 0)}${bloomG(102, 20, -16, 1.02, -1.5)}${bloomG(40, 82, 32, 0.8, -2.4)}${bloomG(124, 42, 10, 0.62, -0.7)}
+${budG(18, 64, 26)}${budG(118, 62, -20)}
+</g></svg>`;
 
 function initFloral() {
   /* Ranting sampul tetap memakai ilustrasi batang. Untuk bingkai foto mempelai
@@ -1627,7 +1764,7 @@ function initFloral() {
   const groups = [
     [".cover-frame", "tl tr bl br", "branch"],
     ["#pair .person .ph", "tl br", "flower"],
-    ["#ev .evc", "tl tr bl br", "flower"],
+    ["#ev", "tl tr bl br", "flower"],
     [".s-event", "tl tr", "flower"],
     [".s-closing", "bl br", "flower"]
   ];
@@ -1672,12 +1809,13 @@ function initFloral() {
 
 
 /* ====== 12c. HUJAN BUNGA SAKURA ======
-   Satu kanvas ringan. Bentuk bunga diambil dari assets/sakura.svg (siluet satu
-   warna) lalu diwarnai pink sekali saja menjadi sprite kecil; tiap frame hanya
-   menyalin sprite itu. Kecepatan jatuh, ukuran, dan kejernihan mengikuti
-   "kedalaman" (dekat = besar, cepat, jelas) sehingga terasa seperti hujan
-   kelopak yang tertiup angin. Jumlahnya menyesuaikan lebar layar & perangkat,
-   dan loop berhenti total saat tab tersembunyi. */
+   Satu kanvas ringan. Kuntum dan kelopak diambil langsung dari foto
+   assets/sakura.jpg: latar putihnya dibuat transparan, lalu setiap kuntum
+   dipotong otomatis menjadi sprite. Warna asli foto dipertahankan sehingga
+   hujan bunga tampak sama dengan asetnya. Kecepatan jatuh, ukuran, dan
+   kejernihan mengikuti "kedalaman" (dekat = besar, cepat, jelas) sehingga
+   terasa seperti hujan kelopak yang tertiup angin. Jumlahnya menyesuaikan
+   lebar layar & perangkat, dan loop berhenti total saat tab tersembunyi. */
 function initPetals() {
   const cv = $("#petals");
   if (!cv || reduceMotion) return;
@@ -1700,41 +1838,122 @@ function initPetals() {
   resize();
   addEventListener("resize", resize, { passive: true });
 
-  /* Tiga rona pink; warna diberikan ke siluet dengan source-in */
-  const PAL = [["#ffffff", "#ffe0ea", "#f7b2c8"], ["#fffafb", "#ffd3e0", "#f5a3bf"], ["#fff0f5", "#fbc3d4", "#f08fb0"]];
-  const SW = 64;
-  const buildSprites = img => PAL.map(([c0, c1, c2]) => {
-    const SH = img ? Math.round(SW * img.naturalHeight / img.naturalWidth) : SW;
+  /* Foto hujan sakura di folder assets menjadi sumber sprite. */
+  const ART = "assets/sakura.jpg";
+  const SRC_W = 640;                    /* cukup tajam untuk sprite <= 44px */
+  const fallbackSprite = () => {
     const s = document.createElement("canvas");
-    s.width = SW;
-    s.height = SH;
+    s.width = s.height = 96;
     const g = s.getContext("2d");
-    if (img) {
-      g.drawImage(img, 0, 0, SW, SH);
-      g.globalCompositeOperation = "source-in";
-    } else {
-      /* Cadangan bila berkas SVG tidak termuat: kelopak sederhana */
-      g.translate(SW / 2, SH - 4);
-      g.scale(2.8, 2.8);
-      g.fillStyle = c1;
-      g.fill(new Path2D("M0 0C-5 -5 -8.5 -13 -4.8 -17.5C-3.2 -19 -1.1 -18.2 0 -16C1.1 -18.2 3.2 -19 4.8 -17.5C8.5 -13 5 -5 0 0Z"));
-      g.setTransform(1, 0, 0, 1, 0, 0);
-      return s;
-    }
-    const grad = g.createLinearGradient(0, 0, SW, SH);
-    grad.addColorStop(0, c0);
-    grad.addColorStop(0.5, c1);
-    grad.addColorStop(1, c2);
-    g.fillStyle = grad;
-    g.fillRect(0, 0, SW, SH);
+    g.translate(48, 90);
+    g.scale(4.2, 4.2);
+    g.fillStyle = "#f5a3bf";
+    g.fill(new Path2D("M0 0C-5 -5 -8.5 -13 -4.8 -17.5C-3.2 -19 -1.1 -18.2 0 -16C1.1 -18.2 3.2 -19 4.8 -17.5C8.5 -13 5 -5 0 0Z"));
     return s;
-  });
+  };
 
-  const N = Math.round(Math.min(40, Math.max(16, W / 12)) * (lowEnd ? 0.6 : 1));
+  const buildSprites = img => {
+    if (!img || !img.naturalWidth) return [fallbackSprite()];
+
+    const w = SRC_W;
+    const h = Math.round(img.naturalHeight * SRC_W / img.naturalWidth);
+    const src = document.createElement("canvas");
+    src.width = w;
+    src.height = h;
+    const sg = src.getContext("2d", { willReadFrequently: true });
+    sg.drawImage(img, 0, 0, w, h);
+
+    let px;
+    try {
+      px = sg.getImageData(0, 0, w, h).data;
+    } catch (e) {
+      return [fallbackSprite()];        /* kanvas tercemar (mis. dibuka via file://) */
+    }
+
+    /* Latar putih dibuat transparan. Nilai alfa mengikuti kadar "bukan putih"
+       agar tepi kelopak tetap halus dan kuntum yang pucat tetap lembut. */
+    const alpha = new Uint8ClampedArray(w * h);
+    for (let i = 0, p = 0; i < px.length; i += 4, p++) {
+      alpha[p] = Math.max(0, Math.min(255, (255 - (px[i] + px[i + 1] + px[i + 2]) / 3) * 4));
+    }
+
+    /* Cari kelompok piksel yang menyatu: satu kuntum atau satu kelopak. */
+    const seen = new Uint8Array(w * h);
+    const stack = new Int32Array(w * h);
+    const blobs = [];
+    for (let p = 0; p < alpha.length; p++) {
+      if (seen[p] || alpha[p] < 40) continue;
+      let top = 0;
+      let x0 = w, y0 = h, x1 = -1, y1 = -1, area = 0;
+      stack[top++] = p;
+      seen[p] = 1;
+      while (top) {
+        const q = stack[--top];
+        const x = q % w;
+        const y = (q / w) | 0;
+        area++;
+        if (x < x0) x0 = x;
+        if (x > x1) x1 = x;
+        if (y < y0) y0 = y;
+        if (y > y1) y1 = y;
+        if (x > 0 && !seen[q - 1] && alpha[q - 1] >= 40) { seen[q - 1] = 1; stack[top++] = q - 1; }
+        if (x < w - 1 && !seen[q + 1] && alpha[q + 1] >= 40) { seen[q + 1] = 1; stack[top++] = q + 1; }
+        if (y > 0 && !seen[q - w] && alpha[q - w] >= 40) { seen[q - w] = 1; stack[top++] = q - w; }
+        if (y < h - 1 && !seen[q + w] && alpha[q + w] >= 40) { seen[q + w] = 1; stack[top++] = q + w; }
+      }
+      const bw = x1 - x0 + 1;
+      const bh = y1 - y0 + 1;
+      if (area >= 90 && bw >= 8 && bh >= 8 && bw <= 200 && bh <= 200) {
+        blobs.push({ x: x0, y: y0, w: bw, h: bh, area });
+      }
+    }
+
+    /* Ambil kuntum yang beragam (buang potongan yang benar-benar sama). */
+    blobs.sort((a, b) => b.area - a.area);
+    const shape = new Set();
+    const picked = [];
+    const step = Math.max(1, Math.floor(blobs.length / 22));
+    for (let i = 0; i < blobs.length && picked.length < 20; i += step) {
+      const b = blobs[i];
+      const key = b.w + "x" + b.h + ":" + b.area;
+      if (shape.has(key)) continue;
+      shape.add(key);
+      picked.push(b);
+    }
+
+    /* Potong tiap kuntum, lalu bersihkan sisa putih di tepinya. */
+    const sprites = picked.map(b => {
+      const pad = 2;
+      const s = document.createElement("canvas");
+      s.width = b.w + pad * 2;
+      s.height = b.h + pad * 2;
+      const sctx = s.getContext("2d");
+      const out = sctx.createImageData(s.width, s.height);
+      for (let y = 0; y < b.h; y++) {
+        for (let x = 0; x < b.w; x++) {
+          const sp = (b.y + y) * w + b.x + x;
+          const a = alpha[sp] / 255;
+          if (a < 0.03) continue;
+          const si = sp * 4;
+          const dp = ((y + pad) * s.width + x + pad) * 4;
+          out.data[dp] = Math.max(0, Math.min(255, (px[si] - 255 * (1 - a)) / a));
+          out.data[dp + 1] = Math.max(0, Math.min(255, (px[si + 1] - 255 * (1 - a)) / a));
+          out.data[dp + 2] = Math.max(0, Math.min(255, (px[si + 2] - 255 * (1 - a)) / a));
+          out.data[dp + 3] = a * 255;
+        }
+      }
+      sctx.putImageData(out, 0, 0);
+      return s;
+    });
+
+    return sprites.length ? sprites : [fallbackSprite()];
+  };
+
+  const N = Math.round(Math.min(32, Math.max(14, W / 16)) * (lowEnd ? 0.6 : 1));
   const make = (sprites, fresh) => {
     const z = Math.random();                       /* 0 = jauh, 1 = dekat */
     const spr = sprites[(Math.random() * sprites.length) | 0];
-    const base = 13 + z * 17 + Math.random() * 5;   /* lebar tampil (px) */
+    const base = 16 + z * 20 + Math.random() * 6;   /* lebar tampil (px) */
     return {
       x: Math.random() * (W + 160) - 80,
       y: fresh ? -30 - Math.random() * H * 0.35 : Math.random() * H,
@@ -1805,13 +2024,43 @@ function initPetals() {
     ps = Array.from({ length: N }, () => make(SPR, false));
     run();
   };
+
   const img = new Image();
   img.decoding = "async";
   img.onload = () => begin(img);
   img.onerror = () => begin(null);
-  img.src = "assets/sakura.svg";
+  img.src = ART;
 }
 initPetals();
+
+
+/* ====== 12d. NAMA FOOTER: MULAI SAAT 85% HALAMAN PENUTUP ======
+   Nama baru "membuka" setelah bagian penutup terlihat 85% dari tinggi
+   halaman footer (bukan begitu tepinya menyentuh layar). Animasi wipe
+   ditangani CSS lewat kelas .nick-in. */
+function initFooterName() {
+  const section = document.querySelector("#penutup");
+  const nick = section && section.querySelector(".nick");
+  if (!section || !nick) return;
+
+  let raf = 0;
+  const check = () => {
+    raf = 0;
+    if (!document.body.classList.contains("open") || nick.classList.contains("nick-in")) return;
+    const rect = section.getBoundingClientRect();
+    const visible = Math.min(innerHeight, rect.bottom) - Math.max(0, rect.top);
+    const pageSize = Math.min(innerHeight, section.offsetHeight) || 1;
+    if (visible / pageSize >= 0.85) nick.classList.add("nick-in");
+  };
+  const schedule = () => {
+    if (!raf) raf = requestAnimationFrame(check);
+  };
+
+  addEventListener("scroll", schedule, { passive: true });
+  addEventListener("resize", schedule, { passive: true });
+  setTimeout(check, 350);
+}
+initFooterName();
 
 
 /* ====== 13. COVER & NAVIGATION ====== */
@@ -1844,7 +2093,7 @@ if (openBtn) {
       });
       coverHideTimer = setTimeout(() => {
         cover.style.display = "none";
-      }, 900);
+      }, 1150);
     }
 
     startMusic();
@@ -1982,6 +2231,8 @@ function returnToCover() {
   $$(".reveal.is-in").forEach(el => {
     el.classList.remove("is-in");
   });
+  const footerNick = $("#nick");
+  if (footerNick) footerNick.classList.remove("nick-in");
   revealStarted = false;
 }
 

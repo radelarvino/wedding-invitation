@@ -3,35 +3,41 @@
    ---------------------------------------------------------------------
    CARA PASANG
    1. Buat Google Sheet baru → Extensions → Apps Script → tempel file ini.
-   2. Ubah SITE_URL (alamat undangan) dan ADMIN_PIN di bawah.
-   3. Jalankan fungsi setup() sekali, izinkan akses. Setup juga memperbaiki
-      sheet lama: header, kolom Kode, sheet Kehadiran, dan formula Ringkasan.
+   2. Ubah SITE_URL, ADMIN_USERNAME, dan ADMIN_PASSWORD di bawah.
+   3. Jalankan fungsi setup() sekali, izinkan akses. Setup membuat sheet
+      Tamu, RSVP, Kehadiran, Ringkasan, dan Akun beserta header-nya.
    4. Deploy → New deployment → Web app
       Execute as: Me · Who has access: Anyone.
       Salin URL ..../exec ke config.js (SCRIPT_URL).
    5. Isi sheet "Tamu" (Nama, Maks tamu, Tipe). Untuk tamu prioritas biarkan
       Tipe kosong/Prioritas. lalu menu Undangan → Buat / perbarui link tamu.
       Untuk tamu umum bernama, isi Tipe = Umum.
-   6. Buka admin.html untuk dashboard kehadiran (PIN = ADMIN_PIN).
+   6. Buka admin.html. Masuk sebagai admin memakai ADMIN_USERNAME /
+      ADMIN_PASSWORD. Akun moderator dibuat dari tab "Akun" di dashboard.
 
    Setiap kali Code.gs diubah: Deploy → Manage deployments → Edit →
    New version, agar perubahan aktif.
    ===================================================================== */
 const SITE_URL = 'https://NAMA-ANDA.github.io/undangan/'; // HARUS diakhiri "/"
-const ADMIN_PIN = '123456';                                // GANTI DI EDITOR APPS SCRIPT; jangan commit PIN asli
+const ADMIN_USERNAME = 'admin';                            // GANTI DI EDITOR APPS SCRIPT
+const ADMIN_PASSWORD = '123456';                           // GANTI; jangan commit password asli
+const ADMIN_NAME = 'Administrator';
+const SESSION_HOURS = 6;                                   // masa berlaku sesi login
 const MAX_UMUM = 1;                                        // samakan generalMax di script.js
 
 const SHEET = {
   tamu: 'Tamu',
   rsvp: 'RSVP',
   hadir: 'Kehadiran',
-  ringkas: 'Ringkasan'
+  ringkas: 'Ringkasan',
+  akun: 'Akun'
 };
 const HEAD = {
   tamu: ['Nama', 'Maks tamu', 'Kode', 'Link', 'Tipe', 'WhatsApp', 'Konfirmasi', 'Jumlah konfirmasi', 'Check-in', 'Waktu check-in', 'Jumlah hadir', 'Catatan'],
   rsvp: ['ID', 'Waktu', 'Nama', 'Kehadiran', 'Jumlah', 'Ucapan', 'Tipe', 'Kode'],
   hadir: ['ID', 'Waktu', 'Nama', 'Kode', 'Jumlah', 'Tipe', 'Catatan'],
-  ringkas: ['Ringkasan', 'Nilai']
+  ringkas: ['Ringkasan', 'Nilai'],
+  akun: ['Username', 'Nama', 'Password hash', 'Salt', 'Role', 'Status', 'Dibuat', 'Terakhir login']
 };
 
 /* ---------- utilitas ---------- */
@@ -44,8 +50,11 @@ const alert_ = msg => {
 const txt_ = s => { s = String(s == null ? '' : s); return /^[=+\-@]/.test(s) ? "'" + s : s; };
 const clean_ = (s, n) => txt_(String(s == null ? '' : s).trim().slice(0, n || 300));
 const iso_ = d => d instanceof Date ? Utilities.formatDate(d, 'Asia/Jakarta', "yyyy-MM-dd'T'HH:mm:ssXXX") : (d || '');
-const pin_ = () => String(ADMIN_PIN);
-const isAdmin_ = p => String(p) === pin_();
+const normUser_ = s => String(s == null ? '' : s).trim().toLowerCase();
+const hex_ = bytes => bytes.map(b => ((b < 0 ? b + 256 : b).toString(16)).padStart(2, '0')).join('');
+const hashPass_ = (pass, salt) => hex_(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, String(salt) + ':' + String(pass)));
+const sessionKey_ = token => 'wedding_session_' + String(token);
+const badLogin_ = (msg) => out_({ ok: false, error: msg || 'Username atau password salah.' });
 
 function sh_(name, head) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -71,6 +80,7 @@ function sh_(name, head) {
 const tamuSheet_ = () => sh_(SHEET.tamu, HEAD.tamu);
 const rsvpSheet_ = () => sh_(SHEET.rsvp, HEAD.rsvp);
 const hadirSheet_ = () => sh_(SHEET.hadir, HEAD.hadir);
+const akunSheet_ = () => sh_(SHEET.akun, HEAD.akun);
 
 function linkBase_() {
   let u = String(SITE_URL || '').trim();
@@ -100,18 +110,18 @@ function onOpen() {
 
 function showDashboard() {
   const url = linkBase_() + 'admin.html';
-  alert_('Dashboard tamu & kehadiran:\n\n' + url + '\n\nPIN awal: ' + ADMIN_PIN + '\nGanti ADMIN_PIN di Code.gs sebelum dibagikan.');
+  alert_('Dashboard tamu & kehadiran:\n\n' + url + '\n\nUsername admin: ' + ADMIN_USERNAME + '\nPassword admin: diatur lewat ADMIN_PASSWORD di Code.gs.\n\nAkun moderator dibuat dari tab "Akun" di dashboard.');
 }
 
 function setup() {
   rapikanLembar(true);
-  alert_('Lembar undangan siap dan sudah dirapikan. Isi sheet "Tamu" (Nama, Maks tamu, Tipe), lalu jalankan menu Undangan → Buat / perbarui link tamu.');
+  alert_('Lembar undangan siap dan sudah dirapikan. Isi sheet "Tamu" (Nama, Maks tamu, Tipe), lalu jalankan menu Undangan → Buat / perbarui link tamu. Akun moderator dapat dibuat dari tab "Akun" di dashboard.');
 }
 
 function cekLembar() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const issues = [];
-  ['tamu', 'rsvp', 'hadir', 'ringkas'].forEach(key => {
+  ['tamu', 'rsvp', 'hadir', 'ringkas', 'akun'].forEach(key => {
     const name = SHEET[key], head = HEAD[key];
     const s = ss.getSheetByName(name);
     if (!s) {
@@ -153,6 +163,7 @@ function rapikanLembar(silent) {
   const r = rsvpSheet_();
   const h = hadirSheet_();
   const sum = sh_(SHEET.ringkas, HEAD.ringkas);
+  const a = akunSheet_();
   const maxRows = s => Math.max(1, s.getMaxRows() - 1);
 
   writeSummary_(sum);
@@ -161,11 +172,14 @@ function rapikanLembar(silent) {
   styleSheet_(r, [115, 155, 190, 120, 80, 380, 100, 115], 0);
   styleSheet_(h, [115, 155, 190, 110, 80, 105, 240], 0);
   styleSheet_(sum, [230, 190], 0);
+  styleSheet_(a, [160, 220, 240, 200, 110, 110, 150, 160], 0);
+  a.hideColumns(3, 2); // hash & salt tidak perlu terlihat saat mengelola akun
 
   t.setTabColor('#D9BD82');
   r.setTabColor('#9DBDAC');
   h.setTabColor('#D7A69E');
   sum.setTabColor('#A4B2A9');
+  a.setTabColor('#EF7EA4');
 
   // Catatan singkat di header supaya kolom tidak tertukar.
   t.getRange('A1').setNote('Isi nama tamu atau nama keluarga.');
@@ -178,6 +192,8 @@ function rapikanLembar(silent) {
   r.getRange('A1').setNote('Diisi otomatis oleh undangan. Tidak perlu diedit.');
   h.getRange('A1').setNote('Diisi otomatis dari dashboard check-in.');
   sum.getRange('A1').setNote('Rekap otomatis. Jangan ubah isi sheet ini.');
+  a.getRange('A1').setNote('Akun moderator. Sebaiknya dibuat dari tab "Akun" di dashboard, bukan diedit manual.');
+  a.getRange('E1').setNote('Role akun: moderator. Admin utama diatur di Code.gs.');
 
   const tipeRule = SpreadsheetApp.newDataValidation()
     .requireValueInList(['Prioritas', 'Umum'], true)
@@ -189,6 +205,7 @@ function rapikanLembar(silent) {
   t.getRange(2, 10, maxRows(t), 1).setNumberFormat('dd/MM/yyyy HH:mm');
   r.getRange(2, 2, maxRows(r), 1).setNumberFormat('dd/MM/yyyy HH:mm');
   h.getRange(2, 2, maxRows(h), 1).setNumberFormat('dd/MM/yyyy HH:mm');
+  a.getRange(2, 7, maxRows(a), 2).setNumberFormat('dd/MM/yyyy HH:mm');
   sum.getRange('B2:B8').setHorizontalAlignment('right').setNumberFormat('#,##0');
   sum.getRange('B9').setHorizontalAlignment('right').setNumberFormat('dd/MM/yyyy HH:mm');
 
@@ -362,6 +379,170 @@ function stats_() {
   };
 }
 
+/* ---------- akun, login & sesi ---------- */
+function publicAccount_(r, row) {
+  return {
+    row: row,
+    username: String(r[0] || ''),
+    nama: String(r[1] || ''),
+    role: String(r[4] || 'moderator') || 'moderator',
+    status: String(r[5] || 'Aktif') || 'Aktif',
+    dibuat: iso_(r[6]),
+    terakhir: iso_(r[7])
+  };
+}
+
+function userRows_() {
+  const s = akunSheet_(), n = s.getLastRow();
+  if (n < 2) return [];
+  return s.getRange(2, 1, n - 1, HEAD.akun.length).getValues()
+    .map((r, i) => ({
+      row: i + 2,
+      username: String(r[0] || '').trim(),
+      nama: String(r[1] || '').trim(),
+      hash: String(r[2] || ''),
+      salt: String(r[3] || ''),
+      role: String(r[4] || 'moderator') || 'moderator',
+      status: String(r[5] || 'Aktif') || 'Aktif',
+      dibuat: r[6],
+      terakhir: r[7]
+    }))
+    .filter(u => u.username);
+}
+
+function findUser_(username) {
+  const key = normUser_(username);
+  if (!key) return null;
+  return userRows_().find(u => u.username.toLowerCase() === key) || null;
+}
+
+function accounts_() {
+  const admin = {
+    username: ADMIN_USERNAME,
+    nama: ADMIN_NAME,
+    role: 'admin',
+    status: 'Aktif',
+    primary: true,
+    dibuat: '',
+    terakhir: ''
+  };
+  return [admin].concat(userRows_().map(u => ({
+    username: u.username,
+    nama: u.nama,
+    role: 'moderator',
+    status: u.status,
+    dibuat: iso_(u.dibuat),
+    terakhir: iso_(u.terakhir)
+  })));
+}
+
+function createSession_(user) {
+  const token = Utilities.getUuid().replace(/-/g, '') + Utilities.getUuid().replace(/-/g, '');
+  const data = {
+    token: token,
+    user: {
+      username: user.username,
+      name: user.nama,
+      role: user.role
+    }
+  };
+  CacheService.getScriptCache().put(sessionKey_(token), JSON.stringify(data.user), SESSION_HOURS * 3600);
+  return data;
+}
+
+function session_(token) {
+  const key = String(token || '').trim();
+  if (!key) return null;
+  try {
+    const raw = CacheService.getScriptCache().get(sessionKey_(key));
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (data.role !== 'admin') {
+      const user = findUser_(data.username);
+      if (!user || user.status === 'Nonaktif') {
+        CacheService.getScriptCache().remove(sessionKey_(key));
+        return null;
+      }
+      data.name = user.nama;
+    }
+    return data;
+  } catch (_) {
+    return null;
+  }
+}
+
+function clearSession_(token) {
+  const key = String(token || '').trim();
+  if (key) CacheService.getScriptCache().remove(sessionKey_(key));
+}
+
+function login_(d) {
+  const username = normUser_(d.username);
+  const password = String(d.password || '');
+  if (!username || !password) return badLogin_('Username dan password wajib diisi.');
+  const cache = CacheService.getScriptCache();
+  const failKey = 'fail_login_' + username;
+  const fails = +(cache.get(failKey) || 0);
+  if (fails >= 5) return badLogin_('Terlalu banyak percobaan. Tunggu 10 menit lalu coba lagi.');
+
+  if (username === normUser_(ADMIN_USERNAME) && password === String(ADMIN_PASSWORD)) {
+    cache.remove(failKey);
+    return out_({ ok: true, data: createSession_({ username: ADMIN_USERNAME, nama: ADMIN_NAME, role: 'admin' }) });
+  }
+
+  const user = findUser_(username);
+  if (!user || user.status === 'Nonaktif' || hashPass_(password, user.salt) !== user.hash) {
+    cache.put(failKey, String(fails + 1), 600);
+    return badLogin_(user && user.status === 'Nonaktif'
+      ? 'Akun moderator ini sedang dinonaktifkan. Hubungi administrator.'
+      : 'Username atau password salah.');
+  }
+
+  akunSheet_().getRange(user.row, 8).setValue(new Date());
+  cache.remove(failKey);
+  return out_({ ok: true, data: createSession_({ username: user.username, nama: user.nama, role: 'moderator' }) });
+}
+
+function addUser_(d) {
+  const username = normUser_(d.username);
+  const nama = clean_(d.nama, 60);
+  const password = String(d.password || '');
+  if (!/^[a-z0-9._-]{3,24}$/.test(username)) return out_({ ok: false, error: 'Username 3–24 karakter: huruf kecil, angka, titik, garis bawah, atau minus.' });
+  if (username === normUser_(ADMIN_USERNAME) || findUser_(username)) return out_({ ok: false, error: 'Username sudah dipakai. Pilih username lain.' });
+  if (nama.length < 2) return out_({ ok: false, error: 'Nama moderator wajib diisi.' });
+  if (password.length < 6 || password.length > 64) return out_({ ok: false, error: 'Password harus 6–64 karakter.' });
+  const salt = Utilities.getUuid();
+  const hash = hashPass_(password, salt);
+  const now = new Date();
+  akunSheet_().appendRow([username, nama, hash, salt, 'moderator', 'Aktif', now, '']);
+  return out_({ ok: true, data: { username: username, nama: nama, role: 'moderator', status: 'Aktif', dibuat: iso_(now), terakhir: '' } });
+}
+
+function resetUser_(d) {
+  const user = findUser_(d.username);
+  if (!user) return out_({ ok: false, error: 'Akun moderator tidak ditemukan.' });
+  const password = String(d.password || '');
+  if (password.length < 6 || password.length > 64) return out_({ ok: false, error: 'Password harus 6–64 karakter.' });
+  const salt = Utilities.getUuid();
+  akunSheet_().getRange(user.row, 3, 1, 2).setValues([[hashPass_(password, salt), salt]]);
+  return out_({ ok: true });
+}
+
+function toggleUser_(d) {
+  const user = findUser_(d.username);
+  if (!user) return out_({ ok: false, error: 'Akun moderator tidak ditemukan.' });
+  const status = String(d.status) === 'Nonaktif' ? 'Nonaktif' : 'Aktif';
+  akunSheet_().getRange(user.row, 6).setValue(status);
+  return out_({ ok: true, data: { username: user.username, status: status } });
+}
+
+function deleteUser_(d) {
+  const user = findUser_(d.username);
+  if (!user) return out_({ ok: false, error: 'Akun moderator tidak ditemukan.' });
+  akunSheet_().deleteRow(user.row);
+  return out_({ ok: true });
+}
+
 /* ---------- GET ---------- */
 function doGet(e) {
   try {
@@ -385,8 +566,13 @@ function doGet(e) {
     if (action === 'wishes') return out_(wishes_());
 
     if (action === 'admin') {
-      if (!isAdmin_(p.pin)) return out_({ ok: false, error: 'PIN tidak sesuai.' });
+      const sess = session_(p.token);
+      if (!sess) return out_({ ok: false, error: 'Sesi berakhir. Silakan masuk kembali.' });
       const type = p.type || 'stats';
+      if (type === 'accounts') {
+        if (sess.role !== 'admin') return out_({ ok: false, error: 'Hanya administrator yang dapat melihat daftar akun.' });
+        return out_({ ok: true, data: accounts_() });
+      }
       if (type === 'guests') return out_({ ok: true, data: allGuests_() });
       if (type === 'attendance') {
         const s = hadirSheet_(), n = s.getLastRow();
@@ -421,9 +607,26 @@ function doPost(e) {
     lock.waitLock(15000);
     const d = JSON.parse((e && e.postData && e.postData.contents) || '{}');
     const action = d.action || 'rsvp';
+    if (action === 'login') return login_(d);
     if (action === 'rsvp') return rsvp_(d);
+    if (action === 'logout') {
+      clearSession_(d.token);
+      return out_({ ok: true });
+    }
+    const sess = session_(d.token);
+    if (!sess) return out_({ ok: false, error: 'Sesi berakhir. Silakan masuk kembali.' });
     if (action === 'checkin') return checkin_(d);
-    if (action === 'addguest') return addguest_(d);
+    if (action === 'addguest') {
+      if (sess.role !== 'admin') return out_({ ok: false, error: 'Hanya administrator yang dapat menambah tamu.' });
+      return addguest_(d);
+    }
+    if (action === 'useradd' || action === 'userreset' || action === 'usertoggle' || action === 'userdelete') {
+      if (sess.role !== 'admin') return out_({ ok: false, error: 'Hanya administrator yang dapat mengelola akun moderator.' });
+      if (action === 'useradd') return addUser_(d);
+      if (action === 'userreset') return resetUser_(d);
+      if (action === 'usertoggle') return toggleUser_(d);
+      return deleteUser_(d);
+    }
     return out_({ ok: false, error: 'Aksi tidak dikenal.' });
   } catch (err) {
     return out_({ ok: false, error: String(err && err.message ? err.message : err) });
@@ -462,7 +665,6 @@ function rsvp_(d) {
 }
 
 function checkin_(d) {
-  if (!isAdmin_(d.pin)) return out_({ ok: false, error: 'PIN tidak sesuai.' });
   const kode = String(d.kode || '').trim();
   const namaInput = clean_(d.nama, 60);
   let g = kode ? findGuest_(kode) : null;
@@ -493,7 +695,6 @@ function checkin_(d) {
 }
 
 function addguest_(d) {
-  if (!isAdmin_(d.pin)) return out_({ ok: false, error: 'PIN tidak sesuai.' });
   const nama = clean_(d.nama, 80);
   if (!nama) return out_({ ok: false, error: 'Nama wajib diisi.' });
   const tipe = String(d.tipe || '').toLowerCase() === 'umum' ? 'Umum' : 'Prioritas';

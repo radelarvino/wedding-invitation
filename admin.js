@@ -8,17 +8,24 @@ const ic = n => `<svg class="ic" aria-hidden="true"><use href="#i-${n}"/></svg>`
 const CONFIG = window.WEDDING_CONFIG || {};
 const API = /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(CONFIG.SCRIPT_URL || "") ? CONFIG.SCRIPT_URL : "";
 
+const SESSION_KEY = "wedding_admin_session";
 const state = {
-  pin: sessionStorage.getItem("wedding_admin_pin") || "",
+  token: "",
+  username: "",
+  name: "",
+  role: "",
   guests: [],
   attendance: [],
   wishes: [],
+  accounts: [],
   stats: {},
   demo: false,
   filter: "all",
   q: "",
   attendanceQ: ""
 };
+const isAdmin = () => state.role === "admin";
+const isAuthError = err => /sesi|token|silakan masuk|login/i.test((err && err.message) || "");
 
 /* ---------- demo ---------- */
 const demoLink = (k, n) => {
@@ -46,6 +53,10 @@ const demoWishes = [
   { nama: "Keluarga Hartono", hadir: "Hadir", ucapan: "Selamat menempuh hidup baru. Semoga sakinah, mawaddah, warahmah.", waktu: "2026-11-30T13:22:00+07:00" },
   { nama: "Siti Aminah", hadir: "Tidak dapat hadir", ucapan: "Mohon maaf belum bisa hadir. Semoga hari bahagianya penuh berkah.", waktu: "2026-11-28T09:05:00+07:00" },
   { nama: "Rizky Pratama", hadir: "Hadir", ucapan: "Congrats Ramiz & Denayu! Sampai jumpa di hari H.", waktu: "2026-11-27T18:45:00+07:00" }
+];
+const demoAccounts = [
+  { username: "moderator1", nama: "Sari Kusuma", role: "moderator", status: "Aktif", dibuat: "2026-11-20T10:00:00+07:00", terakhir: "2026-12-13T07:45:00+07:00" },
+  { username: "moderator2", nama: "Dian Pratama", role: "moderator", status: "Nonaktif", dibuat: "2026-11-21T09:30:00+07:00", terakhir: "" }
 ];
 
 /* ---------- util ---------- */
@@ -101,11 +112,26 @@ function deriveStats() {
 }
 
 /* ---------- API ---------- */
-async function apiGet(type, pin = state.pin) {
+async function readJson(res) {
+  const text = await res.text();
+  try { return JSON.parse(text); }
+  catch (_) { throw new Error("Respons server tidak valid. Periksa URL Apps Script."); }
+}
+async function apiLogin(username, password) {
+  const res = await fetch(API, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify({ action: "login", username, password })
+  });
+  const json = await readJson(res);
+  if (!json || json.ok === false) throw new Error((json && json.error) || "Tidak dapat masuk.");
+  return json.data || {};
+}
+async function apiGet(type) {
   const url = new URL(API);
-  url.search = new URLSearchParams({ action: "admin", pin, type });
+  url.search = new URLSearchParams({ action: "admin", token: state.token, type });
   const res = await fetch(url.toString(), { cache: "no-store" });
-  const json = await res.json();
+  const json = await readJson(res);
   if (!json || json.ok === false) throw new Error((json && json.error) || "Permintaan gagal.");
   return json.data;
 }
@@ -113,9 +139,9 @@ async function apiPost(payload) {
   const res = await fetch(API, {
     method: "POST",
     headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify({ ...payload, pin: state.pin })
+    body: JSON.stringify({ ...payload, token: state.token })
   });
-  const json = await res.json();
+  const json = await readJson(res);
   if (!json || json.ok === false) throw new Error((json && json.error) || "Data gagal disimpan.");
   return json;
 }
@@ -127,17 +153,20 @@ async function loadAll(silent) {
   }
   if (!silent) setBusy(true);
   try {
-    const [stats, guests, attendance, wishes] = await Promise.all([
+    const requests = [
       apiGet("stats"), apiGet("guests"), apiGet("attendance"), apiGet("wishes")
-    ]);
+    ];
+    if (isAdmin()) requests.push(apiGet("accounts"));
+    const [stats, guests, attendance, wishes, accounts] = await Promise.all(requests);
     state.stats = stats || deriveStats();
     state.guests = guests || [];
     state.attendance = attendance || [];
     state.wishes = wishes || [];
+    state.accounts = accounts || [];
     renderAll();
   } catch (err) {
     toast(err.message || "Gagal memuat data.");
-    if (/PIN/i.test(err.message || "")) logout();
+    if (isAuthError(err)) logout(true);
   } finally {
     if (!silent) setBusy(false);
   }
@@ -148,29 +177,71 @@ function setBusy(on) {
   $("#refreshBtn").innerHTML = on ? `${ic("refresh")} Memuat…` : `${ic("refresh")} Muat ulang`;
 }
 
-/* ---------- login ---------- */
-async function login(pin, silent) {
+/* ---------- login & sesi ---------- */
+function readSession() {
+  try {
+    const raw = JSON.parse(sessionStorage.getItem(SESSION_KEY) || "null");
+    return raw && raw.token ? raw : null;
+  } catch (_) { return null; }
+}
+function saveSession() {
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify({
+    token: state.token, username: state.username, name: state.name, role: state.role
+  }));
+}
+function clearSession() {
+  sessionStorage.removeItem(SESSION_KEY);
+}
+function applyRoleUI() {
+  const admin = isAdmin();
+  document.body.dataset.role = state.role || "";
+  $("#roleBadge").hidden = !state.role;
+  $("#roleBadge").textContent = admin ? "Administrator" : "Moderator";
+  $("#userChip").hidden = !state.role;
+  $("#userName").textContent = state.name || "Panitia";
+  $("#userRole").textContent = admin ? "Administrator" : "Moderator";
+  $("#userAvatar").textContent = (state.name || (admin ? "A" : "M")).charAt(0).toUpperCase();
+  $("#welcomeName").textContent = state.name || (admin ? "Admin" : "Moderator");
+  $("#pageSub").textContent = admin
+    ? "Pantau tamu, konfirmasi, kehadiran, dan kelola akses panitia dari satu tempat."
+    : "Pantau tamu, konfirmasi, dan catat kehadiran. Hubungi administrator untuk perubahan data tamu.";
+  $$("[data-admin-only]").forEach(el => { el.hidden = !admin; });
+  $$(".tab").forEach(t => { if (t.dataset.tab === "accounts") t.hidden = !admin; });
+  if (!admin && $("#panel-accounts").classList.contains("on")) openTab("overview");
+}
+async function login(username, password) {
   const btn = $("#gateBtn");
   const msg = $("#gateMsg");
-  if (!API) return;
   btn.disabled = true;
   btn.textContent = "Memeriksa…";
   msg.textContent = "";
-  try {
-    const stats = await apiGet("stats", pin);
-    state.pin = pin;
-    state.stats = stats || {};
-    sessionStorage.setItem("wedding_admin_pin", pin);
+  if (!API) {
+    const user = String(username).trim().toLowerCase();
+    if (user === "admin" && password === "admin") { enterDemo("admin"); return; }
+    if (user === "moderator" && password === "moderator") { enterDemo("moderator"); return; }
+    msg.textContent = "Mode demo: gunakan admin / admin atau moderator / moderator.";
     btn.disabled = false;
     btn.textContent = "Masuk dashboard";
+    $("#loginPass").focus();
+    return;
+  }
+  try {
+    const data = await apiLogin(username, password);
+    const user = data.user || {};
+    state.token = data.token || "";
+    state.username = user.username || username;
+    state.name = user.name || username;
+    state.role = user.role === "admin" ? "admin" : "moderator";
+    state.demo = false;
+    saveSession();
     await enterApp();
   } catch (err) {
-    state.pin = "";
-    sessionStorage.removeItem("wedding_admin_pin");
-    msg.textContent = /PIN/i.test(err.message || "") ? "PIN tidak sesuai. Silakan coba lagi." : (err.message || "Tidak dapat terhubung ke Spreadsheet.");
+    state.token = "";
+    clearSession();
+    msg.textContent = err.message || "Tidak dapat terhubung ke Spreadsheet.";
     btn.disabled = false;
     btn.textContent = "Masuk dashboard";
-    if (silent) $("#pin").focus();
+    $("#loginPass").focus();
   }
 }
 async function enterApp() {
@@ -179,31 +250,54 @@ async function enterApp() {
   $("#logoutBtn").hidden = false;
   $("#modeBadge").hidden = !state.demo;
   $("#modeBadge").textContent = "Mode demo — data tidak tersimpan";
+  applyRoleUI();
+  openTab("overview");
   await loadAll();
-  renderAll();
 }
-function logout() {
-  sessionStorage.removeItem("wedding_admin_pin");
-  state.pin = "";
+function logout(expired) {
+  if (!state.demo && state.token && API) {
+    fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ action: "logout", token: state.token })
+    }).catch(() => {});
+  }
+  clearSession();
+  state.token = "";
+  state.username = "";
+  state.name = "";
+  state.role = "";
   state.demo = false;
+  state.accounts = [];
   $("#app").hidden = true;
   $("#gate").hidden = false;
   $("#logoutBtn").hidden = true;
+  $("#roleBadge").hidden = true;
+  $("#userChip").hidden = true;
   $("#modeBadge").hidden = true;
   $("#gateForm").hidden = false;
   $("#demoBox").hidden = !!API;
-  $("#pin").value = "";
-  $("#pin").focus();
+  $("#loginPass").value = "";
+  $("#gateMsg").textContent = expired ? "Sesi berakhir. Silakan masuk kembali." : "";
+  $("#loginUser").focus();
   window.scrollTo(0, 0);
 }
-function enterDemo() {
+function enterDemo(role) {
+  $("#gateBtn").disabled = false;
+  $("#gateBtn").textContent = "Masuk dashboard";
+  $("#gateMsg").textContent = "";
   state.demo = true;
+  state.token = "";
+  state.username = role === "admin" ? "demo-admin" : "demo-moderator";
+  state.name = role === "admin" ? "Admin Demo" : "Moderator Demo";
+  state.role = role === "admin" ? "admin" : "moderator";
   state.guests = demoGuests.map(g => ({ ...g }));
   state.attendance = demoAttendance.map(a => ({ ...a }));
   state.wishes = demoWishes.map(w => ({ ...w }));
+  state.accounts = role === "admin" ? demoAccounts.map(a => ({ ...a })) : [];
   state.stats = deriveStats();
   enterApp();
-  toast("Mode demo aktif. Data hanya tersimpan selama halaman terbuka.");
+  toast(`Mode demo ${role === "admin" ? "admin" : "moderator"} aktif. Data hanya tersimpan selama halaman terbuka.`);
 }
 
 /* ---------- render ---------- */
@@ -215,6 +309,7 @@ function renderAll() {
   renderGuests();
   renderAttendance();
   renderWishes();
+  if (isAdmin()) renderAccounts();
 }
 
 function renderStats() {
@@ -334,6 +429,36 @@ function renderWishes() {
     <p>${esc(w.ucapan)}</p>
   </article>`).join("");
 }
+function renderAccounts() {
+  const list = state.accounts || [];
+  const rows = list.some(a => a.role === "admin")
+    ? list
+    : [{ username: state.username || "admin", nama: state.name || "Administrator", role: "admin", status: "Aktif", primary: true, terakhir: "" }, ...list];
+  const moderators = rows.filter(a => a.role !== "admin");
+  const active = moderators.filter(a => a.status === "Aktif").length;
+  $("#accountCount").textContent = `${fmtNum(moderators.length)} akun moderator · ${fmtNum(active)} aktif`;
+  $("#accountList").innerHTML = rows.map(a => {
+    const primary = a.role === "admin" || a.primary;
+    const active = a.status !== "Nonaktif";
+    const last = a.terakhir ? `Terakhir masuk ${fmtTime(a.terakhir)}` : "Belum pernah masuk";
+    return `<article class="account-card">
+      <div class="account-info">
+        <span class="account-avatar">${esc((a.nama || a.username || "?").charAt(0).toUpperCase())}</span>
+        <div class="account-copy">
+          <b>${esc(a.nama || a.username)}</b>
+          <small>@${esc(a.username)} · ${primary ? "Administrator" : "Moderator"}</small>
+        </div>
+        <span class="account-badge ${primary ? "primary" : active ? "on" : ""}">${primary ? "Admin utama" : active ? "Aktif" : "Nonaktif"}</span>
+      </div>
+      <p class="account-note">${primary ? "Akun utama diatur melalui ADMIN_USERNAME dan ADMIN_PASSWORD di Code.gs." : esc(last)}</p>
+      ${primary ? "" : `<div class="account-actions">
+        <button class="btn btn-sm btn-ghost" type="button" data-account-reset="${esc(a.username)}">${ic("key")} Reset password</button>
+        <button class="btn btn-sm btn-ghost" type="button" data-account-toggle="${esc(a.username)}" data-status="${active ? "Aktif" : "Nonaktif"}">${ic(active ? "x" : "check")} ${active ? "Nonaktifkan" : "Aktifkan"}</button>
+        <button class="icon-btn" type="button" data-account-delete="${esc(a.username)}" aria-label="Hapus akun ${esc(a.username)}" title="Hapus akun">${ic("trash")}</button>
+      </div>`}
+    </article>`;
+  }).join("");
+}
 
 /* ---------- interaksi daftar ---------- */
 function findGuestByRow(row) {
@@ -369,6 +494,7 @@ $("#guestFilters").addEventListener("click", e => {
 
 /* ---------- tabs ---------- */
 function openTab(name) {
+  if (name === "accounts" && !isAdmin()) return;
   $$(".tab").forEach(t => t.classList.toggle("on", t.dataset.tab === name));
   $$(".panel").forEach(p => p.classList.toggle("on", p.id === "panel-" + name));
 }
@@ -383,6 +509,146 @@ const modal = $("#modal");
 function closeModal() { modal.close(); }
 modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
 modal.addEventListener("close", () => { $("#modalCard").innerHTML = ""; });
+
+/* ---------- kelola akun moderator ---------- */
+function findAccount(username) {
+  return state.accounts.find(a => String(a.username).toLowerCase() === String(username).toLowerCase());
+}
+function confirmAction(title, text, yesLabel) {
+  return new Promise(resolve => {
+    let done = false;
+    const finish = value => {
+      if (done) return;
+      done = true;
+      resolve(value);
+      modal.close();
+    };
+    $("#modalCard").innerHTML = `
+      <button class="modal-close" type="button" data-close aria-label="Tutup">${ic("x")}</button>
+      <p class="eyebrow">Konfirmasi</p>
+      <h2>${esc(title)}</h2>
+      <p class="modal-sub">${esc(text)}</p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" type="button" id="confirmNo">Batal</button>
+        <button class="btn" type="button" id="confirmYes">${esc(yesLabel || "Lanjutkan")}</button>
+      </div>`;
+    modal.showModal();
+    $("#confirmNo").onclick = () => finish(false);
+    $("#confirmYes").onclick = () => finish(true);
+    modal.addEventListener("close", () => finish(false), { once: true });
+  });
+}
+function openAccountForm(account) {
+  const reset = !!account;
+  $("#modalCard").innerHTML = `
+    <button class="modal-close" type="button" data-close aria-label="Tutup">${ic("x")}</button>
+    <p class="eyebrow">Hak akses</p>
+    <h2>${reset ? "Reset password" : "Buat akun moderator"}</h2>
+    <p class="modal-sub">${reset ? "Buat password baru untuk akun moderator ini." : "Akun moderator dapat melihat data tamu dan mencatat kehadiran, tetapi tidak dapat menambah tamu atau mengelola akun."}</p>
+    <form id="accountForm" class="modal-form">
+      ${reset ? `<div class="modal-info"><span>Akun: <b>@${esc(account.username)}</b></span><span>Nama: <b>${esc(account.nama)}</b></span></div>` : `
+        <div class="field"><label for="acName">Nama moderator</label><input id="acName" name="nama" maxlength="60" placeholder="cth. Sari Kusuma" required></div>
+        <div class="field"><label for="acUser">Username</label><input id="acUser" name="username" maxlength="24" autocapitalize="none" spellcheck="false" placeholder="cth. sari.kusuma" required></div>`}
+      <div class="field"><label for="acPass">${reset ? "Password baru" : "Password"}</label><input id="acPass" name="password" type="password" minlength="6" maxlength="64" autocomplete="new-password" placeholder="Minimal 6 karakter" required></div>
+      <div class="field"><label for="acPass2">Ulangi password</label><input id="acPass2" name="password2" type="password" minlength="6" maxlength="64" autocomplete="new-password" placeholder="Ketik ulang password" required></div>
+      <button class="btn" type="submit" id="acSubmit">${ic(reset ? "key" : "user-plus")} ${reset ? "Simpan password" : "Buat akun"}</button>
+      <p class="form-msg" id="acMsg" role="status"></p>
+    </form>`;
+  modal.showModal();
+  ($("#acName") || $("#acPass")).focus();
+  $("#accountForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const btn = $("#acSubmit");
+    const msg = $("#acMsg");
+    const username = reset ? account.username : form.username.value.trim().toLowerCase();
+    const nama = reset ? account.nama : form.nama.value.trim();
+    const password = form.password.value;
+    if (!reset && !/^[a-z0-9._-]{3,24}$/.test(username)) {
+      msg.textContent = "Username 3–24 karakter: huruf kecil, angka, titik, garis bawah, atau minus.";
+      return;
+    }
+    if (!nama) { msg.textContent = "Nama moderator wajib diisi."; return; }
+    if (password.length < 6) { msg.textContent = "Password minimal 6 karakter."; return; }
+    if (password !== form.password2.value) { msg.textContent = "Password dan ulangi password belum sama."; return; }
+    btn.disabled = true;
+    btn.innerHTML = "Menyimpan…";
+    try {
+      if (state.demo) {
+        if (reset) {
+          toast(`Password demo @${username} diperbarui.`);
+        } else {
+          if (state.accounts.some(a => String(a.username).toLowerCase() === username)) {
+            throw new Error("Username sudah dipakai. Pilih username lain.");
+          }
+          state.accounts.push({ username, nama, role: "moderator", status: "Aktif", dibuat: new Date().toISOString(), terakhir: "" });
+          toast(`Akun moderator @${username} dibuat (mode demo).`);
+        }
+        renderAccounts();
+        closeModal();
+      } else {
+        await apiPost({ action: reset ? "userreset" : "useradd", username, nama, password });
+        closeModal();
+        toast(reset ? `Password @${username} berhasil direset.` : `Akun moderator @${username} berhasil dibuat.`);
+        await loadAll();
+      }
+    } catch (err) {
+      msg.textContent = err.message || "Gagal menyimpan akun.";
+      btn.disabled = false;
+      btn.innerHTML = `${ic(reset ? "key" : "user-plus")} ${reset ? "Simpan password" : "Buat akun"}`;
+      if (isAuthError(err)) logout(true);
+    }
+  });
+}
+async function toggleAccount(username) {
+  const account = findAccount(username);
+  if (!account) return;
+  const next = account.status === "Nonaktif" ? "Aktif" : "Nonaktif";
+  try {
+    if (state.demo) {
+      account.status = next;
+      renderAccounts();
+      toast(`@${username} ${next === "Aktif" ? "diaktifkan" : "dinonaktifkan"} (mode demo).`);
+    } else {
+      await apiPost({ action: "usertoggle", username, status: next });
+      toast(`@${username} ${next === "Aktif" ? "diaktifkan" : "dinonaktifkan"}.`);
+      await loadAll();
+    }
+  } catch (err) {
+    toast(err.message || "Gagal mengubah status akun.");
+    if (isAuthError(err)) logout(true);
+  }
+}
+async function deleteAccount(username) {
+  const account = findAccount(username);
+  if (!account) return;
+  const ok = await confirmAction("Hapus akun moderator?", `Akun @${username} (${account.nama}) akan dihapus permanen dan tidak bisa dipakai masuk lagi.`, "Hapus akun");
+  if (!ok) return;
+  try {
+    if (state.demo) {
+      state.accounts = state.accounts.filter(a => a.username !== username);
+      renderAccounts();
+      toast(`Akun @${username} dihapus (mode demo).`);
+    } else {
+      await apiPost({ action: "userdelete", username });
+      toast(`Akun @${username} dihapus.`);
+      await loadAll();
+    }
+  } catch (err) {
+    toast(err.message || "Gagal menghapus akun.");
+    if (isAuthError(err)) logout(true);
+  }
+}
+$("#accountList").addEventListener("click", e => {
+  if (!isAdmin()) return;
+  const reset = e.target.closest("[data-account-reset]");
+  if (reset) { const a = findAccount(reset.dataset.accountReset); if (a) openAccountForm(a); return; }
+  const toggle = e.target.closest("[data-account-toggle]");
+  if (toggle) { toggleAccount(toggle.dataset.accountToggle); return; }
+  const del = e.target.closest("[data-account-delete]");
+  if (del) deleteAccount(del.dataset.accountDelete);
+});
+$("#addAccountBtn").onclick = () => openAccountForm(null);
 
 function openCheckin(g) {
   const isEdit = !!g && g.checkin === "Hadir";
@@ -432,6 +698,7 @@ function openCheckin(g) {
       $("#ciMsg").textContent = err.message || "Gagal menyimpan. Coba lagi.";
       btn.disabled = false;
       btn.innerHTML = `${ic("check")} ${isEdit ? "Simpan perubahan" : "Simpan kehadiran"}`;
+      if (isAuthError(err)) logout(true);
     }
   });
 }
@@ -451,6 +718,7 @@ function demoCheckin(g, nama, jumlah, catatan) {
 }
 
 function openAddGuest() {
+  if (!isAdmin()) { toast("Hanya administrator yang dapat menambah tamu."); return; }
   $("#modalCard").innerHTML = `
     <button class="modal-close" type="button" data-close aria-label="Tutup">${ic("x")}</button>
     <p class="eyebrow">Tamu baru</p>
@@ -506,6 +774,7 @@ function openAddGuest() {
       $("#agMsg").textContent = err.message || "Gagal menambah tamu.";
       btn.disabled = false;
       btn.innerHTML = `${ic("plus")} Simpan tamu`;
+      if (isAuthError(err)) logout(true);
     }
   });
 }
@@ -521,25 +790,53 @@ $("#refreshBtn").onclick = async () => {
   await loadAll();
   toast("Data terbaru dimuat.");
 };
-$("#logoutBtn").onclick = logout;
+$("#logoutBtn").onclick = () => logout(false);
+
+/* ---------- tautan pengajuan moderator ---------- */
+function initRequestLink() {
+  const adminName = CONFIG.ADMIN_NAME || "Admin";
+  let number = String(CONFIG.ADMIN_WA || "").replace(/\D/g, "");
+  if (number.startsWith("0")) number = "62" + number.slice(1);
+  const text = `Halo ${adminName}, saya ingin mengajukan akun moderator untuk Dashboard Undangan Ramiz & Denayu.\n\nNama lengkap: \nUsername yang diinginkan: \nNomor WhatsApp: \n\nTerima kasih.`;
+  const href = number
+    ? `https://wa.me/${number}?text=${encodeURIComponent(text)}`
+    : `https://wa.me/?text=${encodeURIComponent(text)}`;
+  $("#requestModBtn").href = href;
+}
 
 /* ---------- mulai ---------- */
 $("#gateForm").addEventListener("submit", e => {
   e.preventDefault();
-  const pin = $("#pin").value.trim();
-  if (pin) login(pin, false);
+  const username = $("#loginUser").value.trim();
+  const password = $("#loginPass").value;
+  if (username && password) login(username, password);
 });
-$("#demoBtn").onclick = enterDemo;
+function fillDemo(role) {
+  $("#loginUser").value = role;
+  $("#loginPass").value = role;
+  $("#gateMsg").textContent = "";
+  $("#gateBtn").focus();
+}
+$("#fillAdminBtn").onclick = () => fillDemo("admin");
+$("#fillModBtn").onclick = () => fillDemo("moderator");
 
 (async () => {
+  initRequestLink();
   if (!API) {
-    $("#gateForm").hidden = true;
     $("#demoBox").hidden = false;
     $("#modeBadge").hidden = true;
+    $("#loginUser").focus();
     return;
   }
-  if (state.pin) {
-    $("#pin").value = state.pin;
-    await login(state.pin, true);
+  $("#demoBox").hidden = true;
+  const saved = readSession();
+  if (saved) {
+    state.token = saved.token;
+    state.username = saved.username || "";
+    state.name = saved.name || "";
+    state.role = saved.role || "";
+    await enterApp();
+  } else {
+    $("#loginUser").focus();
   }
 })();

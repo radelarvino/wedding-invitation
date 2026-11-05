@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Great+Vibes&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=16">
 </head>
 <body class="locked">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -41,22 +41,31 @@
 <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/><path d="M8 7h8M8 11h6"/></symbol>
 <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"/><circle cx="18" cy="5" r="3"/><path d="M9 19h6a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6"/></symbol>
 <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"/></symbol>
-<symbol id="i-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 1 0 7.75"/></symbol>
 <symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
-<radialGradient id="flHalo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#f6b9cd" stop-opacity=".30"/><stop offset=".6" stop-color="#f0a9bf" stop-opacity=".10"/><stop offset="1" stop-color="#f0a9bf" stop-opacity="0"/></radialGradient>
-<radialGradient id="flPetal" cx="50%" cy="90%" r="100%"><stop offset="0" stop-color="#ee9ab5"/><stop offset=".55" stop-color="#f8cddb"/><stop offset="1" stop-color="#fff4f7"/></radialGradient>
-<path id="fl-petal" d="M0 0C-5 -5 -8.5 -13 -4.8 -17.5 -3.2 -19 -1.1 -18.2 0 -16 1.1 -18.2 3.2 -19 4.8 -17.5 8.5 -13 5 -5 0 0Z"/>
+<radialGradient id="flHalo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#f7a9c1" stop-opacity=".38"/><stop offset=".6" stop-color="#ef7ea4" stop-opacity=".13"/><stop offset="1" stop-color="#ef7ea4" stop-opacity="0"/></radialGradient>
+<radialGradient id="flPetal" cx="50%" cy="90%" r="100%"><stop offset="0" stop-color="#f07ea5"/><stop offset=".55" stop-color="#f9b6c9"/><stop offset="1" stop-color="#fff0f5"/></radialGradient>
+<path id="fl-petal" d="M0 0C-2.4 -2.2 -4.4 -5.8 -5.5 -9.6C-6.3 -12.7 -6.1 -15.8 -4.4 -17.2C-3.3 -18 -1.9 -17.6 -1 -16.4C-.7 -16 -.4 -15.6 -.18 -15.1C-.1 -14.9 0 -14.7 0 -14.6C0 -14.7 .1 -14.9 .18 -15.1C.4 -15.6 .7 -16 1 -16.4C1.9 -17.6 3.3 -18 4.4 -17.2C6.1 -15.8 6.3 -12.7 5.5 -9.6C4.4 -5.8 2.4 -2.2 0 0Z"/>
 <g id="fl-bloom">
-  <g fill="url(#flPetal)" stroke="#f1b6c9" stroke-width=".4" stroke-linejoin="round">
+  <g fill="url(#flPetal)" stroke="#efaec3" stroke-width=".35" stroke-linejoin="round">
     <use href="#fl-petal"/><use href="#fl-petal" transform="rotate(72)"/><use href="#fl-petal" transform="rotate(144)"/><use href="#fl-petal" transform="rotate(216)"/><use href="#fl-petal" transform="rotate(288)"/>
   </g>
-  <path d="M0 0L-2.6 -6M0 0L0 -7M0 0L2.6 -6M0 0L-5 -4M0 0L5 -4" stroke="#d96b90" stroke-width=".5" stroke-linecap="round" fill="none"/>
-  <circle r="1.5" fill="#f0d9ae"/>
+  <g stroke="#e08aa6" stroke-width=".3" stroke-linecap="round" opacity=".5" fill="none">
+    <path d="M0 -1.6V-12.4"/><path d="M0 -1.6V-12.4" transform="rotate(72)"/><path d="M0 -1.6V-12.4" transform="rotate(144)"/><path d="M0 -1.6V-12.4" transform="rotate(216)"/><path d="M0 -1.6V-12.4" transform="rotate(288)"/>
+  </g>
+  <g stroke="#d96b90" stroke-width=".4" stroke-linecap="round" fill="none">
+    <path d="M0 0L-3.3 -5.6M0 0L-1.2 -6.5M0 0L1.2 -6.5M0 0L3.3 -5.6"/>
+  </g>
+  <g fill="#df7f9d">
+    <circle cx="-3.3" cy="-5.6" r=".5"/><circle cx="-1.2" cy="-6.5" r=".5"/><circle cx="1.2" cy="-6.5" r=".5"/><circle cx="3.3" cy="-5.6" r=".5"/>
+  </g>
+  <circle r="1.55" fill="#f0d9ae"/>
+  <circle r=".7" fill="#e3b678"/>
 </g>
 <symbol id="i-flower" viewBox="0 0 24 24"><path d="M12 7c1.5-3 5-4 6-2s-1 4.5-4 5c3 .5 5 3 3.5 5S14 15 12 12c-2 3-4 5-5.5 3S6 10.5 9 10c-3-.5-5-3-4-5s4.5-1 6 2z"/><circle cx="12" cy="12" r="1.6"/></symbol>
 </defs></svg>
 
-<!-- Latar tetap: gradien, cincin dekoratif, dan foto opsional -->
+<!-- Latar tetap -->
 <div id="bg" aria-hidden="true">
   <div class="bg-glow one"></div>
   <div class="bg-glow two"></div>
@@ -65,18 +74,15 @@
   <div class="grain"></div>
 </div>
 
-<!-- Kelopak sakura berjatuhan (digambar oleh script.js) -->
 <canvas id="petals" aria-hidden="true"></canvas>
 
-<!-- Satu-satunya elemen audio. Musik mulai saat tombol "Buka undangan" ditekan -->
-<audio id="bgm" src="assets/audio/SABI & MIA BOYKA - Базовый минимум Bare Minimum (Lyrics) - BagOnly.mp3" loop preload="metadata"></audio>
+<audio id="bgm" src="assets/audio/Ed Sheeran - Photograph (Official Lyric Video).mp3" loop preload="metadata"></audio>
 
-
+<!-- Cover -->
 <div id="cover">
   <div id="slides" aria-hidden="true"></div>
   <div class="cover-veil" aria-hidden="true"></div>
-  <div class="cover-frame" aria-hidden="true">
-  </div>
+  <div class="cover-frame" aria-hidden="true"></div>
 
   <div class="cover-content">
     <div class="cover-kicker anim" style="--i:0">
@@ -98,9 +104,9 @@
     <button class="btn btn-open anim" id="openBtn" style="--i:7"><svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg><span>Buka undangan</span></button>
     <p class="cover-foot anim" style="--i:8">Merupakan kebahagiaan bagi kami apabila Anda berkenan hadir.</p>
   </div>
-
 </div>
 
+<!-- Navigasi Utama -->
 <nav id="pill" class="min" aria-label="Navigasi undangan">
   <div class="lk">
     <a href="#home"><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg><span>Ayat Al-Qur'an</span></a>
@@ -131,6 +137,8 @@
 </section>
 
 <section id="mempelai" class="s-couple">
+  <span class="sakura-branch left" aria-hidden="true"><img src="assets/sakura-branch-h.svg?v=16" alt="" draggable="false"></span>
+  <span class="sakura-branch right" aria-hidden="true"><img src="assets/sakura-branch-h.svg?v=16" alt="" draggable="false"></span>
   <div class="wrap">
     <header class="sec-head reveal">
       <div class="eyebrow">Bismillahirrahmanirrahim</div>
@@ -160,7 +168,7 @@
       <h2 class="big">Wedding Event</h2>
       <p class="lead">Dengan sukacita, kami menantikan kehadiran Anda di hari yang telah kami nantikan.</p>
     </header>
-    <div id="cd" class="countdown" aria-label="Hitung mundur menuju hari pernikahan"></div>
+    <div id="cd" class="countdown reveal" aria-label="Hitung mundur menuju hari pernikahan"></div>
     <div class="dt reveal" id="evDate"></div>
     <div class="ev" id="ev"></div>
   </div>
@@ -174,7 +182,61 @@
       <p class="lead">Temukan kami di tempat di mana janji suci akan diucapkan.</p>
     </header>
     <div class="venue-card reveal">
-      <div class="venue-photo" id="venuePhoto" role="img" aria-label="Ilustrasi tampak depan Roemah Kraton"><svg viewBox="0 0 480 330" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><defs><linearGradient id="vSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#101c44"/><stop offset=".5" stop-color="#34438a"/><stop offset=".82" stop-color="#c36b8d"/><stop offset="1" stop-color="#f0a07b"/></linearGradient><linearGradient id="vWood" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b4720"/><stop offset=".5" stop-color="#d98530"/><stop offset="1" stop-color="#9a5224"/></linearGradient><linearGradient id="vGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe3a0"/><stop offset="1" stop-color="#f2a64e"/></linearGradient><linearGradient id="vGround" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#262c58"/><stop offset="1" stop-color="#0f1530"/></linearGradient><radialGradient id="vGlow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffc766" stop-opacity=".5"/><stop offset="1" stop-color="#ffc766" stop-opacity="0"/></radialGradient></defs><rect width="480" height="330" fill="url(#vSky)"/><circle cx="30" cy="22" r="1" fill="#fff" opacity=".7"/><circle cx="78" cy="52" r="1" fill="#fff" opacity=".7"/><circle cx="130" cy="18" r="1" fill="#fff" opacity=".7"/><circle cx="190" cy="40" r="1" fill="#fff" opacity=".7"/><circle cx="300" cy="16" r="1" fill="#fff" opacity=".7"/><circle cx="356" cy="44" r="1" fill="#fff" opacity=".7"/><circle cx="420" cy="24" r="1" fill="#fff" opacity=".7"/><circle cx="452" cy="60" r="1" fill="#fff" opacity=".7"/><circle cx="260" cy="30" r="1" fill="#fff" opacity=".7"/><path d="M0 262V236C40 222 80 230 120 238S210 228 250 236 340 224 390 236 450 230 480 238V270H0Z" fill="#1b2650"/><ellipse cx="240" cy="176" rx="232" ry="130" fill="url(#vGlow)"/><rect x="22" y="180" width="70" height="80" fill="#a45f2a"/><line x1="27.8" y1="180" x2="27.8" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="33.7" y1="180" x2="33.7" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="39.5" y1="180" x2="39.5" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="45.3" y1="180" x2="45.3" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="51.2" y1="180" x2="51.2" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="57.0" y1="180" x2="57.0" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="62.8" y1="180" x2="62.8" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="68.7" y1="180" x2="68.7" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="74.5" y1="180" x2="74.5" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="80.3" y1="180" x2="80.3" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="86.2" y1="180" x2="86.2" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><rect x="34" y="198" width="46" height="34" rx="2" fill="url(#vGlass)" stroke="#4a2a14" stroke-width="1.4"/><line x1="57.0" y1="198" x2="57.0" y2="232" stroke="#4a2a14" stroke-width="1.2"/><rect x="14" y="172" width="84" height="9" fill="#5a2c12"/><rect x="388" y="180" width="70" height="80" fill="#a45f2a"/><line x1="393.8" y1="180" x2="393.8" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="399.7" y1="180" x2="399.7" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="405.5" y1="180" x2="405.5" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="411.3" y1="180" x2="411.3" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="417.2" y1="180" x2="417.2" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="423.0" y1="180" x2="423.0" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="428.8" y1="180" x2="428.8" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="434.7" y1="180" x2="434.7" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="440.5" y1="180" x2="440.5" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="446.3" y1="180" x2="446.3" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><line x1="452.2" y1="180" x2="452.2" y2="260" stroke="#6e3714" stroke-width=".9" opacity=".55"/><rect x="400" y="198" width="46" height="34" rx="2" fill="url(#vGlass)" stroke="#4a2a14" stroke-width="1.4"/><line x1="423.0" y1="198" x2="423.0" y2="232" stroke="#4a2a14" stroke-width="1.2"/><rect x="382" y="172" width="84" height="9" fill="#5a2c12"/><polygon points="92,260 92,172 240,50 388,172 388,260" fill="url(#vGlass)"/><line x1="116.7" y1="151.7" x2="116.7" y2="260" stroke="#4a2a14" stroke-width="1.5" opacity=".85"/><line x1="141.3" y1="131.3" x2="141.3" y2="260" stroke="#4a2a14" stroke-width="1.5" opacity=".85"/><line x1="166.0" y1="111.0" x2="166.0" y2="260" stroke="#4a2a14" stroke-width="1.5" opacity=".85"/><line x1="190.7" y1="90.7" x2="190.7" y2="260" stroke="#4a2a14" stroke-width="1.5" opacity=".85"/><line x1="215.3" y1="70.3" x2="215.3" y2="260" stroke="#4a2a14" stroke-width="1.5" opacity=".85"/><line x1="240.0" y1="50.0" x2="240.0" y2="260" stroke="#4a2a14" stroke-width="1.5" opacity=".85"/><line x1="264.7" y1="70.3" x2="264.7" y2="260" stroke="#4a2a14" stroke-width="1.5" opacity=".85"/><line x1="289.3" y1="90.7" x2="289.3" y2="260" stroke="#4a2a14" stroke-width="1.5" opacity=".85"/><line x1="314.0" y1="111.0" x2="314.0" y2="260" stroke="#4a2a14" stroke-width="1.5" opacity=".85"/><line x1="338.7" y1="131.3" x2="338.7" y2="260" stroke="#4a2a14" stroke-width="1.5" opacity=".85"/><line x1="363.3" y1="151.7" x2="363.3" y2="260" stroke="#4a2a14" stroke-width="1.5" opacity=".85"/><line x1="157.5" y1="118" x2="322.5" y2="118" stroke="#4a2a14" stroke-width="1.4" opacity=".8"/><line x1="118.7" y1="150" x2="361.3" y2="150" stroke="#4a2a14" stroke-width="1.4" opacity=".8"/><line x1="92.0" y1="196" x2="388.0" y2="196" stroke="#4a2a14" stroke-width="1.4" opacity=".8"/><line x1="92.0" y1="228" x2="388.0" y2="228" stroke="#4a2a14" stroke-width="1.4" opacity=".8"/><polygon points="70,176 240,26 410,176 388,176 240,50 92,176" fill="url(#vWood)" stroke="#5a2c12" stroke-width="1"/><polyline points="82,174 240,38 398,174" fill="none" stroke="#6e3714" stroke-width=".9" opacity=".6"/><path d="M240 50V260" stroke="#5a2c12" stroke-width="3"/><g text-anchor="middle" font-family="Cinzel, 'Cormorant Garamond', Georgia, serif" font-weight="700"><text x="240" y="150" font-size="16" letter-spacing="7" fill="#fbd24a" stroke="#4a2a14" stroke-width="2.4" paint-order="stroke">ROEMAH</text><text x="240" y="190" font-size="40" letter-spacing="3" fill="#fbd24a" stroke="#4a2a14" stroke-width="3" paint-order="stroke">KRATON</text></g><rect x="210" y="208" width="60" height="52" fill="#ffe9b4" stroke="#4a2a14" stroke-width="2.4"/><line x1="240" y1="208" x2="240" y2="260" stroke="#4a2a14" stroke-width="2.4"/><line x1="210" y1="230" x2="270" y2="230" stroke="#4a2a14" stroke-width="1.2"/><rect x="234" y="232" width="2" height="9" fill="#4a2a14"/><rect x="244" y="232" width="2" height="9" fill="#4a2a14"/><rect x="68" y="260" width="344" height="8" fill="#3b4070"/><rect x="0" y="268" width="480" height="62" fill="url(#vGround)"/><ellipse cx="240" cy="270" rx="150" ry="9" fill="#ffc766" opacity=".28"/><line x1="190" y1="268" x2="-60" y2="330" stroke="#3b4070" stroke-width="1" opacity=".55"/><line x1="210" y1="268" x2="60" y2="330" stroke="#3b4070" stroke-width="1" opacity=".55"/><line x1="228" y1="268" x2="165" y2="330" stroke="#3b4070" stroke-width="1" opacity=".55"/><line x1="240" y1="268" x2="240" y2="330" stroke="#3b4070" stroke-width="1" opacity=".55"/><line x1="252" y1="268" x2="315" y2="330" stroke="#3b4070" stroke-width="1" opacity=".55"/><line x1="270" y1="268" x2="420" y2="330" stroke="#3b4070" stroke-width="1" opacity=".55"/><line x1="290" y1="268" x2="540" y2="330" stroke="#3b4070" stroke-width="1" opacity=".55"/><ellipse cx="46" cy="266" rx="34" ry="20" fill="#1d3b3d"/><ellipse cx="56" cy="258" rx="22" ry="15" fill="#2c5a4d"/><ellipse cx="34" cy="262" rx="16" ry="11" fill="#357062"/><ellipse cx="434" cy="266" rx="34" ry="20" fill="#1d3b3d"/><ellipse cx="424" cy="258" rx="22" ry="15" fill="#2c5a4d"/><ellipse cx="446" cy="262" rx="16" ry="11" fill="#357062"/><ellipse cx="192" cy="258" rx="11" ry="12" fill="#2c5a4d"/><rect x="186" y="264" width="12" height="9" rx="2" fill="#7a4a2c"/><ellipse cx="288" cy="258" rx="11" ry="12" fill="#2c5a4d"/><rect x="282" y="264" width="12" height="9" rx="2" fill="#7a4a2c"/><path d="M6 104Q124 150 240 112" fill="none" stroke="#2a2f55" stroke-width="1"/><circle cx="35.5" cy="117.2" r="6" fill="#ffd36b" opacity=".25"/><circle cx="35.5" cy="117.2" r="2.3" fill="#fff0b8"/><circle cx="64.9" cy="124.8" r="6" fill="#ffd36b" opacity=".25"/><circle cx="64.9" cy="124.8" r="2.3" fill="#fff0b8"/><circle cx="94.2" cy="129.7" r="6" fill="#ffd36b" opacity=".25"/><circle cx="94.2" cy="129.7" r="2.3" fill="#fff0b8"/><circle cx="123.5" cy="132.0" r="6" fill="#ffd36b" opacity=".25"/><circle cx="123.5" cy="132.0" r="2.3" fill="#fff0b8"/><circle cx="152.7" cy="131.7" r="6" fill="#ffd36b" opacity=".25"/><circle cx="152.7" cy="131.7" r="2.3" fill="#fff0b8"/><circle cx="181.9" cy="128.8" r="6" fill="#ffd36b" opacity=".25"/><circle cx="181.9" cy="128.8" r="2.3" fill="#fff0b8"/><circle cx="211.0" cy="123.2" r="6" fill="#ffd36b" opacity=".25"/><circle cx="211.0" cy="123.2" r="2.3" fill="#fff0b8"/><path d="M240 112Q356 150 474 104" fill="none" stroke="#2a2f55" stroke-width="1"/><circle cx="240.0" cy="115.0" r="6" fill="#ffd36b" opacity=".25"/><circle cx="240.0" cy="115.0" r="2.3" fill="#fff0b8"/><circle cx="269.0" cy="123.2" r="6" fill="#ffd36b" opacity=".25"/><circle cx="269.0" cy="123.2" r="2.3" fill="#fff0b8"/><circle cx="298.1" cy="128.8" r="6" fill="#ffd36b" opacity=".25"/><circle cx="298.1" cy="128.8" r="2.3" fill="#fff0b8"/><circle cx="327.3" cy="131.7" r="6" fill="#ffd36b" opacity=".25"/><circle cx="327.3" cy="131.7" r="2.3" fill="#fff0b8"/><circle cx="356.5" cy="132.0" r="6" fill="#ffd36b" opacity=".25"/><circle cx="356.5" cy="132.0" r="2.3" fill="#fff0b8"/><circle cx="385.8" cy="129.7" r="6" fill="#ffd36b" opacity=".25"/><circle cx="385.8" cy="129.7" r="2.3" fill="#fff0b8"/><circle cx="415.1" cy="124.8" r="6" fill="#ffd36b" opacity=".25"/><circle cx="415.1" cy="124.8" r="2.3" fill="#fff0b8"/><circle cx="444.5" cy="117.2" r="6" fill="#ffd36b" opacity=".25"/><circle cx="444.5" cy="117.2" r="2.3" fill="#fff0b8"/></svg></div>
+      <div class="venue-photo" id="venuePhoto" role="img" aria-label="Ilustrasi tampak depan Roemah Kraton"><svg viewBox="0 0 480 330" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="vSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#08122b"/><stop offset=".55" stop-color="#122146"/><stop offset="1" stop-color="#1c2e58"/></linearGradient>
+<linearGradient id="vFacade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbe5ea"/><stop offset=".52" stop-color="#f6c1d0"/><stop offset="1" stop-color="#ee91ad"/></linearGradient>
+<linearGradient id="vRoof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fdf5e7"/><stop offset="1" stop-color="#ecdcc5"/></linearGradient>
+<linearGradient id="vGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2d8"/><stop offset="1" stop-color="#f6c98d"/></linearGradient>
+<linearGradient id="vGround" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a2a53"/><stop offset="1" stop-color="#0a132d"/></linearGradient>
+<radialGradient id="vMoon" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff4dc"/><stop offset=".55" stop-color="#ffe9c4"/><stop offset="1" stop-color="#ffe9c4" stop-opacity="0"/></radialGradient>
+<radialGradient id="vGlow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#f5a1ba" stop-opacity=".42"/><stop offset="1" stop-color="#f5a1ba" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="480" height="330" fill="url(#vSky)"/>
+<circle cx="390" cy="58" r="46" fill="url(#vMoon)" opacity=".42"/>
+<circle cx="390" cy="58" r="17" fill="#fff2d8" opacity=".88"/>
+<g fill="#fff4dc" opacity=".75">
+<circle cx="34" cy="36" r="1.2"/><circle cx="82" cy="64" r="1"/><circle cx="138" cy="28" r="1.2"/><circle cx="196" cy="54" r="1"/><circle cx="252" cy="22" r="1.1"/><circle cx="318" cy="48" r="1"/><circle cx="452" cy="30" r="1.1"/><circle cx="438" cy="94" r=".9"/><circle cx="114" cy="92" r=".9"/>
+</g>
+<ellipse cx="240" cy="250" rx="238" ry="122" fill="url(#vGlow)"/>
+<path d="M0 238C54 218 96 226 142 238S238 218 292 232 382 218 480 240V282H0Z" fill="#132348"/>
+<path d="M0 264C72 244 128 254 188 266S312 246 480 268V330H0Z" fill="url(#vGround)"/>
+<g fill="#0d1b3c">
+<path d="M18 236c12-38 30-54 47-56-5 18 2 34 12 44-18 10-39 14-59 12z"/>
+<path d="M445 234c-10-42-28-58-44-62 4 20-4 36-13 46 18 12 38 17 57 16z"/>
+</g>
+<path d="M96 246V164L240 106l144 58v82Z" fill="url(#vFacade)"/>
+<path d="M80 168 240 96l160 72-12 14-148-66-148 66Z" fill="url(#vRoof)"/>
+<path d="M240 96v22" stroke="#d8c4aa" stroke-width="2" opacity=".7"/>
+<rect x="106" y="168" width="268" height="78" fill="#f7cfda" opacity=".28"/>
+<g fill="url(#vGlass)" stroke="#d98ba2" stroke-width="1.6">
+<path d="M127 238v-50c0-6 4-10 10-10h30c6 0 10 4 10 10v50Z"/>
+<path d="M189 238v-50c0-6 4-10 10-10h30c6 0 10 4 10 10v50Z"/>
+<path d="M251 238v-50c0-6 4-10 10-10h30c6 0 10 4 10 10v50Z"/>
+<path d="M313 238v-50c0-6 4-10 10-10h30c6 0 10 4 10 10v50Z"/>
+</g>
+<g stroke="#ef9fb5" stroke-width="1" opacity=".7">
+<path d="M152 178v60M214 178v60M276 178v60M338 178v60"/>
+<path d="M127 208h50M189 208h50M251 208h50M313 208h50"/>
+</g>
+<rect x="220" y="230" width="40" height="16" rx="3" fill="#fbe5ea"/>
+<path d="M240 246v-12" stroke="#b06a80" stroke-width="1.4"/>
+<path d="M206 258h68" stroke="#f7dce4" stroke-width="2" opacity=".55" stroke-linecap="round"/>
+<g stroke="#e7d4b8" stroke-width="1" opacity=".8">
+<path d="M24 156C100 132 380 132 456 156"/>
+<path d="M24 156v10M456 156v10"/>
+</g>
+<g fill="#ffeccb">
+<circle cx="76" cy="146" r="2.4"/><circle cx="128" cy="140" r="2.2"/><circle cx="180" cy="136" r="2.4"/><circle cx="232" cy="134" r="2.2"/><circle cx="284" cy="134" r="2.4"/><circle cx="336" cy="136" r="2.2"/><circle cx="388" cy="141" r="2.4"/><circle cx="436" cy="148" r="2.2"/>
+</g>
+<g opacity=".9">
+<ellipse cx="88" cy="262" rx="28" ry="9" fill="#213863"/><ellipse cx="406" cy="262" rx="28" ry="9" fill="#213863"/>
+<circle cx="78" cy="252" r="12" fill="#2b4472"/><circle cx="100" cy="254" r="15" fill="#263e69"/><circle cx="396" cy="252" r="13" fill="#2b4472"/><circle cx="418" cy="254" r="15" fill="#263e69"/>
+</g>
+<g fill="#f3a4ba" opacity=".85">
+<circle cx="54" cy="116" r="2"/><circle cx="168" cy="112" r="1.6"/><circle cx="292" cy="108" r="1.8"/><circle cx="424" cy="120" r="1.6"/><circle cx="238" cy="86" r="1.4"/>
+</g>
+</svg></div>
       <div class="venue-info">
         <span class="venue-icon"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg></span>
         <h3 id="venueName">Roemah Kraton</h3>
@@ -186,14 +248,16 @@
   </div>
 </section>
 
+<!-- SECTION RSVP & WISHES (GABUNG DALAM 1 HALAMAN) -->
 <section id="rsvp" class="s-rsvp">
   <div class="wrap">
     <header class="sec-head reveal">
-      <div class="eyebrow">RSVP</div>
-      <h2>Konfirmasi Kehadiran</h2>
-      <p class="lead">Kehadiran dan doa Anda adalah kebahagiaan terbesar kami. Mohon konfirmasi agar kami dapat menyambut Anda dengan sebaik-baiknya.</p>
+      <div class="eyebrow">RSVP &amp; Wishes</div>
+      <h2>Konfirmasi Kehadiran &amp; Doa</h2>
+      <p class="lead">Kehadiran dan doa Anda adalah kebahagiaan terbesar kami. Mohon konfirmasi kehadiran dan sampaikan doa restu Anda.</p>
     </header>
 
+    <!-- Kartu Form RSVP -->
     <div class="rsvp-card reveal">
       <div id="sum" class="sum" hidden>
         <span class="sum-icon"><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg></span>
@@ -216,7 +280,8 @@
       </form>
     </div>
 
-    <div class="wishes">
+    <!-- Container Wishes / Ucapan (Di bawah RSVP pada section yang sama) -->
+    <div class="wishes wishes-wrapper">
       <div class="wishes-head reveal">
         <div class="eyebrow">Wishes</div>
         <h3 class="sub">Ucapan &amp; Doa Restu</h3>
@@ -297,6 +362,6 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="config.js"></script>
-<script src="script.js"></script>
+<script src="script.js?v=16"></script>
 </body>
 </html>
