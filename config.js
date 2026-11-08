@@ -7,13 +7,13 @@
       berjalan dalam mode demo (tidak menyimpan data).
    ===================================================================== */
 window.WEDDING_CONFIG = {
-  SCRIPT_URL: "",
+  SCRIPT_URL: "https://script.google.com/macros/s/AKfycby9CtkDD1whUHg2zRWfBZiUahjtdKxR019-lh8E16YDcwSFxQX144t_5uCQSGijQLLszA/exec",
   // Opsional: alamat halaman undangan yang sudah online (dipakai tombol bagikan)
   SITE_URL: "",
   // Nomor WhatsApp administrator untuk pengajuan akun moderator.
   // Tulis dengan kode negara, misalnya 6281234567890.
-  ADMIN_WA: "",
-  ADMIN_NAME: "Administrator"
+  ADMIN_WA: "085591546882",
+  ADMIN_NAME: "Vino"
 };
 
 /* Penanda bahwa JavaScript aktif — agar animasi reveal tidak menyembunyikan

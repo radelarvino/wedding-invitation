@@ -19,9 +19,9 @@
    New version, agar perubahan aktif.
    ===================================================================== */
 const SITE_URL = 'https://NAMA-ANDA.github.io/undangan/'; // HARUS diakhiri "/"
-const ADMIN_USERNAME = 'admin';                            // GANTI DI EDITOR APPS SCRIPT
-const ADMIN_PASSWORD = '123456';                           // GANTI; jangan commit password asli
-const ADMIN_NAME = 'Administrator';
+const ADMIN_USERNAME = 'nikahyuk';                            // GANTI DI EDITOR APPS SCRIPT
+const ADMIN_PASSWORD = 'nikahyuk123';                           // GANTI; jangan commit password asli
+const ADMIN_NAME = 'vino';
 const SESSION_HOURS = 6;                                   // masa berlaku sesi login
 const MAX_UMUM = 1;                                        // samakan generalMax di script.js
 
