@@ -8707,3 +8707,182 @@ html.js #penutup .nick.reveal {
     margin-top: 0.35rem;
   }
 }
+
+/* =====================================================================
+   34. PENYESUAIAN AKHIR (v18)
+   Nav vertikal, kartu acara lebih tinggi, venue di tengah, kotak ucapan
+   pink, galeri ringan, dan scroll bebas tanpa snap.
+   ===================================================================== */
+
+/* Scroll bebas: matikan snap agar section tidak terlihat terpotong setelah
+   melompat dari menu. */
+html {
+  scroll-snap-type: none;
+  scroll-padding-top: 0;
+}
+
+main > section {
+  scroll-snap-align: none;
+  scroll-snap-stop: normal;
+  scroll-margin-top: 0;
+}
+
+/* Galeri sebelumnya dibuat 108svh sehingga selalu menyisakan potongan
+   halaman berikutnya. Kembalikan tepat satu layar. */
+#galeri {
+  min-height: 100svh;
+}
+
+/* Venue: objek diletakkan tepat di tengah halaman. */
+#lokasi {
+  justify-content: center;
+}
+
+#lokasi > .wrap {
+  margin-block: auto;
+}
+
+/* ---------- Ketahanan ukuran: tiap bagian tetap satu layar ---------- */
+@media (max-width: 1023.98px) {
+  /* Menu nav: daftar vertikal berlabel, membuka memanjang ke atas. */
+  #pill .lk {
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: none;
+    grid-template-rows: none;
+    min-width: 12.8rem;
+    width: max-content;
+    max-width: calc(100vw - 2.4rem);
+    max-height: calc(100svh - 7.5rem);
+    gap: 0.1rem;
+    padding: 0.42rem;
+    border-radius: 16px;
+    overflow-y: auto;
+  }
+
+  #pill .lk a {
+    width: auto;
+    height: auto;
+    min-height: 2.3rem;
+    padding: 0.48rem 0.8rem;
+    justify-content: flex-start;
+    gap: 0.62rem;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+
+  #pill .lk a span {
+    display: inline !important;
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    clip: auto !important;
+    clip-path: none !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+  }
+
+  #pill .lk a .ic {
+    width: 1.02rem;
+    height: 1.02rem;
+    flex: none;
+  }
+
+  /* Kartu Akad & Tasyakuran lebih tinggi ke bawah agar terlihat besar. */
+  #acara .evp {
+    height: clamp(172px, 23vh, 232px);
+  }
+
+  /* Galeri: rapatkan judul dan bingkai agar tidak melebihi satu layar. */
+  #galeri {
+    --gal-pad-top: clamp(2.9rem, 4.8vh, 3.6rem);
+    --gal-pad-bottom: clamp(0.9rem, 2vh, 1.3rem);
+    padding-top: var(--gal-pad-top);
+    padding-bottom: var(--gal-pad-bottom);
+    overflow: hidden;
+  }
+
+  #galeri > .wrap {
+    min-height: calc(100svh - var(--gal-pad-top) - var(--gal-pad-bottom));
+  }
+
+  #galeri .sec-head {
+    margin-bottom: 0.3rem;
+  }
+
+  #galeri .sec-head .lead {
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
+
+  /* Animasi carousel lebih ringan: cukup transform + opacity singkat. */
+  .s-gal .slide {
+    transition: transform 0.5s var(--ease-out), opacity 0.34s ease;
+    will-change: auto;
+  }
+
+  .s-gal .slide.act {
+    will-change: transform, opacity;
+  }
+
+  #galeri .slide {
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
+  }
+
+  #galeri .slide.act {
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.34), 0 0 0 1px rgba(247, 174, 196, 0.22);
+  }
+}
+
+@media (max-width: 599px) {
+  #acara .evp {
+    height: clamp(150px, 22vh, 200px);
+  }
+
+  #galeri .s-gal {
+    --gal-ar: 0.72;
+    --w: min(88vw, 52vh, 430px);
+  }
+
+  #galeri .stage.s-gal {
+    min-height: 210px;
+  }
+}
+
+/* ---------- Kotak ucapan pengunjung: nuansa pink ---------- */
+#rsvp .wish {
+  border-color: rgba(247, 174, 196, 0.9);
+  background:
+    radial-gradient(120% 120% at 18% 0%, rgba(255, 255, 255, 0.65), transparent 60%),
+    linear-gradient(180deg, #ffe4ee 0%, #f9c2d6 100%);
+  box-shadow:
+    0 14px 30px -18px rgba(145, 35, 74, 0.5),
+    0 0 0 1px rgba(239, 126, 164, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  color: #6d2038;
+}
+
+#rsvp .wish b {
+  color: #7c1f3d;
+}
+
+#rsvp .wish p {
+  color: #6b2a44;
+}
+
+#rsvp .wish .avatar {
+  color: #a12f54;
+  border-color: rgba(161, 47, 84, 0.35);
+  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.85), rgba(246, 174, 196, 0.45));
+}
+
+#rsvp .wish-badge {
+  color: #93304f;
+  border-color: rgba(147, 48, 79, 0.34);
+  background: rgba(255, 255, 255, 0.5);
+}

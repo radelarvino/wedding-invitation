@@ -34,7 +34,7 @@ const C = {
   /* only:"priority" = hanya tampil untuk tamu prioritas */
   events: [
     { name: "Akad Nikah", label: "Minggu, 13 Desember 2026", time: "08.00 – 10.00 WIB", start: "2026-12-13T08:00:00+07:00", end: "2026-12-13T10:00:00+07:00", photo: "" },
-    { name: "Resepsi", label: "Minggu, 13 Desember 2026", time: "11.00 – 14.00 WIB", start: "2026-12-13T11:00:00+07:00", end: "2026-12-13T14:00:00+07:00", photo: "" }
+    { name: "Tasyakuran", label: "Minggu, 13 Desember 2026", time: "11.00 - 14.00 WIB", start: "2026-12-13T11:00:00+07:00", end: "2026-12-13T14:00:00+07:00", photo: "" }
   ],
   venueName: "Roemah Kraton",
   venueShort: "Roemah Kraton, Tebet, Jakarta Selatan",
@@ -230,7 +230,7 @@ function renderCover() {
     const slidesEl = $("#slides");
     if (slidesEl) {
       slidesEl.innerHTML = C.cover.map((src, i) =>
-        `<img src="${esc(src)}" class="${i === 0 ? "on" : ""}" alt="Foto Sampul ${i + 1}">`
+        `<img src="${esc(src)}" class="${i === 0 ? "on" : ""}" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} alt="Foto Sampul ${i + 1}">`
       ).join("");
       if (C.cover.length > 1 && !slidesEl.dataset.timer) {
         slidesEl.dataset.timer = "1";
@@ -413,7 +413,7 @@ function renderGallery() {
   const slides = [];
   for (let i = 0; i < galleryCount; i++) {
     if (C.gallery[i]) {
-      slides.push(`<div class="slide" data-i="${i}" role="button" tabindex="0" aria-label="Foto ${i + 1} dari ${galleryCount}"><img src="${esc(C.gallery[i])}" alt="Foto ${i + 1}" loading="lazy" draggable="false"></div>`);
+      slides.push(`<div class="slide" data-i="${i}" role="button" tabindex="0" aria-label="Foto ${i + 1} dari ${galleryCount}"><img src="${esc(C.gallery[i])}" alt="Foto ${i + 1}" loading="lazy" decoding="async" draggable="false"></div>`);
     } else {
       slides.push(`<div class="slide ph" data-i="${i}" style="--gi:${i}"><div class="ph-slide-inner"><span class="slide-mark">${esc(a.nick[0])}<em>&amp;</em>${esc(b.nick[0])}</span><small>Our Moment ${String(i + 1).padStart(2, "0")}</small></div></div>`);
     }
@@ -1743,18 +1743,13 @@ addEventListener("scroll", () => {
   }
 }, { passive: true });
 
-/* Rumpun sakura untuk sudut bingkai: satu tangkai melengkung mengikuti sudut,
-   tiga kuntum yang mekar bertahap, dua kuncup, dan daun. Didesain untuk sudut
-   kiri-atas lalu dicerminkan CSS ke sudut lain, sehingga kuntum duduk tepat di
-   atas garis bingkai tanpa menutupi isi foto. */
+/* Rumpun sakura untuk sudut bingkai: hanya kuntum dan kuncup bunga, tanpa
+   tangkai maupun daun, agar terlihat seperti bunga yang melayang di sudut.
+   Didesain untuk sudut kiri-atas lalu dicerminkan CSS ke sudut lain. */
 const FLOWER_ART = `<svg viewBox="0 0 240 240" aria-hidden="true" focusable="false"><g class="wind">
-<circle class="halo" cx="70" cy="46" r="62" fill="url(#flHalo)"/>
-<path d="M-8 116C18 104 40 82 56 58 68 40 82 26 104 16" fill="none" stroke="#8a6b6f" stroke-width="2.2" stroke-linecap="round"/>
-<path d="M46 72C32 60 18 56 4 58" fill="none" stroke="#8a6b6f" stroke-width="1.5" stroke-linecap="round"/>
-<path d="M82 34C92 24 104 21 116 24" fill="none" stroke="#8a6b6f" stroke-width="1.4" stroke-linecap="round"/>
-${leafG(24, 66, -8, 0)}${leafG(72, 32, 28, -1.2)}${leafG(104, 54, -26, -2.1)}
-${bloomG(72, 42, 18, 1.4, 0)}${bloomG(102, 20, -16, 1.02, -1.5)}${bloomG(40, 82, 32, 0.8, -2.4)}${bloomG(124, 42, 10, 0.62, -0.7)}
-${budG(18, 64, 26)}${budG(118, 62, -20)}
+<circle class="halo" cx="70" cy="62" r="66" fill="url(#flHalo)"/>
+${bloomG(58, 62, 14, 1.32, 0)}${bloomG(104, 30, -18, 0.98, -1.3)}${bloomG(36, 118, 28, 1.05, -2.4)}${bloomG(112, 96, 8, 0.72, -0.7)}${bloomG(150, 44, -8, 0.66, -2.9)}${bloomG(22, 46, 40, 0.6, -1.8)}
+${budG(84, 96, -26)}${budG(130, 68, 22)}${budG(16, 86, 38)}
 </g></svg>`;
 
 function initFloral() {
@@ -1823,7 +1818,7 @@ function initPetals() {
   if (!ctx) return;
 
   const lowEnd = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 4) <= 2;
-  const DPR = Math.min(devicePixelRatio || 1, lowEnd ? 1 : 1.5);
+  const DPR = Math.min(devicePixelRatio || 1, lowEnd ? 1 : 1.25);
   let W = innerWidth, H = innerHeight;
   let sized = false;
   const resize = () => {
@@ -1949,7 +1944,14 @@ function initPetals() {
     return sprites.length ? sprites : [fallbackSprite()];
   };
 
-  const N = Math.round(Math.min(32, Math.max(14, W / 16)) * (lowEnd ? 0.6 : 1));
+  /* Jumlah kuntum mengikuti lebar layar; ponsel dan tablet dipangkas agar
+     kanvas tetap ringan dan tidak memicu lag saat digulir. */
+  const small = W < 600;
+  const medium = W < 1024;
+  const cap = small ? 10 : medium ? 16 : 22;
+  const floor = small ? 6 : 10;
+  const per = small ? 40 : medium ? 30 : 24;
+  const N = Math.round(Math.max(floor, Math.min(cap, W / per)) * (lowEnd ? 0.7 : 1));
   const make = (sprites, fresh) => {
     const z = Math.random();                       /* 0 = jauh, 1 = dekat */
     const spr = sprites[(Math.random() * sprites.length) | 0];
