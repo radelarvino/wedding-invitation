@@ -4658,14 +4658,33 @@ main > section.s-closing {
   right: 1.25rem;
 }
 
+/* Bracket sudut krem di bingkai foto mempelai dihilangkan: garisnya
+   melintang tepat di area kuntum sakura sehingga terlihat seperti garis
+   putih yang memotong bunga. */
+#mempelai .ph > .ph-corner {
+  display: none;
+}
+
+/* Rumpun digeser sedikit keluar bingkai supaya kuntum utuh dan tidak
+   tertutup tepi lengkung foto. */
 #mempelai .ph > .floral.flower.tl {
-  top: calc(var(--fw) * -0.17);
+  top: calc(var(--fw) * -0.26);
   left: calc(var(--fw) * -0.3);
 }
 
 #mempelai .ph > .floral.flower.br {
   right: calc(var(--fw) * -0.3);
-  bottom: calc(var(--fw) * -0.17);
+  bottom: calc(var(--fw) * -0.26);
+}
+
+@media (min-width: 600px) {
+  #mempelai .ph > .floral.flower.tl {
+    left: calc(var(--fw) * -0.5);
+  }
+
+  #mempelai .ph > .floral.flower.br {
+    right: calc(var(--fw) * -0.5);
+  }
 }
 
 #acara .ev > .floral.flower {
@@ -8637,5 +8656,54 @@ html.js #penutup .nick.reveal {
 
   #lb.closing {
     animation: none;
+  }
+}
+
+/* =====================================================================
+   33. MEMPELAI DI PONSEL & TABLET — bingkai lebih besar, isi seimbang
+   ===================================================================== */
+
+@media (max-width: 1023.98px) {
+  /* Section setinggi satu layar; auto-margin menengahkan isi saat ada
+     ruang sisa, dan otomatis menjadi 0 di layar pendek agar judul tidak
+     terpotong. */
+  #mempelai > .wrap {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  #mempelai .ph {
+    width: clamp(150px, 26vw, 200px);
+    padding: 5px;
+  }
+
+  #mempelai .ph > .floral.flower {
+    --fw: clamp(104px, 15vw, 132px);
+  }
+}
+
+@media (max-width: 599px) {
+  #mempelai .ph {
+    width: clamp(124px, 36vw, 152px);
+    padding: 4px;
+  }
+
+  #mempelai .ph > .floral.flower {
+    --fw: clamp(84px, 24vw, 104px);
+  }
+
+  /* Di ponsel rumpun dijaga lebih dekat ke sudut bingkai agar tidak
+     terpotong tepi layar. */
+  #mempelai .ph > .floral.flower.tl {
+    left: calc(var(--fw) * -0.22);
+  }
+
+  #mempelai .ph > .floral.flower.br {
+    right: calc(var(--fw) * -0.22);
+  }
+
+  /* Bingkai lebih besar, jadi jarak ke judul dilonggarkan sedikit. */
+  #mempelai .pair {
+    margin-top: 0.35rem;
   }
 }
