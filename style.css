@@ -8886,3 +8886,81 @@ main > section {
   border-color: rgba(147, 48, 79, 0.34);
   background: rgba(255, 255, 255, 0.5);
 }
+
+/* =====================================================================
+   35. SATU LAYAR PENUH DI PONSEL & TABLET
+   Tinggi section mengikuti layar yang sedang terlihat (dvh), sehingga saat
+   bilah alamat ponsel muncul/hilang tidak ada bagian berikutnya yang
+   mengintip. Isi dipadatkan di layar pendek agar tetap muat tanpa terpotong.
+   ===================================================================== */
+
+main > section {
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+#galeri {
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+@media (max-width: 1023.98px) {
+  /* Isi yang lebih pendek ditengahkan agar tiap halaman terasa penuh,
+     bukan menumpuk di atas dengan ruang kosong besar di bawah. */
+  #acara,
+  #hadiah {
+    justify-content: center;
+  }
+
+  #galeri > .wrap {
+    min-height: calc(100dvh - var(--gal-pad-top) - var(--gal-pad-bottom));
+  }
+}
+
+/* Ponsel pendek (mis. 320x568, 360x640): rapatkan jarak agar semua isi
+   tetap berada dalam satu layar. */
+@media (max-height: 620px) {
+  main > section {
+    padding-top: clamp(0.9rem, 2.4vh, 1.3rem);
+    padding-bottom: clamp(0.8rem, 2.2vh, 1.2rem);
+  }
+
+  #galeri {
+    --gal-pad-top: clamp(1.3rem, 3vh, 1.8rem);
+    --gal-pad-bottom: 0.5rem;
+  }
+
+  #galeri > .wrap {
+    min-height: calc(100dvh - var(--gal-pad-top) - var(--gal-pad-bottom));
+  }
+
+  #galeri .sec-head {
+    margin-bottom: 0.2rem;
+  }
+
+  #galeri .stage.s-gal {
+    min-height: 160px;
+  }
+
+  #cerita .sec-head,
+  #acara .sec-head,
+  #rsvp .sec-head {
+    margin-bottom: clamp(0.8rem, 2.4vh, 1.4rem);
+  }
+
+  #acara .evp {
+    height: clamp(72px, 15vh, 120px);
+  }
+
+  #acara .evb {
+    padding-bottom: 0.55rem;
+  }
+
+  #acara .dt {
+    margin-bottom: 0.35rem;
+  }
+
+  #rsvp .wishes-head {
+    margin: 1.1rem auto 0.8rem;
+  }
+}
