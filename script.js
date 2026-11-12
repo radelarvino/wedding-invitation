@@ -101,6 +101,21 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({
  */
 const ic = n => `<svg class="ic" aria-hidden="true"><use href="#i-${n}"/></svg>`;
 
+/* Foto prewedding dipilih sesuai lebar layar: ponsel memakai 640 px (~80 KB),
+   layar lebar 860 px. Versi asli 1000 px (302 KB) tidak perlu diunduh. */
+const PHOTO_SM = "assets/prewed-640.webp";
+const PHOTO_LG = "assets/prewed-860.webp";
+const photoURL = src => /(^|\/)prewed\.webp(\?|$)/i.test(src || "")
+  ? (innerWidth >= 600 ? PHOTO_LG : PHOTO_SM)
+  : src;
+
+/* Pekerjaan berat dijadwalkan ke waktu luang agar tidak menumpuk menjadi satu
+   tugas panjang yang menunda ketukan atau gulir pertama pengunjung. */
+const whenIdle = fn => ("requestIdleCallback" in window
+  ? requestIdleCallback(fn, { timeout: 1200 })
+  : setTimeout(fn, 120));
+const afterPaint = fn => requestAnimationFrame(() => setTimeout(fn, 0));
+
 /**
  * Menampilkan pesan toast sementara di bagian bawah layar
  * @param {string} text - Teks pesan
@@ -220,7 +235,7 @@ function renderCover() {
   if (C.bgImage) {
     const photoEl = $("#bg .photo");
     if (photoEl) {
-      photoEl.style.backgroundImage = `url("${C.bgImage}")`;
+      photoEl.style.backgroundImage = `url("${esc(photoURL(C.bgImage))}")`;
       photoEl.classList.add("on");
     }
   }
@@ -230,7 +245,7 @@ function renderCover() {
     const slidesEl = $("#slides");
     if (slidesEl) {
       slidesEl.innerHTML = C.cover.map((src, i) =>
-        `<img src="${esc(src)}" class="${i === 0 ? "on" : ""}" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} alt="Foto Sampul ${i + 1}">`
+        `<img src="${esc(photoURL(src))}" class="${i === 0 ? "on" : ""}" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} alt="Foto Sampul ${i + 1}">`
       ).join("");
       if (C.cover.length > 1 && !slidesEl.dataset.timer) {
         slidesEl.dataset.timer = "1";
@@ -359,7 +374,9 @@ function renderContent() {
   renderGifts();
   renderGallery();
   setupRsvpForm();
-  initTimeline();
+  /* Diukur setelah halaman sempat dilukis supaya tidak memaksa tata letak
+     ulang tepat setelah HTML besar baru disisipkan. */
+  afterPaint(initTimeline);
   initFloral();
   $$(".person h3").forEach(splitText);
 }
@@ -457,7 +474,9 @@ function startCountdown(target) {
         cells[i].textContent = v;
         if (!reduceMotion) {
           cells[i].classList.remove("tick");
-          void cells[i].offsetWidth;
+          /* Cukup segarkan gaya, tanpa memaksa tata letak ulang seluruh
+             halaman setiap detik (bisa membuat gulir tersendat). */
+          getComputedStyle(cells[i]).animationName;
           cells[i].classList.add("tick");
         }
       }
@@ -656,7 +675,27 @@ function initStage(stage) {
  */
 function initAllStages() {
   $$(".stage:not(.s-gal)").forEach(initStage);
-  initGallery();
+  initGalleryWhenNear();
+}
+
+/**
+ * Menyiapkan galeri "Our Moment" hanya ketika bagian itu hampir terlihat.
+ * Tata letak 3D untuk semua slide cukup berat, jadi tidak perlu dikerjakan
+ * saat pengunjung masih berada di layar sampul.
+ */
+function initGalleryWhenNear() {
+  const stage = $(".s-gal");
+  if (!stage || !("IntersectionObserver" in window)) {
+    initGallery();
+    return;
+  }
+  const io = new IntersectionObserver(entries => {
+    if (entries.some(e => e.isIntersecting)) {
+      io.disconnect();
+      initGallery();
+    }
+  }, { rootMargin: "800px 0px" });
+  io.observe(stage);
 }
 
 /* Daftar hadiah: buka/tutup beranimasi (panel + panah) */
@@ -879,7 +918,7 @@ function initGallery() {
    Garis terisi mengikuti scroll: tumbuh ke bawah saat turun, menyusut saat
    naik. Titik menyala ketika garis mencapainya. Posisi dihitung dari elemen
    titik sebenarnya, jadi sejajar di semua ukuran layar. */
-const TL = { el: null, track: null, line: null, items: [], offs: [], lit: [], top: 0, len: 1, active: false, raf: 0, lastP: -1 };
+const TL = { el: null, track: null, line: null, items: [], offs: [], lit: [], top: 0, len: 1, docTop: 0, active: false, raf: 0, lastP: -1 };
 
 function layoutTimeline() {
   const t = TL;
@@ -890,6 +929,9 @@ function layoutTimeline() {
   t.top = ys[0];
   t.len = Math.max(1, ys[ys.length - 1] - ys[0]);
   t.offs = ys.map(y => y - ys[0]);
+  /* Simpan posisi bagian di dokumen sekali saja. Saat menggulir cukup
+     memakai scrollY, jadi tidak ada pembacaan layout paksa tiap bingkai. */
+  t.docTop = t.el.getBoundingClientRect().top + scrollY;
   [t.track, t.line].forEach(el => {
     el.style.top = t.top + "px";
     el.style.height = t.len + "px";
@@ -900,7 +942,7 @@ function updateTimeline() {
   const t = TL;
   t.raf = 0;
   if (!t.el || !t.items.length) return;
-  const y = innerHeight * 0.62 - (t.el.getBoundingClientRect().top + t.top);
+  const y = innerHeight * 0.62 - (t.docTop - scrollY + t.top);
   const p = Math.min(1, Math.max(0, y / t.len));
   if (Math.abs(p - t.lastP) > 0.0005) {
     t.line.style.transform = `scaleY(${p.toFixed(4)})`;
@@ -932,6 +974,9 @@ function initTimeline() {
 
   new IntersectionObserver(es => {
     TL.active = es[0].isIntersecting;
+    /* Saat bagian masuk layar, ukur ulang posisinya: gambar di atasnya bisa
+       saja baru selesai dimuat dan menggeser halaman. */
+    if (TL.active) layoutTimeline();
     queue(); /* satu pembaruan terakhir saat keluar layar agar garis berakhir di posisi yang benar */
   }, { rootMargin: "160px 0px" }).observe(el);
 
@@ -1754,8 +1799,9 @@ ${budG(84, 96, -26)}${budG(130, 68, 22)}${budG(16, 86, 38)}
 
 function initFloral() {
   /* Ranting sampul tetap memakai ilustrasi batang. Untuk bingkai foto mempelai
-     serta kartu Akad Nikah & Resepsi, dipakai kuntum sakura dari assets/sakura.jpg
-     yang sudah dipotong bersih: hanya bunga, tanpa tangkai dan daun. */
+     serta kartu Akad Nikah & Tasyakuran, dipakai kuntum sakura dari
+     assets/sakura-640.jpg yang sudah dipotong bersih: hanya bunga, tanpa
+     tangkai dan daun. */
   const groups = [
     [".cover-frame", "tl tr bl br", "branch"],
     ["#pair .person .ph", "tl br", "flower"],
@@ -1833,8 +1879,9 @@ function initPetals() {
   resize();
   addEventListener("resize", resize, { passive: true });
 
-  /* Foto hujan sakura di folder assets menjadi sumber sprite. */
-  const ART = "assets/sakura.jpg";
+  /* Foto hujan sakura di folder assets menjadi sumber sprite. Versi 640 px
+     dipakai agar unduhan ringan dan pemrosesan piksel tidak berat. */
+  const ART = "assets/sakura-640.jpg";
   const SRC_W = 640;                    /* cukup tajam untuk sprite <= 44px */
   const fallbackSprite = () => {
     const s = document.createElement("canvas");
@@ -2029,7 +2076,9 @@ function initPetals() {
 
   const img = new Image();
   img.decoding = "async";
-  img.onload = () => begin(img);
+  /* Pemotongan sprite memakan puluhan milidetik; jalankan saat mesin sedang
+     lengang supaya tidak menunda layar sampul atau ketukan pertama. */
+  img.onload = () => whenIdle(() => begin(img));
   img.onerror = () => begin(null);
   img.src = ART;
 }
@@ -2265,8 +2314,10 @@ addEventListener("scroll", () => {
 resolveGuest()
   .then(() => {
     renderContent();
-    initAllStages();
-    initTilt();
+    /* Pekerjaan berat dipisahkan ke waktu luang: sampul tampil lebih cepat
+       dan ketukan pertama pengunjung tidak tertahan tugas panjang. */
+    whenIdle(() => initAllStages());
+    whenIdle(() => initTilt());
     return loadWishes();
   })
   .then(() => {
