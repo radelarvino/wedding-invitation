@@ -2350,7 +2350,7 @@ function openEnvelope() {
         btn.focus({ preventScroll: true });
       } catch (_) {}
     }
-  }, reduce ? 240 : 2200);
+  }, reduce ? 240 : 2400);
 }
 
 if (envBox && envSeal) {
@@ -2360,6 +2360,11 @@ if (envBox && envSeal) {
     cover.setAttribute("aria-hidden", "true");
   }
   envSeal.addEventListener("click", openEnvelope);
+  // Ketukan di mana pun pada amplop juga mempercepat pembukaan
+  envBox.addEventListener("click", openEnvelope);
+  addEventListener("keydown", (e) => {
+    if (e.key === "Escape") openEnvelope();
+  });
   // Fokus awal di dalam dialog agar pengguna keyboard langsung bisa membuka
   try {
     envSeal.focus({ preventScroll: true });

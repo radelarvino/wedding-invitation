@@ -9076,7 +9076,7 @@ main > section {
   background:
     radial-gradient(118% 88% at 50% 32%, #1d2e58 0%, #162445 34%, #0d1730 62%, #05090f 100%);
   opacity: 1;
-  transition: opacity 0.8s ease 1.24s;
+  transition: opacity 0.8s ease 1.45s;
 }
 
 /* Cahaya ambien hangat di balik amplop agar panggung tidak terasa datar */
@@ -9281,7 +9281,7 @@ main > section {
 .env-flap {
   position: absolute;
   transform-style: preserve-3d;
-  transition: transform 1.05s cubic-bezier(0.2, 0.82, 0.2, 1);
+  transition: transform 1.05s cubic-bezier(0.42, 0, 0.15, 1);
 }
 
 .env-flap i {
