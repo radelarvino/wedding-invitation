@@ -8995,3 +8995,56 @@ main > section {
     margin: 1.1rem auto 0.8rem;
   }
 }
+
+/* =====================================================================
+   37. RANTING SAKURA MEMPELAI: MENYAMBUNG DI DESKTOP
+   Di layar lebar kedua ranting kiri dan kanan dibuat saling bertemu di
+   tengah sehingga membentuk satu untaian bunga dari tepi kiri ke kanan.
+   Ponsel dan tablet tetap memakai susunan lama.
+   ===================================================================== */
+@media (min-width: 1024px) {
+  #mempelai .sakura-branch {
+    width: calc(50vw + 40px);
+    max-width: none;
+  }
+
+  /* Kedua sisi bertemu di tengah dengan sedikit tumpang tindih agar tidak
+     terlihat celah, terutama saat ranting bergoyang. */
+  #mempelai .sakura-branch.left {
+    left: 0;
+  }
+
+  #mempelai .sakura-branch.right {
+    right: 0;
+  }
+}
+
+/* =====================================================================
+   38. LAYAR SANGAT SEMPIT (≤ 319px, mis. layar luar Galaxy Fold)
+   Padding section dikecilkan agar Cerita dan Penutup kembali tepat satu
+   layar tanpa memotong isi.
+   ===================================================================== */
+@media (max-width: 319px) {
+  main > section {
+    padding-top: 1.6rem;
+    padding-bottom: 1.3rem;
+  }
+
+  #cerita .tl-item,
+  #cerita .tl-item:nth-of-type(2n + 1),
+  #cerita .tl-item:nth-of-type(2n) {
+    margin-bottom: 2px;
+  }
+
+  #penutup .closing-text {
+    line-height: 1.7;
+  }
+
+  #penutup .nick {
+    margin-top: 1.2rem;
+  }
+
+  #penutup .credit {
+    margin-top: 1.6rem;
+  }
+}

@@ -495,11 +495,16 @@ function startCountdown(target) {
  */
 function ics(e) {
   const f = d => new Date(d).toISOString().replace(/[-:]|\.\d{3}/g, "");
+  const text = s => String(s).replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+  const now = f(new Date());
+  const uid = `${now}-${Math.random().toString(36).slice(2, 10)}@wedding-invitation`;
   const lines = [
-    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Undangan Pernikahan//ID",
-    "BEGIN:VEVENT", `DTSTART:${f(e.start)}`, `DTEND:${f(e.end)}`,
-    `SUMMARY:${e.name} ${a.nick} & ${b.nick}`, `LOCATION:${C.venue}`,
-    "DESCRIPTION:Merupakan kehormatan apabila Anda berkenan hadir.", "END:VEVENT", "END:VCALENDAR"
+    "BEGIN:VCALENDAR", "VERSION:2.0", "CALSCALE:GREGORIAN", "PRODID:-//Undangan Pernikahan//ID",
+    "BEGIN:VEVENT", `UID:${uid}`, `DTSTAMP:${now}`,
+    `DTSTART:${f(e.start)}`, `DTEND:${f(e.end)}`,
+    `SUMMARY:${text(`${e.name} ${a.nick} & ${b.nick}`)}`, `LOCATION:${text(C.venue)}`,
+    `DESCRIPTION:${text("Merupakan kehormatan apabila Anda berkenan hadir.")}`,
+    "END:VEVENT", "END:VCALENDAR"
   ].join("\r\n");
   const url = URL.createObjectURL(new Blob([lines], { type: "text/calendar" }));
   const link = document.createElement("a");
