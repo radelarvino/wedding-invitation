@@ -29,7 +29,7 @@
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/gf/jost-var.woff2" crossorigin>
 <link rel="preload" as="image" href="assets/prewed-640.webp" media="(max-width: 599.98px)" fetchpriority="high">
 <link rel="preload" as="image" href="assets/prewed-860.webp" media="(min-width: 600px)" fetchpriority="high">
-<link rel="stylesheet" href="style.css?v=24">
+<link rel="stylesheet" href="style.css?v=25">
 </head>
 <body class="locked">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -93,6 +93,34 @@
 <canvas id="petals" aria-hidden="true"></canvas>
 
 <audio id="bgm" src="assets/audio/Ed Sheeran - Photograph (Official Lyric Video).mp3" loop preload="metadata"></audio>
+
+<!-- Amplop 3D pembuka -->
+<div id="env" class="env" role="dialog" aria-modal="true" aria-label="Buka undangan pernikahan Ramiz dan Denayu">
+  <div class="env-glow" aria-hidden="true"></div>
+  <div class="env-stage">
+    <div class="env-card">
+      <span class="env-shadow" aria-hidden="true"></span>
+      <div class="env-back" aria-hidden="true">
+        <div class="env-note">
+          <span class="env-note-kicker">The Wedding Celebration</span>
+          <span class="env-note-names">Ramiz <em>&amp;</em> Denayu</span>
+          <span class="env-note-date">13 . 12 . 2026</span>
+        </div>
+      </div>
+      <div class="env-flap fl-t" aria-hidden="true"><i class="ff"></i><i class="fb"></i></div>
+      <div class="env-flap fl-b" aria-hidden="true"><i class="ff"></i><i class="fb"></i></div>
+      <div class="env-flap fl-l" aria-hidden="true"><i class="ff"></i><i class="fb"></i></div>
+      <div class="env-flap fl-r" aria-hidden="true"><i class="ff"></i><i class="fb"></i></div>
+      <button class="env-seal" id="envSeal" type="button" aria-label="Buka undangan">
+        <span class="env-seal-wax" aria-hidden="true"></span>
+        <span class="env-seal-ring" aria-hidden="true"></span>
+        <span class="env-seal-mono" aria-hidden="true">R<em>&amp;</em>D</span>
+      </button>
+    </div>
+    <p class="env-hint" aria-hidden="true">Ketuk segel untuk membuka</p>
+  </div>
+</div>
+<noscript><style>#env{display:none}</style></noscript>
 
 <!-- Cover -->
 <div id="cover">
@@ -378,6 +406,6 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="config.js"></script>
-<script src="script.js?v=20"></script>
+<script src="script.js?v=21"></script>
 </body>
 </html>

@@ -8164,6 +8164,13 @@ body.open main {
   filter: none;
 }
 
+/* Saat cover masih terkunci, main tersembunyi. Skala 1.008 hanya dipakai
+   untuk animasi masuk dan membuat lebar dokumen melebihi viewport, jadi
+   dihilangkan khusus pada keadaan terkunci agar tidak ada scroll horizontal. */
+body.locked main {
+  transform: translate3d(0, 3vh, 0);
+}
+
 /* ---------------------------------------------------------------------
    Kartu Akad & Resepsi: bingkai ganda rose-gold, garis punggung buku,
    dan lapisan tepi halaman di luar kartu.
@@ -9046,5 +9053,598 @@ main > section {
 
   #penutup .credit {
     margin-top: 1.6rem;
+  }
+}
+
+/* =====================================================================
+   39. AMPLOP 3D PEMBUKA UNDANGAN
+   Amplop navy bertekstur sakura dengan segel lilin rose. Saat segel
+   diketuk, keempat lipatan membuka dalam ruang 3D dan memperlihatkan
+   kartu undangan di dalamnya, lalu seluruh amplop memudar halus
+   memperlihatkan cover yang sudah ada tanpa mengubah isinya.
+   ===================================================================== */
+.env {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  padding:
+    max(1.1rem, env(safe-area-inset-top))
+    1.1rem
+    max(1.1rem, env(safe-area-inset-bottom));
+  background:
+    radial-gradient(118% 88% at 50% 32%, #1d2e58 0%, #162445 34%, #0d1730 62%, #05090f 100%);
+  opacity: 1;
+  transition: opacity 0.8s ease 1.24s;
+}
+
+/* Cahaya ambien hangat di balik amplop agar panggung tidak terasa datar */
+.env::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(20% 16% at 16% 22%, rgba(229, 207, 168, 0.16), transparent 72%),
+    radial-gradient(16% 13% at 84% 26%, rgba(239, 126, 164, 0.14), transparent 72%),
+    radial-gradient(15% 12% at 74% 84%, rgba(229, 207, 168, 0.12), transparent 74%),
+    radial-gradient(18% 14% at 24% 78%, rgba(239, 126, 164, 0.1), transparent 74%),
+    radial-gradient(46% 34% at 50% 46%, rgba(229, 207, 168, 0.2), transparent 70%);
+  pointer-events: none;
+}
+
+/* Vignette tepi supaya fokus tetap ke segel */
+.env::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(105% 92% at 50% 46%, transparent 46%, rgba(3, 6, 12, 0.55) 100%);
+  pointer-events: none;
+}
+
+.env[hidden],
+.env.done {
+  display: none;
+}
+
+.env.opening {
+  opacity: 0;
+}
+
+.env-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(70vw, 520px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 236, 196, 0.95) 0%, rgba(247, 174, 196, 0.42) 38%, rgba(247, 174, 196, 0) 68%);
+  opacity: 0;
+  filter: blur(6px);
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.35);
+  transition:
+    opacity 0.9s ease 0.15s,
+    transform 1.3s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s;
+}
+
+.env.opening .env-glow {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(2.3);
+}
+
+.env-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.65rem, 2.2vh, 1.15rem);
+  width: 100%;
+  perspective: 1350px;
+  perspective-origin: 50% 44%;
+  animation: envStageIn 1s cubic-bezier(0.22, 0.8, 0.2, 1) both;
+}
+
+@keyframes envStageIn {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.env-card {
+  --env-w: min(88vw, 460px, calc(76vh * 0.72));
+  position: relative;
+  width: var(--env-w);
+  height: min(76vh, calc(var(--env-w) * 1.39));
+  height: min(76dvh, calc(var(--env-w) * 1.39));
+  transform-style: preserve-3d;
+  transition: transform 1.5s cubic-bezier(0.22, 0.8, 0.2, 1);
+}
+
+.env.opening .env-card {
+  transform: scale(1.04) translateY(-6px);
+}
+
+/* Bingkai emas di atas seluruh permukaan amplop; tetap ada saat lipatan
+   terbuka sehingga kartu undangan terlihat seperti bertepi emas. */
+.env-card::after {
+  content: "";
+  position: absolute;
+  inset: 4.6%;
+  z-index: 7;
+  border-radius: 3px;
+  border: 1px solid rgba(229, 207, 168, 0.36);
+  box-shadow:
+    inset 0 0 0 1px rgba(229, 207, 168, 0.1),
+    0 0 24px rgba(0, 0, 0, 0.16);
+  transform: translateZ(6px);
+  pointer-events: none;
+}
+
+.env-shadow {
+  position: absolute;
+  inset: 4% 3%;
+  border-radius: 18px;
+  background: #050a14;
+  box-shadow:
+    0 34px 70px rgba(0, 0, 0, 0.65),
+    0 10px 24px rgba(0, 0, 0, 0.5);
+  transform: translateZ(-6px);
+}
+
+.env-back {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 18% 0%, rgba(239, 126, 164, 0.16), transparent 58%),
+    radial-gradient(100% 90% at 88% 100%, rgba(229, 207, 168, 0.12), transparent 60%),
+    linear-gradient(158deg, #1b2b55 0%, #122045 48%, #0a1430 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(229, 207, 168, 0.26),
+    inset 0 0 0 10px rgba(7, 12, 26, 0.35),
+    inset 0 0 0 11px rgba(229, 207, 168, 0.12),
+    inset 0 0 60px rgba(0, 0, 0, 0.45);
+}
+
+.env-back::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    url("assets/sakura-flowers.svg") center / 165% no-repeat,
+    radial-gradient(70% 46% at 50% 102%, rgba(239, 126, 164, 0.14), transparent 70%);
+  opacity: 0.11;
+}
+
+/* Bingkai emas kini berada di .env-card agar tetap terlihat di atas lipatan */
+
+.env-note {
+  position: absolute;
+  inset: 7.5% 7%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.35rem, 1.2vh, 0.75rem);
+  padding: 8% 7%;
+  border-radius: 4px;
+  color: #2a2030;
+  text-align: center;
+  background: radial-gradient(120% 90% at 50% 0%, #fffdf8, #f7ead4 58%, #eed9b8 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(178, 135, 78, 0.55),
+    inset 0 0 0 7px rgba(255, 253, 246, 0.8),
+    inset 0 0 0 8px rgba(190, 150, 95, 0.35),
+    0 16px 36px rgba(0, 0, 0, 0.28);
+}
+
+.env-note-kicker {
+  font-family: var(--font-ui);
+  font-size: clamp(0.46rem, 1.15vw, 0.58rem);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: #a8804d;
+}
+
+.env-note-names {
+  font-family: var(--font-script);
+  font-size: clamp(1.5rem, 5.3vw, 2.7rem);
+  line-height: 1.15;
+  color: #7c1f3d;
+}
+
+.env-note-names em {
+  font-style: normal;
+  font-size: 0.58em;
+  color: #b08a4a;
+  padding: 0 0.12em;
+}
+
+.env-note-date {
+  font-family: var(--font-ui);
+  font-size: clamp(0.54rem, 1.35vw, 0.68rem);
+  line-height: 1.4;
+  letter-spacing: 0.32em;
+  color: #6c5a45;
+}
+
+.env-flap {
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: transform 1.05s cubic-bezier(0.2, 0.82, 0.2, 1);
+}
+
+.env-flap i {
+  position: absolute;
+  inset: 0;
+  display: block;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.env-flap .ff {
+  background: linear-gradient(158deg, #1d2f5b 0%, #132247 52%, #0a1531 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(229, 207, 168, 0.2),
+    inset 0 0 46px rgba(0, 0, 0, 0.32);
+}
+
+/* Tiap lipatan punya arah cahaya sendiri agar terasa seperti kertas terlipat */
+.fl-t .ff {
+  background: linear-gradient(180deg, #263a66 0%, #1e3058 55%, #1b2b51 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(229, 207, 168, 0.24),
+    inset 0 0 44px rgba(0, 0, 0, 0.22),
+    inset 0 34px 34px -26px rgba(255, 244, 220, 0.14);
+}
+
+.fl-b .ff {
+  background: linear-gradient(0deg, #24375f 0%, #1c2e55 55%, #192a50 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(229, 207, 168, 0.22),
+    inset 0 0 44px rgba(0, 0, 0, 0.22),
+    inset 0 -26px 30px -24px rgba(255, 244, 220, 0.1);
+}
+
+.fl-l .ff {
+  background: linear-gradient(90deg, #22345e 0%, #1a2c53 60%, #18294f 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(229, 207, 168, 0.22),
+    inset 0 0 44px rgba(0, 0, 0, 0.22);
+}
+
+.fl-r .ff {
+  background: linear-gradient(270deg, #22345e 0%, #1a2c53 60%, #18294f 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(229, 207, 168, 0.22),
+    inset 0 0 44px rgba(0, 0, 0, 0.22);
+}
+
+.env-flap .fb {
+  background: linear-gradient(158deg, #f2e2c6 0%, #e6cfa8 56%, #cfb086 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(178, 135, 78, 0.3),
+    inset 0 0 42px rgba(146, 104, 58, 0.2);
+}
+
+/* Ranting sakura tipis tercetak di lipatan atas dan bawah amplop */
+.fl-t .ff::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("assets/sakura-flowers.svg") center top / 94% auto no-repeat;
+  opacity: 0.15;
+}
+
+.fl-b .ff::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("assets/sakura-flowers.svg") center bottom / 94% auto no-repeat;
+  opacity: 0.18;
+}
+
+.env-flap .ff::after,
+.env-flap .fb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 100% at 22% 0%, rgba(239, 126, 164, 0.15), transparent 55%);
+}
+
+.env-flap .fb::after {
+  background: radial-gradient(120% 100% at 30% 10%, #fffdf8, transparent 65%);
+  opacity: 0.65;
+}
+
+.fl-t {
+  inset: 0 0 auto 0;
+  z-index: 6;
+  height: 63%;
+  transform: translateZ(3px);
+  transform-origin: 50% 0;
+}
+
+.fl-b {
+  inset: auto 0 0 0;
+  z-index: 5;
+  height: 63%;
+  transform: translateZ(2px);
+  transform-origin: 50% 100%;
+}
+
+.fl-l {
+  inset: 0 auto 0 0;
+  z-index: 4;
+  width: 66%;
+  transform: translateZ(1px);
+  transform-origin: 0 50%;
+}
+
+.fl-r {
+  inset: 0 0 0 auto;
+  z-index: 4;
+  width: 66%;
+  transform: translateZ(1px);
+  transform-origin: 100% 50%;
+}
+
+.fl-t i {
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.fl-b i {
+  clip-path: polygon(0 100%, 100% 100%, 50% 0);
+}
+
+.fl-l i {
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.fl-r i {
+  clip-path: polygon(100% 0, 0 50%, 100% 100%);
+}
+
+.fl-t .fb,
+.fl-b .fb {
+  transform: rotateX(180deg);
+}
+
+.fl-l .fb,
+.fl-r .fb {
+  transform: rotateY(180deg);
+}
+
+#env.opening .fl-t {
+  transform: translateZ(3px) rotateX(-167deg);
+  transition-delay: 0s;
+}
+
+#env.opening .fl-l {
+  transform: translateZ(1px) rotateY(167deg);
+  transition-delay: 0.07s;
+}
+
+#env.opening .fl-r {
+  transform: translateZ(1px) rotateY(-167deg);
+  transition-delay: 0.07s;
+}
+
+#env.opening .fl-b {
+  transform: translateZ(2px) rotateX(167deg);
+  transition-delay: 0.13s;
+}
+
+#env.opening .env-flap {
+  will-change: transform;
+}
+
+.env-seal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 10;
+  width: clamp(74px, min(23vw, 18vh), 128px);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transform: translate(-50%, -50%) translateZ(34px);
+  transform-style: preserve-3d;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 0.55s cubic-bezier(0.3, 0.8, 0.3, 1),
+    opacity 0.4s ease;
+}
+
+/* Bayangan segel jatuh tepat di permukaan amplop, bukan di atas lilin */
+.env-seal::before {
+  content: "";
+  position: absolute;
+  inset: 2%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 56% 62%, rgba(0, 0, 0, 0.24) 0%, rgba(0, 0, 0, 0.11) 52%, rgba(0, 0, 0, 0) 74%);
+  transform: translateZ(-34px) translateY(10%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.env-seal-wax {
+  position: absolute;
+  inset: 0;
+  border-radius: 47% 53% 46% 54% / 52% 46% 54% 48%;
+  background:
+    radial-gradient(circle at 33% 24%, rgba(255, 240, 246, 0.36) 0%, rgba(255, 240, 246, 0) 42%),
+    radial-gradient(circle at 70% 78%, rgba(255, 206, 224, 0.18) 0%, rgba(255, 206, 224, 0) 52%),
+    radial-gradient(circle at 50% 42%, #e4819f 0%, #dc6c93 55%, #bb4267 100%);
+  box-shadow:
+    0 0 0 2px rgba(229, 207, 168, 0.42),
+    inset 0 2px 3px rgba(255, 255, 255, 0.32),
+    inset 0 -8px 14px rgba(108, 22, 52, 0.26),
+    inset 0 0 0 1px rgba(112, 26, 56, 0.22),
+    0 8px 16px rgba(0, 0, 0, 0.35);
+  transition:
+    transform 0.45s cubic-bezier(0.3, 0.8, 0.3, 1),
+    box-shadow 0.45s ease;
+}
+
+/* Tepi lilin yang meleleh sedikit keluar dari bentuk utama */
+.env-seal-wax::before {
+  content: "";
+  position: absolute;
+  inset: -3.5%;
+  z-index: -1;
+  border-radius: 52% 48% 45% 55% / 47% 55% 45% 53%;
+  background: linear-gradient(160deg, #d46783 0%, #b84062 100%);
+  box-shadow: 0 0 0 1.5px rgba(229, 207, 168, 0.3);
+}
+
+.env-seal:hover .env-seal-wax,
+.env-seal:focus-visible .env-seal-wax {
+  transform: scale(1.06) rotate(3deg);
+  box-shadow:
+    inset 0 -7px 14px rgba(105, 20, 50, 0.45),
+    inset 0 7px 12px rgba(255, 255, 255, 0.55),
+    0 16px 30px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(239, 126, 164, 0.4);
+}
+
+.env-seal:focus-visible {
+  outline: 2px solid rgba(229, 207, 168, 0.9);
+  outline-offset: 10px;
+  border-radius: 50%;
+}
+
+.env-seal-ring {
+  position: absolute;
+  inset: 13.5%;
+  border-radius: 50%;
+  border: 1px solid rgba(240, 213, 168, 0.5);
+  box-shadow:
+    inset 0 0 0 1px rgba(120, 30, 60, 0.2),
+    inset 0 2px 6px rgba(255, 255, 255, 0.32);
+  transition:
+    transform 0.9s ease,
+    opacity 0.9s ease;
+}
+
+.env-seal-mono {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-script);
+  font-size: clamp(1.4rem, 4.6vw, 2.05rem);
+  line-height: 0.98;
+  color: #5e1832;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.5),
+    0 -1px 1px rgba(90, 10, 35, 0.35);
+}
+
+.env-seal-mono em {
+  font-style: normal;
+  font-size: 0.55em;
+  color: #8d2747;
+  padding: 0 0.06em;
+}
+
+.env-seal::after {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  border-radius: 50%;
+  border: 1px solid rgba(229, 207, 168, 0.32);
+  pointer-events: none;
+  animation: envPulse 3s ease-out infinite;
+}
+
+@keyframes envPulse {
+  0% {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.25);
+    opacity: 0;
+  }
+}
+
+#env.opening .env-seal {
+  opacity: 0;
+  transform: translate(-50%, -50%) translateZ(60px) scale(0.55) rotate(-16deg);
+}
+
+#env.opening .env-seal::after {
+  animation: none;
+}
+
+#env.opening .env-seal-ring {
+  transform: scale(2.4);
+  opacity: 0;
+}
+
+.env-hint {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: clamp(0.52rem, 1.2vw, 0.62rem);
+  line-height: 1.4;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  text-align: center;
+  color: rgba(232, 212, 176, 0.85);
+  animation: envHint 3.2s ease-in-out infinite;
+}
+
+@keyframes envHint {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+#env.opening .env-hint {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .env-stage,
+  .env-hint,
+  .env-seal::after {
+    animation: none;
+  }
+
+  .env-flap,
+  .env-card,
+  .env-seal,
+  .env-glow,
+  .env,
+  .env-seal-ring {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+}
+
+@media print {
+  .env {
+    display: none !important;
   }
 }

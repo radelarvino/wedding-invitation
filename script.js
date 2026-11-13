@@ -2315,7 +2315,59 @@ addEventListener("scroll", () => {
 }, { passive: true });
 
 
-/* ====== 16. INITIALIZATION ====== */
+/* ====== 16. AMPLOP 3D PEMBUKA UNDANGAN ====== */
+const envBox = $("#env");
+const envSeal = $("#envSeal");
+let envelopeOpened = false;
+
+/**
+ * Membuka lipatan amplop 3D, lalu memperlihatkan cover yang sudah ada.
+ * Cover tetap utuh; amplop hanya lapisan pembuka di atasnya.
+ */
+function openEnvelope() {
+  if (!envBox || envelopeOpened) return;
+  envelopeOpened = true;
+
+  const cover = $("#cover");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  envBox.classList.add("opening");
+
+  if (envSeal) {
+    envSeal.disabled = true;
+    envSeal.setAttribute("aria-label", "Membuka undangan");
+  }
+
+  setTimeout(() => {
+    envBox.hidden = true;
+    envBox.classList.add("done");
+    if (cover) {
+      cover.removeAttribute("inert");
+      cover.removeAttribute("aria-hidden");
+    }
+    const btn = $("#openBtn");
+    if (btn) {
+      try {
+        btn.focus({ preventScroll: true });
+      } catch (_) {}
+    }
+  }, reduce ? 240 : 2200);
+}
+
+if (envBox && envSeal) {
+  const cover = $("#cover");
+  if (cover) {
+    cover.setAttribute("inert", "");
+    cover.setAttribute("aria-hidden", "true");
+  }
+  envSeal.addEventListener("click", openEnvelope);
+  // Fokus awal di dalam dialog agar pengguna keyboard langsung bisa membuka
+  try {
+    envSeal.focus({ preventScroll: true });
+  } catch (_) {}
+}
+
+
+/* ====== 17. INITIALIZATION ====== */
 resolveGuest()
   .then(() => {
     renderContent();
