@@ -8409,16 +8409,16 @@ main > section::after {
 }
 
 /* ---------------------------------------------------------------------
-   Reveal lebih ringan dan dua arah: terbuka saat masuk, menutup saat
-   berpindah ke objek/bagian lain, lalu terputar lagi saat kembali.
+   Reveal dua arah: elemen naik lembut saat masuk layar, lalu menutup lagi
+   saat berpindah bagian agar animasi terputar kembali ketika digulir.
    --------------------------------------------------------------------- */
 html.js .reveal,
 .reveal {
   opacity: 0;
-  transform: translate3d(0, 12px, 0);
+  transform: translate3d(0, 34px, 0) scale(0.985);
   transition:
-    opacity 0.42s var(--ease-out),
-    transform 0.52s var(--ease-out);
+    opacity 0.72s var(--ease-out),
+    transform 0.9s var(--ease-out);
   transition-delay: var(--d, 0ms);
 }
 
@@ -9650,89 +9650,54 @@ main > section {
 }
 
 /* =====================================================================
-   40. PENYEMPURNAAN AKHIR — SINEMATIK AMPLOP, SAMBUTAN OTOMATIS,
-   RANTING LURUS DESKTOP, BUNGA BINGKAI LEBIH KECIL, THE JOURNEY
+   40. PENYEMPURNAAN AKHIR — SINEMATIK AMPLOP, TOMBOL MASUK PINK,
+   RANTING LURUS DESKTOP, BUNGA BINGKAI, THE JOURNEY
    ===================================================================== */
 
 /* ---------------------------------------------------------------------
-   A. Layar sambutan: penanda bahwa undangan akan terbuka otomatis
+   A. Tombol masuk pada layar sambutan: pink utama. Animasi masuknya tetap
+   memakai .anim milik sampul, jadi ritmenya tidak berubah.
    --------------------------------------------------------------------- */
-.auto-enter {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.45rem;
-  margin-top: clamp(0.7rem, 1.9vh, 1.05rem);
-  font: 400 0.56rem/1.4 var(--font-ui);
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: rgba(229, 207, 168, 0.9);
-}
-
-.auto-enter i {
-  position: relative;
-  display: block;
-  width: clamp(120px, 27vw, 184px);
-  height: 1px;
-  overflow: hidden;
-  background: rgba(229, 207, 168, 0.22);
-}
-
-.auto-enter i::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(240, 169, 191, 0.15), var(--gold) 70%, #fff3da);
-  transform: scaleX(0);
-  transform-origin: left center;
-}
-
-#cover.arming .auto-enter {
-  display: flex;
-}
-
-#cover.arming .auto-enter.anim {
-  animation: coverRise 0.55s var(--ease-out) both;
-}
-
-#cover.arming .auto-enter i::after {
-  animation: autoEnterBar 1.8s cubic-bezier(0.32, 0.72, 0.28, 1) 0.08s both;
-}
-
-@keyframes autoEnterBar {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-
 #home:focus {
   outline: none;
 }
 
-/* Tombol manual dibuat sekunder agar layar sambutan tidak terasa seperti
-   gerbang kedua; undangan tetap masuk sendiri beberapa saat kemudian. */
 #cover #openBtn.btn-open {
-  margin-top: clamp(0.55rem, 1.5vh, 0.85rem);
-  padding: 0.52rem 1.15rem;
-  border: 1px solid rgba(229, 207, 168, 0.3);
+  margin-top: clamp(0.8rem, 2.2vh, 1.15rem);
+  padding: 0.78rem 1.85rem;
+  border: 1px solid rgba(255, 238, 218, 0.5);
   border-radius: 99px;
-  background: rgba(229, 207, 168, 0.04);
-  box-shadow: none;
-  color: rgba(244, 231, 206, 0.88);
-  font-size: 0.6rem;
-  letter-spacing: 0.24em;
+  background: linear-gradient(135deg, #f7b6ca 0%, #ea83a7 44%, #d9557f 100%);
+  box-shadow:
+    0 16px 30px -14px rgba(217, 85, 127, 0.75),
+    0 0 26px rgba(239, 126, 164, 0.28),
+    inset 0 1px 0 rgba(255, 248, 240, 0.45),
+    inset 0 -2px 10px rgba(150, 32, 72, 0.22);
+  color: #fff8f1;
+  font-size: 0.66rem;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
+  text-shadow: 0 1px 2px rgba(138, 25, 59, 0.35);
 }
 
 #cover #openBtn.btn-open:hover,
 #cover #openBtn.btn-open:focus-visible {
-  background: rgba(229, 207, 168, 0.1);
-  border-color: rgba(244, 214, 166, 0.55);
-  color: #fff5e2;
+  background: linear-gradient(135deg, #ffc4d6 0%, #f08fb2 44%, #e05c89 100%);
+  border-color: rgba(255, 248, 236, 0.72);
+  color: #fffdf9;
+  box-shadow:
+    0 18px 34px -14px rgba(217, 85, 127, 0.82),
+    0 0 34px rgba(247, 169, 193, 0.4),
+    inset 0 1px 0 rgba(255, 250, 244, 0.55);
+}
+
+#cover #openBtn.btn-open:active {
+  transform: translateY(1px) scale(0.985);
 }
 
 #cover #openBtn.btn-open .ic {
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 1rem;
+  height: 1rem;
 }
 
 /* ---------------------------------------------------------------------
@@ -9956,49 +9921,106 @@ main > section {
 }
 
 /* ---------------------------------------------------------------------
-   D. Bunga bingkai foto mempelai: lebih kecil, duduk di luar sudut foto
+   D. Bunga bingkai foto mempelai: satu rumpun kecil yang memeluk sudut
+   luar kotak foto — kiri-atas untuk mempelai pria, kanan-atas untuk
+   mempelai wanita — dengan ukuran yang tidak menutupi nama/inisial.
    --------------------------------------------------------------------- */
 #mempelai .ph > .floral.flower {
-  --fw: clamp(64px, 6.8vw, 86px);
+  --fw: clamp(86px, 8.4vw, 108px);
+  z-index: 7;
+  filter: drop-shadow(0 8px 14px rgba(23, 35, 74, 0.18));
 }
 
 #mempelai .ph > .floral.flower.tl {
-  top: calc(var(--fw) * -0.38);
-  left: calc(var(--fw) * -0.46);
+  top: calc(var(--fw) * -0.14);
+  left: calc(var(--fw) * -0.16);
 }
 
-#mempelai .ph > .floral.flower.br {
-  right: calc(var(--fw) * -0.46);
-  bottom: calc(var(--fw) * -0.38);
+#mempelai .ph > .floral.flower.tr {
+  top: calc(var(--fw) * -0.14);
+  right: calc(var(--fw) * -0.16);
 }
 
 @media (min-width: 600px) and (max-width: 1023.98px) {
   #mempelai .ph > .floral.flower {
-    --fw: clamp(66px, 9vw, 80px);
+    --fw: clamp(78px, 9.6vw, 94px);
   }
 
   #mempelai .ph > .floral.flower.tl {
-    left: calc(var(--fw) * -0.5);
+    top: calc(var(--fw) * -0.16);
+    left: calc(var(--fw) * -0.18);
   }
 
-  #mempelai .ph > .floral.flower.br {
-    right: calc(var(--fw) * -0.5);
+  #mempelai .ph > .floral.flower.tr {
+    top: calc(var(--fw) * -0.16);
+    right: calc(var(--fw) * -0.18);
   }
 }
 
 @media (max-width: 599px) {
   #mempelai .ph > .floral.flower {
-    --fw: clamp(54px, 14.5vw, 68px);
+    --fw: clamp(68px, 17.5vw, 80px);
   }
 
   #mempelai .ph > .floral.flower.tl {
-    top: calc(var(--fw) * -0.3);
-    left: calc(var(--fw) * -0.32);
+    top: calc(var(--fw) * -0.12);
+    left: calc(var(--fw) * -0.14);
   }
 
-  #mempelai .ph > .floral.flower.br {
-    right: calc(var(--fw) * -0.32);
-    bottom: calc(var(--fw) * -0.3);
+  #mempelai .ph > .floral.flower.tr {
+    top: calc(var(--fw) * -0.12);
+    right: calc(var(--fw) * -0.14);
+  }
+}
+
+/* Elemen kecil di dalam kartu menyusul masuk saat kartunya terlihat */
+@keyframes rvChild {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.venue-card.is-in .venue-info > *,
+.rsvp-card.is-in .rsvp-cta > *,
+.rsvp-card.is-in .sum > * {
+  animation: rvChild 0.68s var(--ease-out) backwards;
+}
+
+.venue-card.is-in .venue-info > :nth-child(1),
+.rsvp-card.is-in .rsvp-cta > :nth-child(1),
+.rsvp-card.is-in .sum > :nth-child(1) {
+  animation-delay: 0.08s;
+}
+
+.venue-card.is-in .venue-info > :nth-child(2),
+.rsvp-card.is-in .rsvp-cta > :nth-child(2),
+.rsvp-card.is-in .sum > :nth-child(2) {
+  animation-delay: 0.16s;
+}
+
+.venue-card.is-in .venue-info > :nth-child(3),
+.rsvp-card.is-in .sum > :nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+.venue-card.is-in .venue-info > :nth-child(4) {
+  animation-delay: 0.32s;
+}
+
+.venue-card.is-in .venue-info > :nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .venue-card.is-in .venue-info > *,
+  .rsvp-card.is-in .rsvp-cta > *,
+  .rsvp-card.is-in .sum > * {
+    animation: none !important;
   }
 }
 
@@ -10224,8 +10246,7 @@ html.js #cerita .jr-item.reveal.is-in,
 @media (prefers-reduced-motion: reduce) {
   .env-card,
   .env-card::before,
-  .env-petals i,
-  .auto-enter i::after {
+  .env-petals i {
     animation: none !important;
   }
 

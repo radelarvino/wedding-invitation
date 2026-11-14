@@ -1837,13 +1837,22 @@ addEventListener("scroll", () => {
   }
 }, { passive: true });
 
-/* Rumpun sakura untuk sudut bingkai: hanya kuntum dan kuncup bunga, tanpa
-   tangkai maupun daun, agar terlihat seperti bunga yang melayang di sudut.
-   Didesain untuk sudut kiri-atas lalu dicerminkan CSS ke sudut lain. */
-const FLOWER_ART = `<svg viewBox="0 0 240 240" aria-hidden="true" focusable="false"><g class="wind">
-<circle class="halo" cx="70" cy="62" r="66" fill="url(#flHalo)"/>
-${bloomG(58, 62, 14, 1.32, 0)}${bloomG(104, 30, -18, 0.98, -1.3)}${bloomG(36, 118, 28, 1.05, -2.4)}${bloomG(112, 96, 8, 0.72, -0.7)}${bloomG(150, 44, -8, 0.66, -2.9)}${bloomG(22, 46, 40, 0.6, -1.8)}
-${budG(84, 96, -26)}${budG(130, 68, 22)}${budG(16, 86, 38)}
+/* Rumpun sakura untuk sudut bingkai: tiga kuntum, kuncup, dan daun kecil
+   yang saling menumpuk rapat. Digambar untuk sudut kiri-atas lalu
+   dicerminkan CSS ke sudut kanan-atas, sehingga selalu "memeluk" sudut
+   kotak foto tanpa tangkai yang mencuat keluar. */
+const FLOWER_ART = `<svg viewBox="0 0 200 200" aria-hidden="true" focusable="false"><g class="wind">
+<circle class="halo" cx="62" cy="66" r="74" fill="url(#flHalo)"/>
+<g class="tw tw1">
+<g opacity=".95">
+<g transform="translate(86 92) rotate(-24)"><path class="lf" style="--bd:-1.4s" d="M0 0c7-9 18-11 27-7-6 9-17 12-27 7z" fill="#9db9d3"/></g>
+<g transform="translate(30 88) rotate(58)"><path class="lf" style="--bd:-2.1s" d="M0 0c7-9 18-11 27-7-6 9-17 12-27 7z" fill="#a9c1d8"/></g>
+<g transform="translate(104 58) rotate(-38)"><path class="lf" style="--bd:-0.8s" d="M0 0c7-9 18-11 27-7-6 9-17 12-27 7z" fill="#9db9d3"/></g>
+<g transform="translate(98 26) rotate(-6)"><path class="lf" style="--bd:-1.9s" d="M0 0c6-8 15-10 23-6-5 8-14 10-23 6z" fill="#a9c1d8"/></g>
+</g>
+${bloomG(64, 64, 6, 2.55, 0)}${bloomG(116, 26, -16, 1.7, -1.1)}${bloomG(30, 108, 26, 1.35, -2.2)}${bloomG(90, 104, 10, 1.1, -0.5)}
+${budG(132, 52, 26)}${budG(14, 70, -34)}${budG(64, 126, 64)}
+</g>
 </g></svg>`;
 
 function initFloral() {
@@ -1860,11 +1869,16 @@ function initFloral() {
   ];
 
   groups.forEach(([sel, pos, kind]) => {
-    $$(sel).forEach(host => {
+    $$(sel).forEach((host, idx) => {
       if (!host || host.dataset.fl) return;
       host.dataset.fl = "1";
       const isCover = kind === "branch";
-      const items = pos.split(" ").map(p => {
+      /* Foto mempelai memakai satu rumpun: kiri-atas untuk orang pertama,
+         kanan-atas (dicerminkan) untuk orang kedua agar seimbang. */
+      const positions = sel === "#pair .person .ph"
+        ? [idx % 2 === 0 ? "tl" : "tr"]
+        : pos.split(" ");
+      const items = positions.map(p => {
         const el = document.createElement("span");
         el.className = `floral ${kind} ${p}`;
         el.setAttribute("aria-hidden", "true");
@@ -2166,8 +2180,6 @@ initFooterName();
 /* ====== 13. COVER & NAVIGATION ====== */
 let coverHideTimer;
 let coverOutTimer;
-let autoEnterTimer = 0;
-let autoEntered = false;
 let startedAt = 0;
 
 /**
@@ -2177,21 +2189,18 @@ let startedAt = 0;
 const isOpen = () => document.body.classList.contains("open");
 
 /**
- * Menggeser layar sambutan ke dashboard undangan.
- * Dipanggil otomatis setelah amplop selesai terbuka, atau lewat tombol
- * "Masuk sekarang" bila pengunjung ingin masuk lebih cepat.
+ * Membuka undangan: layar sambutan bergeser halus ke dashboard.
+ * Dipicu oleh tombol "Buka undangan" pada sampul.
  */
 function enterInvitation() {
   if (isOpen()) return;
-  autoEntered = true;
-  clearTimeout(autoEnterTimer);
 
   document.body.classList.remove("locked");
   document.body.classList.add("open");
 
   const cover = $("#cover");
   if (cover) {
-    cover.classList.remove("returning", "arming");
+    cover.classList.remove("returning");
     cover.classList.add("leave");
     clearTimeout(coverOutTimer);
     clearTimeout(coverHideTimer);
@@ -2317,13 +2326,10 @@ function returnToCover() {
   // Hapus timer penutupan cover yang sedang berjalan
   clearTimeout(coverHideTimer);
   clearTimeout(coverOutTimer);
-  clearTimeout(autoEnterTimer);
-  autoEntered = true;
 
-  // Kembalikan visibilitas cover. Auto-entry hanya sekali; setelah pengunjung
-  // kembali ke sampul, masuk lagi dilakukan lewat tombol "Masuk sekarang".
+  // Kembalikan visibilitas cover; masuk lagi dilakukan lewat tombol.
   cover.style.display = "";
-  cover.classList.remove("out", "leave", "arming");
+  cover.classList.remove("out", "leave");
 
   // Tambahkan kelas animasi kembali
   cover.classList.add("returning");
@@ -2419,20 +2425,13 @@ function openEnvelope() {
       cover.removeAttribute("aria-hidden");
     }
 
-    /* Layar sambutan tetap tampil sebentar untuk membangun suasana, lalu
-       otomatis bergeser ke dashboard. Tombol "Masuk sekarang" tetap
-       tersedia sebagai jalan pintas manual. */
-    if (!autoEntered) {
-      if (cover) cover.classList.add("arming");
-      clearTimeout(autoEnterTimer);
-      autoEnterTimer = setTimeout(enterInvitation, reduce ? 650 : 1800);
-    } else {
-      const btn = $("#openBtn");
-      if (btn) {
-        try {
-          btn.focus({ preventScroll: true });
-        } catch (_) {}
-      }
+    /* Layar sambutan menunggu pengunjung. Tombol "Buka undangan" menjadi
+       satu-satunya jalan masuk agar momennya tidak terlewat. */
+    const btn = $("#openBtn");
+    if (btn) {
+      try {
+        btn.focus({ preventScroll: true });
+      } catch (_) {}
     }
   }, reduce ? 240 : 2400);
 }
