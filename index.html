@@ -29,7 +29,7 @@
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/gf/jost-var.woff2" crossorigin>
 <link rel="preload" as="image" href="assets/prewed-640.webp" media="(max-width: 599.98px)" fetchpriority="high">
 <link rel="preload" as="image" href="assets/prewed-860.webp" media="(min-width: 600px)" fetchpriority="high">
-<link rel="stylesheet" href="style.css?v=26">
+<link rel="stylesheet" href="style.css?v=28">
 </head>
 <body class="locked">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -97,6 +97,24 @@
 <!-- Amplop 3D pembuka -->
 <div id="env" class="env" role="dialog" aria-modal="true" aria-label="Buka undangan pernikahan Ramiz dan Denayu">
   <div class="env-glow" aria-hidden="true"></div>
+  <div class="env-petals" aria-hidden="true">
+    <i style="--x:6%;--t:12s;--d:-2s;--s:1;--r:-24deg;--drift:46px"></i>
+    <i style="--x:15%;--t:16s;--d:-8s;--s:.72;--r:18deg;--drift:-32px"></i>
+    <i style="--x:23%;--t:14s;--d:-4s;--s:.88;--r:-12deg;--drift:58px"></i>
+    <i style="--x:34%;--t:18s;--d:-11s;--s:.62;--r:26deg;--drift:-46px"></i>
+    <i style="--x:44%;--t:13s;--d:-6s;--s:.78;--r:-30deg;--drift:36px"></i>
+    <i style="--x:55%;--t:17s;--d:-1s;--s:.94;--r:14deg;--drift:-54px"></i>
+    <i style="--x:64%;--t:12s;--d:-9s;--s:.66;--r:-20deg;--drift:42px"></i>
+    <i style="--x:73%;--t:15s;--d:-5s;--s:.84;--r:28deg;--drift:-38px"></i>
+    <i style="--x:82%;--t:19s;--d:-13s;--s:.58;--r:-16deg;--drift:50px"></i>
+    <i style="--x:90%;--t:14s;--d:-3s;--s:.9;--r:22deg;--drift:-44px"></i>
+    <i style="--x:97%;--t:16s;--d:-10s;--s:.7;--r:-26deg;--drift:32px"></i>
+    <i style="--x:11%;--t:20s;--d:-15s;--s:.5;--r:30deg;--drift:64px"></i>
+    <i style="--x:48%;--t:21s;--d:-12s;--s:.56;--r:-34deg;--drift:-62px"></i>
+    <i style="--x:69%;--t:18s;--d:-7s;--s:.46;--r:12deg;--drift:54px"></i>
+    <i style="--x:86%;--t:22s;--d:-17s;--s:.52;--r:-8deg;--drift:-58px"></i>
+  </div>
+  <div class="env-frame" aria-hidden="true"><i></i></div>
   <div class="env-stage">
     <div class="env-card">
       <span class="env-shadow" aria-hidden="true"></span>
@@ -145,8 +163,9 @@
       <span class="gc-note" id="guestNote"></span>
     </div>
 
-    <button class="btn btn-open anim" id="openBtn" style="--i:7"><svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg><span>Buka undangan</span></button>
-    <p class="cover-foot anim" style="--i:8">Merupakan kebahagiaan bagi kami apabila Anda berkenan hadir.</p>
+    <div class="auto-enter anim" style="--i:7" aria-hidden="true"><i></i><span>Memasuki undangan</span></div>
+    <button class="btn btn-open anim" id="openBtn" style="--i:8"><svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg><span>Masuk sekarang</span></button>
+    <p class="cover-foot anim" style="--i:9">Merupakan kebahagiaan bagi kami apabila Anda berkenan hadir.</p>
   </div>
 </div>
 
@@ -183,6 +202,7 @@
 <section id="mempelai" class="s-couple">
   <span class="sakura-branch left" aria-hidden="true"><img src="assets/sakura-flowers.svg?v=18" alt="" draggable="false"></span>
   <span class="sakura-branch right" aria-hidden="true"><img src="assets/sakura-flowers.svg?v=18" alt="" draggable="false"></span>
+  <span class="sakura-garland" aria-hidden="true"><img src="assets/sakura-garland.svg?v=1" alt="" draggable="false"></span>
   <div class="wrap">
     <header class="sec-head reveal">
       <div class="eyebrow">Bismillahirrahmanirrahim</div>
@@ -201,7 +221,7 @@
       <h2 class="big">The Journey</h2>
       <p class="lead">Setiap pertemuan adalah doa yang dijawab, dan setiap langkah membawa kami pulang ke tempat yang sama.</p>
     </header>
-    <div class="tl" id="tl"></div>
+    <div class="jr" id="tl"></div>
   </div>
 </section>
 
@@ -406,6 +426,6 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="config.js"></script>
-<script src="script.js?v=22"></script>
+<script src="script.js?v=24"></script>
 </body>
 </html>

@@ -9648,3 +9648,594 @@ main > section {
     display: none !important;
   }
 }
+
+/* =====================================================================
+   40. PENYEMPURNAAN AKHIR — SINEMATIK AMPLOP, SAMBUTAN OTOMATIS,
+   RANTING LURUS DESKTOP, BUNGA BINGKAI LEBIH KECIL, THE JOURNEY
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   A. Layar sambutan: penanda bahwa undangan akan terbuka otomatis
+   --------------------------------------------------------------------- */
+.auto-enter {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: clamp(0.7rem, 1.9vh, 1.05rem);
+  font: 400 0.56rem/1.4 var(--font-ui);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(229, 207, 168, 0.9);
+}
+
+.auto-enter i {
+  position: relative;
+  display: block;
+  width: clamp(120px, 27vw, 184px);
+  height: 1px;
+  overflow: hidden;
+  background: rgba(229, 207, 168, 0.22);
+}
+
+.auto-enter i::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(240, 169, 191, 0.15), var(--gold) 70%, #fff3da);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+#cover.arming .auto-enter {
+  display: flex;
+}
+
+#cover.arming .auto-enter.anim {
+  animation: coverRise 0.55s var(--ease-out) both;
+}
+
+#cover.arming .auto-enter i::after {
+  animation: autoEnterBar 1.8s cubic-bezier(0.32, 0.72, 0.28, 1) 0.08s both;
+}
+
+@keyframes autoEnterBar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+#home:focus {
+  outline: none;
+}
+
+/* Tombol manual dibuat sekunder agar layar sambutan tidak terasa seperti
+   gerbang kedua; undangan tetap masuk sendiri beberapa saat kemudian. */
+#cover #openBtn.btn-open {
+  margin-top: clamp(0.55rem, 1.5vh, 0.85rem);
+  padding: 0.52rem 1.15rem;
+  border: 1px solid rgba(229, 207, 168, 0.3);
+  border-radius: 99px;
+  background: rgba(229, 207, 168, 0.04);
+  box-shadow: none;
+  color: rgba(244, 231, 206, 0.88);
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+#cover #openBtn.btn-open:hover,
+#cover #openBtn.btn-open:focus-visible {
+  background: rgba(229, 207, 168, 0.1);
+  border-color: rgba(244, 214, 166, 0.55);
+  color: #fff5e2;
+}
+
+#cover #openBtn.btn-open .ic {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+/* ---------------------------------------------------------------------
+   B. Amplop sinematik: panggung lebih penuh, kelopak jatuh, kilau kertas
+   --------------------------------------------------------------------- */
+.env {
+  background:
+    radial-gradient(130% 96% at 50% 28%, #22345f 0%, #18294e 30%, #0d1730 62%, #04070d 100%);
+}
+
+.env::before {
+  background:
+    radial-gradient(22% 18% at 14% 20%, rgba(255, 226, 178, 0.18), transparent 72%),
+    radial-gradient(18% 15% at 86% 24%, rgba(247, 154, 184, 0.16), transparent 72%),
+    radial-gradient(17% 14% at 76% 86%, rgba(255, 226, 178, 0.13), transparent 74%),
+    radial-gradient(20% 16% at 20% 80%, rgba(247, 154, 184, 0.12), transparent 74%),
+    radial-gradient(52% 38% at 50% 44%, rgba(255, 233, 193, 0.22), transparent 70%);
+}
+
+.env-stage {
+  z-index: 2;
+  animation: envStageIn 1.15s cubic-bezier(0.22, 0.8, 0.2, 1) both;
+}
+
+.env-card {
+  --env-w: min(94vw, 760px, calc(88vh * 0.72));
+  width: var(--env-w);
+  height: min(88vh, calc(var(--env-w) * 1.39));
+  height: min(88dvh, calc(var(--env-w) * 1.39));
+  animation: envCardIdle 8s 1.5s ease-in-out infinite alternate;
+}
+
+/* Bingkai tipis di tepi layar + ranting sakura di dua sudut, agar panggung
+   terasa penuh dari tepi ke tepi, bukan sekadar kartu di tengah. */
+.env-frame {
+  position: absolute;
+  inset: clamp(0.6rem, 2.1vw, 1.7rem);
+  z-index: 1;
+  border: 1px solid rgba(229, 207, 168, 0.2);
+  border-radius: clamp(12px, 2vw, 24px);
+  box-shadow: inset 0 0 70px rgba(4, 8, 18, 0.4);
+  pointer-events: none;
+}
+
+.env-frame i {
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(229, 207, 168, 0.07);
+  border-radius: inherit;
+}
+
+.env-frame::before,
+.env-frame::after {
+  content: "";
+  position: absolute;
+  width: clamp(150px, 23vw, 330px);
+  aspect-ratio: 820 / 210;
+  background: url("assets/sakura-flowers.svg") center / contain no-repeat;
+  opacity: 0.28;
+  filter: drop-shadow(0 0 20px rgba(239, 126, 164, 0.18));
+}
+
+.env-frame::before {
+  left: -1.4%;
+  bottom: -0.6%;
+}
+
+.env-frame::after {
+  right: -1.4%;
+  top: -0.6%;
+  transform: rotate(180deg);
+}
+
+@keyframes envCardIdle {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(0, -9px, 0); }
+}
+
+#env.opening .env-card {
+  animation: envCardOpen 1.6s cubic-bezier(0.22, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes envCardOpen {
+  from { transform: translate3d(0, -9px, 0) scale(1); }
+  to { transform: translate3d(0, -14px, 0) scale(1.055); }
+}
+
+/* Kilau tipis menyapu permukaan amplop, seperti cahaya lilin yang bergerak */
+.env-card::before {
+  content: "";
+  position: absolute;
+  inset: -10%;
+  z-index: 8;
+  pointer-events: none;
+  background: linear-gradient(112deg,
+    transparent 40%,
+    rgba(255, 244, 220, 0.09) 48%,
+    rgba(255, 255, 255, 0.04) 51%,
+    transparent 60%);
+  mix-blend-mode: screen;
+  transform: translateX(-135%);
+  animation: envSheen 9s 1.6s ease-in-out infinite;
+}
+
+@keyframes envSheen {
+  0%, 58% { transform: translateX(-135%); }
+  82%, 100% { transform: translateX(135%); }
+}
+
+#env.opening .env-card::after {
+  border-color: rgba(255, 234, 192, 0.75);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 244, 216, 0.3),
+    0 0 40px rgba(255, 222, 166, 0.32),
+    inset 0 0 34px rgba(255, 238, 204, 0.16);
+}
+
+.env-card::after {
+  transition: border-color 0.9s ease, box-shadow 1s ease;
+}
+
+/* Kelopak sakura yang jatuh pelan di seluruh layar amplop */
+.env-petals {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.env-petals i {
+  position: absolute;
+  top: -12%;
+  left: var(--x, 50%);
+  width: calc(14px * var(--s, 1));
+  height: calc(18px * var(--s, 1));
+  border-radius: 62% 38% 56% 44% / 62% 56% 44% 38%;
+  background: linear-gradient(155deg, #ffe7ef 0%, #f7a9c1 46%, #e8719a 100%);
+  box-shadow: 0 0 8px rgba(247, 169, 193, 0.28);
+  opacity: 0;
+  rotate: var(--r, 0deg);
+  animation: envPetalFall var(--t, 15s) linear var(--d, 0s) infinite;
+}
+
+@keyframes envPetalFall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -12vh, 0) rotate(0deg);
+  }
+  10% { opacity: 0.72; }
+  55% {
+    opacity: 0.6;
+    transform: translate3d(var(--drift, 40px), 52vh, 0) rotate(190deg);
+  }
+  90% { opacity: 0.5; }
+  100% {
+    opacity: 0;
+    transform: translate3d(calc(var(--drift, 40px) * 2.1), 116vh, 0) rotate(380deg);
+  }
+}
+
+.env-hint {
+  color: rgba(244, 227, 196, 0.92);
+  text-shadow: 0 0 18px rgba(255, 221, 166, 0.28);
+}
+
+/* Layar pendek: jaga panggung tetap utuh tanpa kelopak menutupi segel */
+@media (max-height: 620px) {
+  .env {
+    padding-block: max(0.7rem, env(safe-area-inset-top)) max(0.7rem, env(safe-area-inset-bottom));
+  }
+
+  .env-card {
+    --env-w: min(92vw, calc(88vh * 0.72));
+  }
+
+  .env-hint {
+    display: none;
+  }
+
+  .env-petals i:nth-child(n + 7) {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   C. Ranting mempelai desktop: satu untaian lurus dari kiri ke kanan
+   --------------------------------------------------------------------- */
+.sakura-garland {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  #mempelai .sakura-branch {
+    display: none;
+  }
+
+  #mempelai .sakura-garland {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(-2.8rem, -2.2vw, -1.2rem);
+    z-index: 0;
+    display: block;
+    width: 112%;
+    max-width: none;
+    aspect-ratio: 1600 / 260;
+    transform: translateX(-50%);
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  #mempelai .sakura-garland img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter:
+      drop-shadow(0 0 22px rgba(239, 126, 164, 0.18))
+      drop-shadow(0 6px 16px rgba(4, 8, 18, 0.4));
+  }
+}
+
+/* ---------------------------------------------------------------------
+   D. Bunga bingkai foto mempelai: lebih kecil, duduk di luar sudut foto
+   --------------------------------------------------------------------- */
+#mempelai .ph > .floral.flower {
+  --fw: clamp(64px, 6.8vw, 86px);
+}
+
+#mempelai .ph > .floral.flower.tl {
+  top: calc(var(--fw) * -0.38);
+  left: calc(var(--fw) * -0.46);
+}
+
+#mempelai .ph > .floral.flower.br {
+  right: calc(var(--fw) * -0.46);
+  bottom: calc(var(--fw) * -0.38);
+}
+
+@media (min-width: 600px) and (max-width: 1023.98px) {
+  #mempelai .ph > .floral.flower {
+    --fw: clamp(66px, 9vw, 80px);
+  }
+
+  #mempelai .ph > .floral.flower.tl {
+    left: calc(var(--fw) * -0.5);
+  }
+
+  #mempelai .ph > .floral.flower.br {
+    right: calc(var(--fw) * -0.5);
+  }
+}
+
+@media (max-width: 599px) {
+  #mempelai .ph > .floral.flower {
+    --fw: clamp(54px, 14.5vw, 68px);
+  }
+
+  #mempelai .ph > .floral.flower.tl {
+    top: calc(var(--fw) * -0.3);
+    left: calc(var(--fw) * -0.32);
+  }
+
+  #mempelai .ph > .floral.flower.br {
+    right: calc(var(--fw) * -0.32);
+    bottom: calc(var(--fw) * -0.3);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   E. THE JOURNEY: accordion bersih, panel tersapu kiri ke kanan
+   --------------------------------------------------------------------- */
+#cerita .jr {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.38rem, 1vh, 0.58rem);
+  width: 100%;
+  max-width: 780px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+#cerita .jr-item {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(217, 106, 143, 0.24);
+  border-radius: 14px;
+  background: rgba(255, 250, 240, 0.82);
+  box-shadow: 0 12px 28px -20px rgba(23, 35, 74, 0.28);
+  transition:
+    border-color 0.45s ease,
+    box-shadow 0.45s ease,
+    background 0.45s ease;
+}
+
+#cerita .jr-item.open {
+  border-color: rgba(217, 106, 143, 0.48);
+  background: linear-gradient(135deg, rgba(255, 252, 246, 0.97), rgba(255, 240, 246, 0.92));
+  box-shadow:
+    0 16px 34px -20px rgba(23, 35, 74, 0.36),
+    0 0 0 1px rgba(239, 126, 164, 0.1),
+    0 0 22px rgba(239, 126, 164, 0.08);
+}
+
+#cerita .jr-head {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.55rem, 2vw, 0.9rem);
+  width: 100%;
+  padding: clamp(0.52rem, 1.45vh, 0.72rem) clamp(0.75rem, 2.4vw, 1.05rem);
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#cerita .jr-head:focus-visible {
+  outline: 2px solid var(--pink-deep);
+  outline-offset: -3px;
+  border-radius: 12px;
+}
+
+#cerita .jr-num {
+  min-width: 1.9em;
+  font-family: var(--font-ui);
+  font-size: clamp(0.62rem, 0.58rem + 0.14vw, 0.72rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  color: var(--pink-deep);
+  opacity: 0.6;
+}
+
+#cerita .jr-meta {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.08rem;
+  min-width: 0;
+}
+
+#cerita .jr-date {
+  font: 400 0.55rem/1.4 var(--font-ui);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+#cerita .jr-title {
+  font-family: var(--font-display);
+  font-size: clamp(0.98rem, 0.92rem + 0.26vw, 1.16rem);
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+#cerita .jr-ic {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid rgba(217, 106, 143, 0.3);
+  border-radius: 50%;
+  color: var(--pink-deep);
+  transition:
+    transform 0.45s var(--ease-out),
+    background 0.35s ease;
+}
+
+#cerita .jr-ic .ic,
+#cerita .jr-ic svg {
+  width: 0.88rem;
+  height: 0.88rem;
+}
+
+#cerita .jr-item.open .jr-ic {
+  background: rgba(239, 126, 164, 0.14);
+  transform: rotate(180deg);
+}
+
+#cerita .jr-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s cubic-bezier(0.22, 0.8, 0.2, 1);
+}
+
+#cerita .jr-item.open .jr-panel {
+  grid-template-rows: 1fr;
+}
+
+#cerita .jr-panel-in {
+  min-height: 0;
+  overflow: hidden;
+}
+
+#cerita .jr-panel-in::before {
+  content: "";
+  display: block;
+  height: 1px;
+  margin: 0 clamp(0.9rem, 3vw, 1.2rem);
+  background: linear-gradient(90deg,
+    rgba(178, 63, 101, 0.5),
+    rgba(178, 63, 101, 0.06) 70%,
+    transparent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.55s 0.06s cubic-bezier(0.22, 0.8, 0.2, 1);
+}
+
+#cerita .jr-item.open .jr-panel-in::before {
+  transform: scaleX(1);
+}
+
+#cerita .jr-panel-in p {
+  margin: 0;
+  padding: 0.68rem clamp(0.9rem, 3vw, 1.2rem) 0;
+  font-size: clamp(0.76rem, 0.72rem + 0.1vw, 0.85rem);
+  line-height: 1.7;
+  color: var(--soft);
+  opacity: 0;
+  transform: translateX(-16px);
+  transition:
+    opacity 0.35s ease 0.12s,
+    transform 0.5s 0.1s cubic-bezier(0.22, 0.8, 0.2, 1);
+}
+
+#cerita .jr-panel-in p:last-child {
+  padding-bottom: 0.85rem;
+}
+
+#cerita .jr-item.open .jr-panel-in p {
+  opacity: 1;
+  transform: none;
+}
+
+#cerita .jr-full {
+  color: rgba(70, 77, 100, 0.92);
+}
+
+/* Baris masuk dari kiri, bukan dari bawah, agar alurnya terasa menyapu */
+html.js #cerita .jr-item.reveal,
+#cerita .jr-item.reveal {
+  opacity: 0;
+  transform: translate3d(-28px, 8px, 0);
+  transition:
+    opacity 0.75s var(--ease-out),
+    transform 0.75s var(--ease-out);
+  transition-delay: var(--d, 0ms);
+}
+
+html.js #cerita .jr-item.reveal.is-in,
+#cerita .jr-item.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Layar pendek: rapatkan header & panel supaya tetap satu layar */
+@media (max-height: 720px) {
+  #cerita .sec-head {
+    margin-bottom: 0.5rem;
+  }
+
+  #cerita .sec-head .lead {
+    display: none;
+  }
+
+  #cerita .jr {
+    gap: 0.34rem;
+  }
+
+  #cerita .jr-head {
+    padding-block: 0.42rem;
+  }
+
+  #cerita .jr-panel-in p {
+    padding-top: 0.48rem;
+    font-size: 0.72rem;
+    line-height: 1.55;
+  }
+
+  #cerita .jr-panel-in p:last-child {
+    padding-bottom: 0.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .env-card,
+  .env-card::before,
+  .env-petals i,
+  .auto-enter i::after {
+    animation: none !important;
+  }
+
+  .env-petals i {
+    display: none;
+  }
+
+  #cerita .jr-panel,
+  #cerita .jr-panel-in p,
+  #cerita .jr-panel-in::before {
+    transition: none !important;
+  }
+}

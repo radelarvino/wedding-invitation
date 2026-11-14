@@ -360,23 +360,33 @@ function renderContent() {
 
   const tlEl = $("#tl");
   if (tlEl) {
-    tlEl.innerHTML = `<i class="tl-track" aria-hidden="true"></i><i class="tl-line" aria-hidden="true"></i>` + C.story.map((s, i) => `<article class="tl-item reveal" style="--d:${(i % 2) * 90}ms">
-      <span class="tl-dot" aria-hidden="true"></span>
-      <div class="tl-card">
-        <small>${esc(s.date)}</small>
-        <h3>${esc(s.t)}</h3>
-        <p>${esc(s.d)}</p>
-        ${s.full ? `<details><summary>Baca cerita lengkap ${ic("chevron-down")}</summary><p>${esc(s.full)}</p></details>` : ""}
+    /* The Journey: baris tanggal + judul. Satu baris terbuka pada satu waktu,
+       isinya tersapu dari kiri ke kanan agar terasa ringan dan bersih. */
+    tlEl.innerHTML = C.story.map((s, i) => {
+      const open = i === 0;
+      return `<article class="jr-item reveal${open ? " open" : ""}" style="--d:${i * 70}ms">
+      <button class="jr-head" type="button" id="jr-h-${i}" aria-expanded="${open}" aria-controls="jr-p-${i}">
+        <span class="jr-num" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span>
+        <span class="jr-meta">
+          <span class="jr-date">${esc(s.date)}</span>
+          <span class="jr-title">${esc(s.t)}</span>
+        </span>
+        <span class="jr-ic" aria-hidden="true">${ic("chevron-down")}</span>
+      </button>
+      <div class="jr-panel" id="jr-p-${i}" role="region" aria-labelledby="jr-h-${i}" aria-hidden="${!open}">
+        <div class="jr-panel-in">
+          <p>${esc(s.d)}</p>
+          ${s.full ? `<p class="jr-full">${esc(s.full)}</p>` : ""}
+        </div>
       </div>
-    </article>`).join("");
+    </article>`;
+    }).join("");
   }
 
   renderGifts();
   renderGallery();
   setupRsvpForm();
-  /* Diukur setelah halaman sempat dilukis supaya tidak memaksa tata letak
-     ulang tepat setelah HTML besar baru disisipkan. */
-  afterPaint(initTimeline);
+  initJourney();
   initFloral();
   $$(".person h3").forEach(splitText);
 }
@@ -993,6 +1003,40 @@ function initTimeline() {
     addEventListener("resize", () => { layoutTimeline(); queue(); }, { passive: true });
   }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { layoutTimeline(); queue(); });
+}
+
+
+/* ====== 7d. THE JOURNEY (ACCORDION) ======
+   Satu cerita terbuka pada satu waktu. Klik baris lain menutup baris
+   sebelumnya, lalu panel baru tersapu masuk dari kiri ke kanan. */
+function initJourney() {
+  const el = $("#tl");
+  if (!el || el.dataset.jr) return;
+  el.dataset.jr = "1";
+
+  el.addEventListener("click", e => {
+    const head = e.target.closest(".jr-head");
+    if (!head || !el.contains(head)) return;
+
+    const item = head.closest(".jr-item");
+    if (!item) return;
+    const wasOpen = item.classList.contains("open");
+
+    el.querySelectorAll(".jr-item.open").forEach(other => {
+      other.classList.remove("open");
+      const btn = other.querySelector(".jr-head");
+      const panel = other.querySelector(".jr-panel");
+      if (btn) btn.setAttribute("aria-expanded", "false");
+      if (panel) panel.setAttribute("aria-hidden", "true");
+    });
+
+    if (!wasOpen) {
+      item.classList.add("open");
+      head.setAttribute("aria-expanded", "true");
+      const panel = item.querySelector(".jr-panel");
+      if (panel) panel.setAttribute("aria-hidden", "false");
+    }
+  });
 }
 
 
@@ -1809,7 +1853,7 @@ function initFloral() {
      tangkai dan daun. */
   const groups = [
     [".cover-frame", "tl tr bl br", "branch"],
-    ["#pair .person .ph", "tl br", "flower"],
+    ["#pair .person .ph", "tl", "flower"],
     ["#ev", "tl tr bl br", "flower"],
     [".s-event", "tl tr", "flower"],
     [".s-closing", "bl br", "flower"]
@@ -2122,6 +2166,8 @@ initFooterName();
 /* ====== 13. COVER & NAVIGATION ====== */
 let coverHideTimer;
 let coverOutTimer;
+let autoEnterTimer = 0;
+let autoEntered = false;
 let startedAt = 0;
 
 /**
@@ -2130,36 +2176,57 @@ let startedAt = 0;
  */
 const isOpen = () => document.body.classList.contains("open");
 
+/**
+ * Menggeser layar sambutan ke dashboard undangan.
+ * Dipanggil otomatis setelah amplop selesai terbuka, atau lewat tombol
+ * "Masuk sekarang" bila pengunjung ingin masuk lebih cepat.
+ */
+function enterInvitation() {
+  if (isOpen()) return;
+  autoEntered = true;
+  clearTimeout(autoEnterTimer);
+
+  document.body.classList.remove("locked");
+  document.body.classList.add("open");
+
+  const cover = $("#cover");
+  if (cover) {
+    cover.classList.remove("returning", "arming");
+    cover.classList.add("leave");
+    clearTimeout(coverOutTimer);
+    clearTimeout(coverHideTimer);
+    // Langsung picu keluarnya cover dalam 3D secara instan dan halus
+    requestAnimationFrame(() => {
+      cover.classList.add("out");
+    });
+    coverHideTimer = setTimeout(() => {
+      cover.style.display = "none";
+    }, 1150);
+  }
+
+  startMusic();
+  window.scrollTo(0, 0);
+
+  /* Pindahkan fokus ke bagian pertama agar pengguna keyboard tidak tertinggal
+     pada tombol segel yang sudah tersembunyi. */
+  const home = $("#home");
+  if (home) {
+    home.setAttribute("tabindex", "-1");
+    try {
+      home.focus({ preventScroll: true });
+    } catch (_) {}
+  }
+
+  startedAt = Date.now();
+  startReveals();
+  observeReveals();
+  initTilt();
+  setTimeout(() => $$(".car").forEach(c => c.mark && c.mark()), 550);
+}
+
 const openBtn = $("#openBtn");
 if (openBtn) {
-  openBtn.onclick = () => {
-    if (isOpen()) return;
-    document.body.classList.remove("locked");
-    document.body.classList.add("open");
-
-    const cover = $("#cover");
-    if (cover) {
-      cover.classList.remove("returning");
-      cover.classList.add("leave");
-      clearTimeout(coverOutTimer);
-      clearTimeout(coverHideTimer);
-      // Langsung picu keluarnya cover dalam 3D secara instan dan halus
-      requestAnimationFrame(() => {
-        cover.classList.add("out");
-      });
-      coverHideTimer = setTimeout(() => {
-        cover.style.display = "none";
-      }, 1150);
-    }
-
-    startMusic();
-    window.scrollTo(0, 0);
-    startedAt = Date.now();
-    startReveals();
-    observeReveals();
-    initTilt();
-    setTimeout(() => $$(".car").forEach(c => c.mark && c.mark()), 550);
-  };
+  openBtn.onclick = enterInvitation;
 }
 
 const pill = $("#pill");
@@ -2250,10 +2317,13 @@ function returnToCover() {
   // Hapus timer penutupan cover yang sedang berjalan
   clearTimeout(coverHideTimer);
   clearTimeout(coverOutTimer);
+  clearTimeout(autoEnterTimer);
+  autoEntered = true;
 
-  // Kembalikan visibilitas cover
+  // Kembalikan visibilitas cover. Auto-entry hanya sekali; setelah pengunjung
+  // kembali ke sampul, masuk lagi dilakukan lewat tombol "Masuk sekarang".
   cover.style.display = "";
-  cover.classList.remove("out", "leave");
+  cover.classList.remove("out", "leave", "arming");
 
   // Tambahkan kelas animasi kembali
   cover.classList.add("returning");
@@ -2332,6 +2402,10 @@ function openEnvelope() {
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   envBox.classList.add("opening");
 
+  /* Musik dimulai dari ketukan segel: gestur pertama pengunjung, jadi
+     browser mengizinkan pemutaran tanpa perlu klik kedua. */
+  startMusic();
+
   if (envSeal) {
     envSeal.disabled = true;
     envSeal.setAttribute("aria-label", "Membuka undangan");
@@ -2344,11 +2418,21 @@ function openEnvelope() {
       cover.removeAttribute("inert");
       cover.removeAttribute("aria-hidden");
     }
-    const btn = $("#openBtn");
-    if (btn) {
-      try {
-        btn.focus({ preventScroll: true });
-      } catch (_) {}
+
+    /* Layar sambutan tetap tampil sebentar untuk membangun suasana, lalu
+       otomatis bergeser ke dashboard. Tombol "Masuk sekarang" tetap
+       tersedia sebagai jalan pintas manual. */
+    if (!autoEntered) {
+      if (cover) cover.classList.add("arming");
+      clearTimeout(autoEnterTimer);
+      autoEnterTimer = setTimeout(enterInvitation, reduce ? 650 : 1800);
+    } else {
+      const btn = $("#openBtn");
+      if (btn) {
+        try {
+          btn.focus({ preventScroll: true });
+        } catch (_) {}
+      }
     }
   }, reduce ? 240 : 2400);
 }
