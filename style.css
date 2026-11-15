@@ -75,7 +75,7 @@
   --soft: #a9b4c8;
   --moss: #a9c7e6;
   --sage: #7fa3c9;
-  --blush: #f0a9bf;
+  --blush: #f7b6ca;
   --gold: #e5cfa8;
   --gold-2: #bfa47b;
   --line: rgba(243, 236, 226, 0.13);
@@ -2261,7 +2261,6 @@ textarea {
   --ry: 0deg !important;
   --rx: 0deg !important;
   --ty: 0px !important;
-  transform: none !important;
 }
 
 .gift {
@@ -2270,7 +2269,6 @@ textarea {
   align-items: center;
   text-align: center;
   padding: clamp(1.5rem, 3.5vw, 2rem) clamp(1.1rem, 3vw, 1.5rem);
-  transform: none !important;
   transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out), border-color 0.3s;
 }
 
@@ -2780,7 +2778,7 @@ textarea {
 
 .nick {
   font: 400 clamp(2.8rem, 9vw, 4.9rem)/1.1 var(--font-script);
-  color: #f5c6d4;
+  color: var(--pink-2);
   margin: 1.8rem 0 0.4rem;
   text-shadow: 0 2px 24px rgba(0, 0, 0, 0.3);
 }
@@ -5978,10 +5976,10 @@ main > section.s-closing {
   --cream: #f0e4cc;
   --cream-2: #f6ecd7;
   --cream-3: #e5d5b7;
-  --pink: #ef7ea4;
-  --pink-2: #f6aec4;
-  --pink-3: #fbdfe8;
-  --pink-deep: #d75c86;
+  --pink: #ea83a7;
+  --pink-2: #f7b6ca;
+  --pink-3: #fce3ec;
+  --pink-deep: #d9557f;
 
   --bg: var(--cream);
   --bg2: var(--cream-2);
@@ -5993,12 +5991,12 @@ main > section.s-closing {
   --soft: #5f6680;
   --moss: #2c3f70;
   --sage: #41537c;
-  --blush: #dc648b;
-  --gold: #d96a8f;
-  --gold-2: #b54b6d;
+  --blush: #e0759a;
+  --gold: #e0759a;
+  --gold-2: #d9557f;
   --line: rgba(23, 35, 74, 0.13);
-  --line-gold: rgba(217, 106, 143, 0.36);
-  --glow: rgba(239, 126, 164, 0.18);
+  --line-gold: rgba(224, 117, 154, 0.36);
+  --glow: rgba(234, 131, 167, 0.18);
 }
 
 body {
@@ -6007,7 +6005,7 @@ body {
 }
 
 ::selection {
-  background: rgba(239, 126, 164, 0.32);
+  background: rgba(234, 131, 167, 0.32);
   color: var(--navy);
 }
 
@@ -6018,9 +6016,9 @@ body {
 /* Latar halaman: cream dengan pendar pink & navy, tanpa foto. */
 #bg {
   background:
-    radial-gradient(70vmax 58vmax at 8% 4%, rgba(239, 126, 164, 0.13), transparent 62%),
+    radial-gradient(70vmax 58vmax at 8% 4%, rgba(234, 131, 167, 0.13), transparent 62%),
     radial-gradient(65vmax 65vmax at 95% 38%, rgba(23, 39, 80, 0.09), transparent 66%),
-    radial-gradient(60vmax 55vmax at 16% 98%, rgba(246, 174, 196, 0.14), transparent 64%),
+    radial-gradient(60vmax 55vmax at 16% 98%, rgba(247, 182, 202, 0.14), transparent 64%),
     linear-gradient(180deg, var(--cream-2) 0%, var(--cream) 55%, #eaddc4 100%);
 }
 
@@ -6031,7 +6029,7 @@ body {
 }
 
 .bg-glow.one {
-  background: radial-gradient(circle, rgba(239, 126, 164, 0.24) 0%, transparent 68%);
+  background: radial-gradient(circle, rgba(234, 131, 167, 0.24) 0%, transparent 68%);
 }
 
 .bg-glow.two {
@@ -6039,7 +6037,7 @@ body {
 }
 
 .bg-glow.three {
-  background: radial-gradient(circle, rgba(246, 174, 196, 0.22) 0%, transparent 68%);
+  background: radial-gradient(circle, rgba(247, 182, 202, 0.22) 0%, transparent 68%);
 }
 
 #bg::before,
@@ -6061,58 +6059,58 @@ main > section::before {
 
 #home {
   background:
-    radial-gradient(60% 55% at 50% 18%, rgba(239, 126, 164, 0.08), transparent 65%),
+    radial-gradient(60% 55% at 50% 18%, rgba(234, 131, 167, 0.08), transparent 65%),
     var(--cream);
 }
 
 #mempelai {
   background:
-    radial-gradient(55% 60% at 12% 24%, rgba(239, 126, 164, 0.16), transparent 62%),
-    radial-gradient(50% 55% at 92% 76%, rgba(239, 126, 164, 0.1), transparent 64%),
+    radial-gradient(55% 60% at 12% 24%, rgba(234, 131, 167, 0.16), transparent 62%),
+    radial-gradient(50% 55% at 92% 76%, rgba(234, 131, 167, 0.1), transparent 64%),
     linear-gradient(165deg, #0d1938 0%, var(--navy) 55%, #081126 100%);
 }
 
 #cerita {
   background:
-    radial-gradient(55% 55% at 88% 12%, rgba(246, 174, 196, 0.14), transparent 66%),
+    radial-gradient(55% 55% at 88% 12%, rgba(247, 182, 202, 0.14), transparent 66%),
     var(--cream-2);
 }
 
 #acara {
   background:
-    radial-gradient(60% 60% at 15% 18%, rgba(239, 126, 164, 0.14), transparent 64%),
-    radial-gradient(55% 55% at 88% 86%, rgba(239, 126, 164, 0.08), transparent 66%),
+    radial-gradient(60% 60% at 15% 18%, rgba(234, 131, 167, 0.14), transparent 64%),
+    radial-gradient(55% 55% at 88% 86%, rgba(234, 131, 167, 0.08), transparent 66%),
     linear-gradient(165deg, #0e1b3e 0%, var(--navy) 58%, #091329 100%);
 }
 
 #lokasi {
   background:
-    radial-gradient(55% 60% at 50% 8%, rgba(246, 174, 196, 0.15), transparent 66%),
+    radial-gradient(55% 60% at 50% 8%, rgba(247, 182, 202, 0.15), transparent 66%),
     var(--cream);
 }
 
 #rsvp {
   background:
-    radial-gradient(55% 55% at 10% 16%, rgba(239, 126, 164, 0.14), transparent 64%),
-    radial-gradient(55% 55% at 92% 82%, rgba(239, 126, 164, 0.08), transparent 66%),
+    radial-gradient(55% 55% at 10% 16%, rgba(234, 131, 167, 0.14), transparent 64%),
+    radial-gradient(55% 55% at 92% 82%, rgba(234, 131, 167, 0.08), transparent 66%),
     linear-gradient(170deg, var(--navy) 0%, #0c1735 60%, #081126 100%);
 }
 
 #hadiah {
   background:
-    radial-gradient(55% 55% at 88% 10%, rgba(246, 174, 196, 0.14), transparent 66%),
+    radial-gradient(55% 55% at 88% 10%, rgba(247, 182, 202, 0.14), transparent 66%),
     var(--cream-2);
 }
 
 #galeri {
   background:
-    radial-gradient(55% 55% at 18% 20%, rgba(239, 126, 164, 0.12), transparent 64%),
+    radial-gradient(55% 55% at 18% 20%, rgba(234, 131, 167, 0.12), transparent 64%),
     linear-gradient(165deg, #0d1938 0%, var(--navy) 60%, #081126 100%);
 }
 
 #penutup {
   background:
-    radial-gradient(55% 55% at 50% 100%, rgba(239, 126, 164, 0.15), transparent 68%),
+    radial-gradient(55% 55% at 50% 100%, rgba(234, 131, 167, 0.15), transparent 68%),
     linear-gradient(180deg, var(--cream-2) 0%, var(--cream) 60%, #eadcc2 100%);
 }
 
@@ -6125,13 +6123,13 @@ main > section::before {
   --ink: #f7f0e1;
   --ivory: #fbf5e9;
   --soft: #c9cfe0;
-  --moss: #f3cbda;
-  --sage: #e8b6c8;
-  --blush: #f7b0c6;
-  --gold: #f4a9c1;
-  --gold-2: #f7c6d5;
+  --moss: var(--pink-2);
+  --sage: var(--pink);
+  --blush: var(--pink-2);
+  --gold: var(--pink-2);
+  --gold-2: var(--pink-3);
   --line: rgba(247, 240, 225, 0.18);
-  --line-gold: rgba(244, 169, 193, 0.45);
+  --line-gold: rgba(247, 182, 202, 0.45);
   --card: #13224a;
   --card2: #192b58;
   --bg: #0d1a3a;
@@ -6186,9 +6184,9 @@ main > section.s-closing {
 /* Tombol utama: pink dengan teks navy, tombol kedua tetap bergaris. */
 .btn {
   border-color: rgba(255, 255, 255, 0.22);
-  background: linear-gradient(135deg, #f8b3c7 0%, var(--pink) 52%, #dd628c 100%);
+  background: linear-gradient(135deg, var(--pink-2) 0%, var(--pink) 52%, var(--pink-deep) 100%);
   color: #111d3c;
-  box-shadow: 0 10px 26px rgba(215, 92, 134, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  box-shadow: 0 10px 26px rgba(217, 85, 127, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .btn::before {
@@ -6196,7 +6194,7 @@ main > section.s-closing {
 }
 
 .btn:hover {
-  box-shadow: 0 14px 32px rgba(215, 92, 134, 0.32), 0 0 0 4px rgba(239, 126, 164, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  box-shadow: 0 14px 32px rgba(217, 85, 127, 0.32), 0 0 0 4px rgba(234, 131, 167, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
 .btn.ghost {
@@ -6207,7 +6205,7 @@ main > section.s-closing {
 }
 
 .btn.ghost:hover {
-  background: rgba(239, 126, 164, 0.1);
+  background: rgba(234, 131, 167, 0.1);
   border-color: var(--pink);
   box-shadow: none;
 }
@@ -6217,15 +6215,15 @@ main > section.s-closing {
    --------------------------------------------------------------------- */
 #cover {
   background:
-    radial-gradient(80vmax 65vmax at 50% -12%, rgba(239, 126, 164, 0.14), transparent 62%),
-    radial-gradient(60vmax 50vmax at 88% 108%, rgba(246, 174, 196, 0.1), transparent 62%),
+    radial-gradient(80vmax 65vmax at 50% -12%, rgba(234, 131, 167, 0.14), transparent 62%),
+    radial-gradient(60vmax 50vmax at 88% 108%, rgba(247, 182, 202, 0.1), transparent 62%),
     linear-gradient(160deg, #0d1937 0%, #0a142d 54%, #0b1733 100%);
 }
 
 #cover::before {
   background:
-    radial-gradient(55vmax 40vmax at 20% 20%, rgba(239, 126, 164, 0.1), transparent 65%),
-    radial-gradient(45vmax 45vmax at 90% 85%, rgba(246, 174, 196, 0.08), transparent 65%);
+    radial-gradient(55vmax 40vmax at 20% 20%, rgba(234, 131, 167, 0.1), transparent 65%),
+    radial-gradient(45vmax 45vmax at 90% 85%, rgba(247, 182, 202, 0.08), transparent 65%);
 }
 
 .cover-kicker {
@@ -6259,25 +6257,25 @@ main > section.s-closing {
 
 .cover-frame::before {
   background: linear-gradient(135deg,
-    rgba(246, 174, 196, 0.8) 0%,
+    rgba(247, 182, 202, 0.8) 0%,
     rgba(247, 240, 225, 0.42) 26%,
     rgba(247, 240, 225, 0.2) 50%,
     rgba(247, 240, 225, 0.42) 74%,
-    rgba(246, 174, 196, 0.8) 100%);
+    rgba(247, 182, 202, 0.8) 100%);
 }
 
 #cover .guest-card {
-  background: linear-gradient(150deg, rgba(250, 244, 234, 0.09), rgba(246, 174, 196, 0.05) 60%, rgba(250, 244, 234, 0.03));
+  background: linear-gradient(150deg, rgba(250, 244, 234, 0.09), rgba(247, 182, 202, 0.05) 60%, rgba(250, 244, 234, 0.03));
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(6px);
 }
 
 #cover .guest-card::after {
   background: linear-gradient(135deg,
-    rgba(246, 174, 196, 0.65),
+    rgba(247, 182, 202, 0.65),
     rgba(247, 240, 225, 0.38) 40%,
     rgba(247, 240, 225, 0.26) 60%,
-    rgba(246, 174, 196, 0.65));
+    rgba(247, 182, 202, 0.65));
 }
 
 .gc-label {
@@ -6293,9 +6291,9 @@ main > section.s-closing {
 }
 
 .tag {
-  border-color: rgba(246, 174, 196, 0.45);
+  border-color: rgba(247, 182, 202, 0.45);
   color: var(--pink-2);
-  background: rgba(239, 126, 164, 0.12);
+  background: rgba(234, 131, 167, 0.12);
 }
 
 #cover .btn-open {
@@ -6332,7 +6330,7 @@ main > section.s-closing {
 #home .mini-orn {
   color: var(--pink-deep);
   border-color: var(--line-gold);
-  background: rgba(239, 126, 164, 0.08);
+  background: rgba(234, 131, 167, 0.08);
 }
 
 /* ---------------------------------------------------------------------
@@ -6355,7 +6353,7 @@ main > section.s-closing {
   z-index: 0;
   pointer-events: none;
   opacity: 0.92;
-  filter: drop-shadow(0 0 18px rgba(239, 126, 164, 0.18));
+  filter: drop-shadow(0 0 18px rgba(234, 131, 167, 0.18));
 }
 
 .sakura-branch.left {
@@ -6387,11 +6385,11 @@ main > section.s-closing {
 #mempelai .ph {
   width: clamp(140px, 18vw, 205px);
   padding: 6px;
-  background: linear-gradient(155deg, #fdf2e4 0%, var(--pink-2) 45%, #e76f97 100%);
+  background: linear-gradient(155deg, #fdf2e4 0%, var(--pink-2) 45%, var(--pink-deep) 100%);
   box-shadow:
     0 6px 14px -2px rgba(0, 0, 0, 0.28),
     0 26px 58px -10px rgba(0, 0, 0, 0.52),
-    0 0 40px rgba(239, 126, 164, 0.24),
+    0 0 40px rgba(234, 131, 167, 0.24),
     inset 0 1px 1px rgba(255, 255, 255, 0.4);
 }
 
@@ -6399,7 +6397,7 @@ main > section.s-closing {
   box-shadow:
     0 10px 20px -2px rgba(0, 0, 0, 0.32),
     0 32px 70px -12px rgba(0, 0, 0, 0.6),
-    0 0 52px rgba(239, 126, 164, 0.38),
+    0 0 52px rgba(234, 131, 167, 0.38),
     inset 0 1px 2px rgba(255, 255, 255, 0.5);
 }
 
@@ -6410,7 +6408,7 @@ main > section.s-closing {
 #mempelai .ph-fallback {
   background:
     radial-gradient(70% 70% at 50% 20%, rgba(255, 250, 240, 0.9), transparent 68%),
-    linear-gradient(160deg, #f9e3e9, #f4b6c8);
+    linear-gradient(160deg, var(--pink-3), var(--pink-2));
   color: var(--navy);
 }
 
@@ -6434,16 +6432,16 @@ main > section.s-closing {
 
 #mempelai .amp {
   color: var(--pink-2);
-  text-shadow: 0 0 28px rgba(239, 126, 164, 0.35);
+  text-shadow: 0 0 28px rgba(234, 131, 167, 0.35);
 }
 
 #mempelai .amp::before,
 #mempelai .amp::after {
-  background: linear-gradient(90deg, transparent, rgba(246, 174, 196, 0.55));
+  background: linear-gradient(90deg, transparent, rgba(247, 182, 202, 0.55));
 }
 
 #mempelai .amp::after {
-  background: linear-gradient(90deg, rgba(246, 174, 196, 0.55), transparent);
+  background: linear-gradient(90deg, rgba(247, 182, 202, 0.55), transparent);
 }
 
 #mempelai .motive {
@@ -6511,12 +6509,12 @@ main > section.s-closing {
 }
 
 #cerita .tl-track {
-  background: rgba(217, 106, 143, 0.2);
+  background: rgba(224, 117, 154, 0.2);
 }
 
 #cerita .tl-line {
-  background: linear-gradient(180deg, var(--pink), #f8bccd);
-  box-shadow: 0 0 12px rgba(239, 126, 164, 0.5);
+  background: linear-gradient(180deg, var(--pink), var(--pink-2));
+  box-shadow: 0 0 12px rgba(234, 131, 167, 0.5);
 }
 
 #cerita .tl-item,
@@ -6536,17 +6534,17 @@ main > section.s-closing {
   left: calc(var(--tl-x) - var(--tl-pad));
   width: 13px;
   height: 13px;
-  border: 2px solid rgba(217, 106, 143, 0.5);
+  border: 2px solid rgba(224, 117, 154, 0.5);
   background: var(--cream-2);
-  box-shadow: 0 0 0 4px rgba(239, 126, 164, 0.08);
+  box-shadow: 0 0 0 4px rgba(234, 131, 167, 0.08);
 }
 
 #cerita .tl-item.lit .tl-dot {
   border-color: var(--pink-deep);
   background: var(--pink);
   box-shadow:
-    0 0 0 5px rgba(239, 126, 164, 0.16),
-    0 0 18px rgba(239, 126, 164, 0.7);
+    0 0 0 5px rgba(234, 131, 167, 0.16),
+    0 0 18px rgba(234, 131, 167, 0.7);
 }
 
 #cerita .tl-card {
@@ -6559,7 +6557,7 @@ main > section.s-closing {
   align-items: start;
   height: 100%;
   padding: clamp(0.72rem, 1.6vh, 0.9rem) clamp(0.9rem, 2vw, 1.15rem);
-  border: 1px solid rgba(217, 106, 143, 0.24);
+  border: 1px solid rgba(224, 117, 154, 0.24);
   border-radius: 14px;
   background: rgba(255, 250, 240, 0.82);
   box-shadow: 0 12px 28px -18px rgba(23, 35, 74, 0.28);
@@ -6567,8 +6565,8 @@ main > section.s-closing {
 }
 
 #cerita .tl-item.lit .tl-card {
-  border-color: rgba(217, 106, 143, 0.46);
-  box-shadow: 0 14px 32px -18px rgba(23, 35, 74, 0.34), 0 0 20px rgba(239, 126, 164, 0.08);
+  border-color: rgba(224, 117, 154, 0.46);
+  box-shadow: 0 14px 32px -18px rgba(23, 35, 74, 0.34), 0 0 20px rgba(234, 131, 167, 0.08);
 }
 
 #cerita .tl-card small {
@@ -6650,11 +6648,11 @@ main > section.s-closing {
   border: 1px solid rgba(248, 178, 198, 0.55);
   border-radius: 16px;
   background:
-    linear-gradient(155deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.03) 42%, rgba(239, 126, 164, 0.13) 100%),
-    linear-gradient(180deg, rgba(239, 126, 164, 0.34) 0%, rgba(239, 126, 164, 0.17) 100%);
+    linear-gradient(155deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.03) 42%, rgba(234, 131, 167, 0.13) 100%),
+    linear-gradient(180deg, rgba(234, 131, 167, 0.34) 0%, rgba(234, 131, 167, 0.17) 100%);
   box-shadow:
     0 18px 38px -18px rgba(0, 0, 0, 0.5),
-    0 0 24px rgba(239, 126, 164, 0.16),
+    0 0 24px rgba(234, 131, 167, 0.16),
     inset 0 1px 0 rgba(255, 255, 255, 0.22);
   backdrop-filter: blur(8px);
 }
@@ -6663,7 +6661,7 @@ main > section.s-closing {
   border-color: rgba(248, 178, 198, 0.82);
   box-shadow:
     0 22px 44px -18px rgba(0, 0, 0, 0.55),
-    0 0 32px rgba(239, 126, 164, 0.24),
+    0 0 32px rgba(234, 131, 167, 0.24),
     inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
@@ -6689,7 +6687,7 @@ main > section.s-closing {
 }
 
 #acara .dt b {
-  border-color: rgba(246, 174, 196, 0.45);
+  border-color: rgba(247, 182, 202, 0.45);
   color: var(--pink-2);
 }
 
@@ -6711,7 +6709,7 @@ main > section.s-closing {
   border-color: rgba(244, 169, 193, 0.6);
   box-shadow:
     0 28px 60px -24px rgba(0, 0, 0, 0.68),
-    0 0 32px rgba(239, 126, 164, 0.12),
+    0 0 32px rgba(234, 131, 167, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
@@ -6719,7 +6717,7 @@ main > section.s-closing {
   border-bottom: 1px solid rgba(244, 169, 193, 0.28);
   background:
     radial-gradient(circle at 50% 45%, rgba(255, 250, 240, 0.7) 0%, transparent 74%),
-    linear-gradient(160deg, #fbe4ea 0%, #f6bccd 58%, #f2a7bd 100%);
+    linear-gradient(160deg, var(--pink-3) 0%, var(--pink-2) 58%, var(--pink) 100%);
 }
 
 #acara .evp-fallback {
@@ -6761,10 +6759,10 @@ main > section.s-closing {
    --------------------------------------------------------------------- */
 #lokasi .venue-card {
   max-width: 1000px;
-  border: 1px solid rgba(217, 106, 143, 0.26);
+  border: 1px solid rgba(224, 117, 154, 0.26);
   border-radius: 24px;
   background:
-    linear-gradient(150deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 45%, rgba(246, 174, 196, 0.08)),
+    linear-gradient(150deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 45%, rgba(247, 182, 202, 0.08)),
     var(--card);
   box-shadow:
     0 26px 60px -34px rgba(23, 35, 74, 0.42),
@@ -6772,10 +6770,10 @@ main > section.s-closing {
 }
 
 #lokasi .venue-card:hover {
-  border-color: rgba(217, 106, 143, 0.46);
+  border-color: rgba(224, 117, 154, 0.46);
   box-shadow:
     0 32px 70px -34px rgba(23, 35, 74, 0.48),
-    0 0 30px rgba(239, 126, 164, 0.1),
+    0 0 30px rgba(234, 131, 167, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.75);
 }
 
@@ -6802,9 +6800,9 @@ main > section.s-closing {
 
 #lokasi .venue-icon {
   color: var(--pink-deep);
-  border-color: rgba(217, 106, 143, 0.38);
-  background: rgba(239, 126, 164, 0.1);
-  box-shadow: 0 0 24px rgba(239, 126, 164, 0.14);
+  border-color: rgba(224, 117, 154, 0.38);
+  background: rgba(234, 131, 167, 0.1);
+  box-shadow: 0 0 24px rgba(234, 131, 167, 0.14);
 }
 
 #lokasi .venue-info h3 {
@@ -6821,7 +6819,7 @@ main > section.s-closing {
 }
 
 #lokasi .venue-info .btn.ghost:hover {
-  background: rgba(239, 126, 164, 0.1);
+  background: rgba(234, 131, 167, 0.1);
   border-color: var(--pink-deep);
 }
 
@@ -6833,8 +6831,8 @@ main > section.s-closing {
   max-width: 680px;
   border: 1px solid rgba(255, 255, 255, 0.34);
   background:
-    linear-gradient(150deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0.08) 44%, rgba(215, 92, 134, 0.1) 100%),
-    linear-gradient(160deg, #fbdce5 0%, #f6b6c9 62%, #f3a4bc 100%);
+    linear-gradient(150deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0.08) 44%, rgba(217, 85, 127, 0.1) 100%),
+    linear-gradient(160deg, var(--pink-3) 0%, var(--pink-2) 62%, var(--pink) 100%);
   box-shadow:
     0 30px 68px -30px rgba(0, 0, 0, 0.55),
     inset 0 1px 0 rgba(255, 255, 255, 0.45);
@@ -6844,7 +6842,7 @@ main > section.s-closing {
   border-color: rgba(255, 255, 255, 0.48);
   box-shadow:
     0 34px 74px -30px rgba(0, 0, 0, 0.6),
-    0 0 34px rgba(239, 126, 164, 0.16),
+    0 0 34px rgba(234, 131, 167, 0.16),
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
@@ -6941,7 +6939,7 @@ main > section.s-closing {
 }
 
 #rsvp .wishes-head .sub {
-  color: #f7d9e2;
+  color: var(--pink-3);
 }
 
 #rsvp .s-wish {
@@ -6965,8 +6963,8 @@ main > section.s-closing {
 
 #rsvp .avatar {
   color: var(--pink-deep);
-  border-color: rgba(217, 106, 143, 0.4);
-  background: radial-gradient(circle at 30% 20%, rgba(239, 126, 164, 0.2), rgba(246, 174, 196, 0.08));
+  border-color: rgba(224, 117, 154, 0.4);
+  background: radial-gradient(circle at 30% 20%, rgba(234, 131, 167, 0.2), rgba(247, 182, 202, 0.08));
 }
 
 #rsvp .wish b {
@@ -6975,7 +6973,7 @@ main > section.s-closing {
 
 #rsvp .wish-badge {
   color: var(--pink-deep);
-  border-color: rgba(217, 106, 143, 0.34);
+  border-color: rgba(224, 117, 154, 0.34);
 }
 
 #rsvp .wish p {
@@ -7001,7 +6999,7 @@ main > section.s-closing {
 }
 
 #rsvp .s-wish .pp:hover {
-  background: rgba(239, 126, 164, 0.14);
+  background: rgba(234, 131, 167, 0.14);
   color: #fbf5e9;
 }
 
@@ -7009,9 +7007,9 @@ main > section.s-closing {
    Hadiah: kartu cream dengan aksen pink
    --------------------------------------------------------------------- */
 #hadiah .gift {
-  border: 1px solid rgba(217, 106, 143, 0.24);
+  border: 1px solid rgba(224, 117, 154, 0.24);
   background:
-    linear-gradient(155deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.08) 45%, rgba(246, 174, 196, 0.08)),
+    linear-gradient(155deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.08) 45%, rgba(247, 182, 202, 0.08)),
     var(--card);
   box-shadow:
     0 18px 42px -26px rgba(23, 35, 74, 0.32),
@@ -7019,21 +7017,21 @@ main > section.s-closing {
 }
 
 #hadiah .gift:hover {
-  border-color: rgba(217, 106, 143, 0.48);
+  border-color: rgba(224, 117, 154, 0.48);
   box-shadow:
     0 24px 52px -26px rgba(23, 35, 74, 0.4),
-    0 0 24px rgba(239, 126, 164, 0.1),
+    0 0 24px rgba(234, 131, 167, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 #hadiah .gift-icon {
   color: var(--pink-deep);
-  border-color: rgba(217, 106, 143, 0.34);
-  background: rgba(239, 126, 164, 0.09);
+  border-color: rgba(224, 117, 154, 0.34);
+  background: rgba(234, 131, 167, 0.09);
 }
 
 #hadiah .gift:hover .gift-icon {
-  background: rgba(239, 126, 164, 0.16);
+  background: rgba(234, 131, 167, 0.16);
   border-color: var(--pink-deep);
 }
 
@@ -7050,27 +7048,27 @@ main > section.s-closing {
 }
 
 #hadiah .gift .btn.ghost {
-  border-color: rgba(217, 106, 143, 0.38);
+  border-color: rgba(224, 117, 154, 0.38);
   color: var(--pink-deep);
 }
 
 #hadiah .gift .btn.ghost:hover {
-  background: rgba(239, 126, 164, 0.1);
+  background: rgba(234, 131, 167, 0.1);
   border-color: var(--pink-deep);
 }
 
 #hadiah .dd-toggle {
-  border-color: rgba(217, 106, 143, 0.38);
+  border-color: rgba(224, 117, 154, 0.38);
   color: var(--pink-deep);
   background: rgba(255, 250, 240, 0.62);
 }
 
 #hadiah .dd-toggle:hover,
 #hadiah .dd.open .dd-toggle {
-  background: rgba(239, 126, 164, 0.1);
+  background: rgba(234, 131, 167, 0.1);
   color: var(--pink-deep);
   border-color: var(--pink-deep);
-  box-shadow: 0 0 0 4px rgba(239, 126, 164, 0.1);
+  box-shadow: 0 0 0 4px rgba(234, 131, 167, 0.1);
 }
 
 #hadiah .ddh h3 {
@@ -7082,7 +7080,7 @@ main > section.s-closing {
 }
 
 #hadiah .ri {
-  border-color: rgba(217, 106, 143, 0.24);
+  border-color: rgba(224, 117, 154, 0.24);
   background: rgba(255, 250, 240, 0.92);
 }
 
@@ -7099,7 +7097,7 @@ main > section.s-closing {
 }
 
 #hadiah .bar {
-  background: rgba(217, 106, 143, 0.14);
+  background: rgba(224, 117, 154, 0.14);
 }
 
 #hadiah .bar i {
@@ -7130,8 +7128,8 @@ main > section.s-closing {
 
 #galeri .slide.ph {
   background:
-    radial-gradient(80% 70% at 28% 18%, rgba(239, 126, 164, 0.2), transparent 60%),
-    radial-gradient(70% 70% at 82% 90%, rgba(246, 174, 196, 0.12), transparent 64%),
+    radial-gradient(80% 70% at 28% 18%, rgba(234, 131, 167, 0.2), transparent 60%),
+    radial-gradient(70% 70% at 82% 90%, rgba(247, 182, 202, 0.12), transparent 64%),
     linear-gradient(155deg, #1a2c58, #0d1838);
 }
 
@@ -7140,7 +7138,7 @@ main > section.s-closing {
 }
 
 #galeri .slide-mark {
-  color: #f7b1c6;
+  color: var(--pink-2);
   opacity: 1;
 }
 
@@ -7175,7 +7173,7 @@ main > section.s-closing {
 }
 
 #galeri .pp:hover {
-  background: rgba(239, 126, 164, 0.14);
+  background: rgba(234, 131, 167, 0.14);
   color: #fbf5e9;
 }
 
@@ -7202,7 +7200,7 @@ main > section.s-closing {
 }
 
 #penutup .closing-actions .btn.ghost:hover {
-  background: rgba(239, 126, 164, 0.1);
+  background: rgba(234, 131, 167, 0.1);
   border-color: var(--pink-deep);
 }
 
@@ -7219,7 +7217,7 @@ main > section.s-closing {
    --------------------------------------------------------------------- */
 #pill {
   background: rgba(11, 22, 51, 0.86);
-  border-color: rgba(246, 174, 196, 0.42);
+  border-color: rgba(247, 182, 202, 0.42);
   backdrop-filter: blur(9px);
   box-shadow: 0 10px 28px rgba(11, 22, 51, 0.22);
 }
@@ -7230,7 +7228,7 @@ main > section.s-closing {
 
 #pill .lk {
   background: rgba(11, 22, 51, 0.97);
-  border-color: rgba(246, 174, 196, 0.32);
+  border-color: rgba(247, 182, 202, 0.32);
   box-shadow: 0 18px 50px rgba(8, 15, 34, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
@@ -7245,7 +7243,7 @@ main > section.s-closing {
 
 #pill a:hover,
 #pill a.on {
-  background: rgba(239, 126, 164, 0.18);
+  background: rgba(234, 131, 167, 0.18);
   color: #fff7ea;
 }
 
@@ -7260,16 +7258,16 @@ main > section.s-closing {
 
 #audioBtn,
 .fab {
-  color: #e3688e;
-  border-color: rgba(227, 104, 142, 0.62);
+  color: var(--pink-deep);
+  border-color: rgba(217, 85, 127, 0.62);
   box-shadow: none;
   filter: drop-shadow(0 1px 3px rgba(8, 15, 34, 0.65));
 }
 
 #audioBtn:hover,
 .fab:hover {
-  color: #f6aec4;
-  border-color: rgba(246, 174, 196, 0.85);
+  color: var(--pink-2);
+  border-color: rgba(247, 182, 202, 0.85);
 }
 
 #progress {
@@ -7278,7 +7276,7 @@ main > section.s-closing {
 
 #progress i {
   background: linear-gradient(90deg, var(--pink-deep), var(--pink), var(--pink-2));
-  box-shadow: 0 0 10px rgba(239, 126, 164, 0.55);
+  box-shadow: 0 0 10px rgba(234, 131, 167, 0.55);
 }
 
 /* Aksen bunga yang sudah ada tetap dipakai, hanya dipertajam warnanya. */
@@ -7298,7 +7296,7 @@ main > section.s-closing {
 
 #lb button {
   background: rgba(11, 22, 51, 0.72);
-  border-color: rgba(246, 174, 196, 0.42);
+  border-color: rgba(247, 182, 202, 0.42);
   color: #fbf5e9;
 }
 
@@ -7309,7 +7307,7 @@ main > section.s-closing {
 
 .toast {
   background: rgba(11, 22, 51, 0.96);
-  border-color: rgba(246, 174, 196, 0.36);
+  border-color: rgba(247, 182, 202, 0.36);
   color: #fbf5e9;
 }
 
@@ -7517,7 +7515,7 @@ main > section::after {
   height: auto;
   aspect-ratio: 820 / 210;
   opacity: 0.62;
-  filter: drop-shadow(0 0 20px rgba(239, 126, 164, 0.16));
+  filter: drop-shadow(0 0 20px rgba(234, 131, 167, 0.16));
 }
 
 #mempelai .sakura-branch.left {
@@ -7562,8 +7560,8 @@ main > section::after {
 
 #rsvp select {
   background-image:
-    linear-gradient(45deg, transparent 50%, #f7aec4 50%),
-    linear-gradient(135deg, #f7aec4 50%, transparent 50%);
+    linear-gradient(45deg, transparent 50%, var(--pink-2) 50%),
+    linear-gradient(135deg, var(--pink-2) 50%, transparent 50%);
   background-position: calc(100% - 18px) 52%, calc(100% - 13px) 52%;
   background-size: 5px 5px, 5px 5px;
   background-repeat: no-repeat;
@@ -7609,11 +7607,11 @@ main > section::after {
 }
 
 #pill:hover {
-  border-color: rgba(246, 174, 196, 0.95);
+  border-color: rgba(247, 182, 202, 0.95);
 }
 
 #pillBtn {
-  color: #e3688e;
+  color: var(--pink-deep);
 }
 
 #pill .lk {
@@ -7631,14 +7629,14 @@ main > section::after {
 /* Panah carousel transparan; aksen pink tetap terlihat di semua latar. */
 .stage .nav {
   background: transparent;
-  border-color: rgba(246, 174, 196, 0.62);
+  border-color: rgba(247, 182, 202, 0.62);
   color: var(--pink-2);
   box-shadow: none;
   backdrop-filter: none;
 }
 
 .stage .nav:hover {
-  background: rgba(239, 126, 164, 0.16);
+  background: rgba(234, 131, 167, 0.16);
   border-color: var(--pink-2);
 }
 
@@ -8050,7 +8048,7 @@ body.open main {
 
 #lokasi .venue-card {
   background:
-    linear-gradient(150deg, rgba(255, 250, 240, 0.18), rgba(255, 250, 240, 0.03) 45%, rgba(246, 174, 196, 0.05)),
+    linear-gradient(150deg, rgba(255, 250, 240, 0.18), rgba(255, 250, 240, 0.03) 45%, rgba(247, 182, 202, 0.05)),
     var(--card);
   box-shadow:
     0 26px 60px -34px rgba(23, 35, 74, 0.42),
@@ -8060,7 +8058,7 @@ body.open main {
 #lokasi .venue-card:hover {
   box-shadow:
     0 32px 70px -34px rgba(23, 35, 74, 0.48),
-    0 0 30px rgba(239, 126, 164, 0.1),
+    0 0 30px rgba(234, 131, 167, 0.1),
     inset 0 1px 0 rgba(255, 250, 240, 0.42);
 }
 
@@ -8190,7 +8188,7 @@ body.locked main {
     0 28px 60px -24px rgba(0, 0, 0, 0.68),
     7px 7px 0 -1px rgba(244, 169, 193, 0.18),
     12px 12px 0 -2px rgba(6, 12, 28, 0.46),
-    0 0 32px rgba(239, 126, 164, 0.12),
+    0 0 32px rgba(234, 131, 167, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
@@ -8316,7 +8314,7 @@ main > section::after {
 }
 
 #acara .cd-cell:hover {
-  background: rgba(239, 126, 164, 0.06);
+  background: rgba(234, 131, 167, 0.06);
   border-color: rgba(248, 178, 198, 0.8);
   box-shadow: none;
 }
@@ -8452,7 +8450,7 @@ html.js #penutup .nick.reveal {
     #0c1834;
   box-shadow:
     0 28px 58px -34px rgba(0, 0, 0, 0.72),
-    0 0 44px rgba(239, 126, 164, 0.06),
+    0 0 44px rgba(234, 131, 167, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.07);
   isolation: isolate;
   transition: border-color 0.35s ease, box-shadow 0.45s ease;
@@ -8462,7 +8460,7 @@ html.js #penutup .nick.reveal {
   border-color: rgba(248, 190, 208, 0.62);
   box-shadow:
     0 32px 64px -34px rgba(0, 0, 0, 0.76),
-    0 0 54px rgba(239, 126, 164, 0.12),
+    0 0 54px rgba(234, 131, 167, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.09);
 }
 
@@ -8897,10 +8895,10 @@ main > section {
   border-color: rgba(247, 174, 196, 0.9);
   background:
     radial-gradient(120% 120% at 18% 0%, rgba(255, 255, 255, 0.65), transparent 60%),
-    linear-gradient(180deg, #ffe4ee 0%, #f9c2d6 100%);
+    linear-gradient(180deg, var(--pink-3) 0%, var(--pink-2) 100%);
   box-shadow:
     0 14px 30px -18px rgba(145, 35, 74, 0.5),
-    0 0 0 1px rgba(239, 126, 164, 0.3),
+    0 0 0 1px rgba(234, 131, 167, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.72);
   color: #6d2038;
 }
@@ -8916,7 +8914,7 @@ main > section {
 #rsvp .wish .avatar {
   color: #a12f54;
   border-color: rgba(161, 47, 84, 0.35);
-  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.85), rgba(246, 174, 196, 0.45));
+  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.85), rgba(247, 182, 202, 0.45));
 }
 
 #rsvp .wish-badge {
@@ -9086,9 +9084,9 @@ main > section {
   inset: 0;
   background:
     radial-gradient(20% 16% at 16% 22%, rgba(229, 207, 168, 0.16), transparent 72%),
-    radial-gradient(16% 13% at 84% 26%, rgba(239, 126, 164, 0.14), transparent 72%),
+    radial-gradient(16% 13% at 84% 26%, rgba(234, 131, 167, 0.14), transparent 72%),
     radial-gradient(15% 12% at 74% 84%, rgba(229, 207, 168, 0.12), transparent 74%),
-    radial-gradient(18% 14% at 24% 78%, rgba(239, 126, 164, 0.1), transparent 74%),
+    radial-gradient(18% 14% at 24% 78%, rgba(234, 131, 167, 0.1), transparent 74%),
     radial-gradient(46% 34% at 50% 46%, rgba(229, 207, 168, 0.2), transparent 70%);
   pointer-events: none;
 }
@@ -9203,7 +9201,7 @@ main > section {
   z-index: 1;
   overflow: hidden;
   background:
-    radial-gradient(120% 80% at 18% 0%, rgba(239, 126, 164, 0.16), transparent 58%),
+    radial-gradient(120% 80% at 18% 0%, rgba(234, 131, 167, 0.16), transparent 58%),
     radial-gradient(100% 90% at 88% 100%, rgba(229, 207, 168, 0.12), transparent 60%),
     linear-gradient(158deg, #1b2b55 0%, #122045 48%, #0a1430 100%);
   box-shadow:
@@ -9218,8 +9216,8 @@ main > section {
   position: absolute;
   inset: 0;
   background:
-    url("assets/sakura-flowers.svg") center / 165% no-repeat,
-    radial-gradient(70% 46% at 50% 102%, rgba(239, 126, 164, 0.14), transparent 70%);
+    url("assets/sakura-flowers.svg?v=19") center / 165% no-repeat,
+    radial-gradient(70% 46% at 50% 102%, rgba(234, 131, 167, 0.14), transparent 70%);
   opacity: 0.11;
 }
 
@@ -9342,7 +9340,7 @@ main > section {
   content: "";
   position: absolute;
   inset: 0;
-  background: url("assets/sakura-flowers.svg") center top / 94% auto no-repeat;
+  background: url("assets/sakura-flowers.svg?v=19") center top / 94% auto no-repeat;
   opacity: 0.15;
 }
 
@@ -9350,7 +9348,7 @@ main > section {
   content: "";
   position: absolute;
   inset: 0;
-  background: url("assets/sakura-flowers.svg") center bottom / 94% auto no-repeat;
+  background: url("assets/sakura-flowers.svg?v=19") center bottom / 94% auto no-repeat;
   opacity: 0.18;
 }
 
@@ -9359,7 +9357,7 @@ main > section {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(120% 100% at 22% 0%, rgba(239, 126, 164, 0.15), transparent 55%);
+  background: radial-gradient(120% 100% at 22% 0%, rgba(234, 131, 167, 0.15), transparent 55%);
 }
 
 .env-flap .fb::after {
@@ -9487,7 +9485,7 @@ main > section {
   background:
     radial-gradient(circle at 33% 24%, rgba(255, 240, 246, 0.36) 0%, rgba(255, 240, 246, 0) 42%),
     radial-gradient(circle at 70% 78%, rgba(255, 206, 224, 0.18) 0%, rgba(255, 206, 224, 0) 52%),
-    radial-gradient(circle at 50% 42%, #e4819f 0%, #dc6c93 55%, #bb4267 100%);
+    radial-gradient(circle at 50% 42%, var(--pink-2) 0%, var(--pink) 55%, var(--pink-deep) 100%);
   box-shadow:
     0 0 0 2px rgba(229, 207, 168, 0.42),
     inset 0 2px 3px rgba(255, 255, 255, 0.32),
@@ -9506,7 +9504,7 @@ main > section {
   inset: -3.5%;
   z-index: -1;
   border-radius: 52% 48% 45% 55% / 47% 55% 45% 53%;
-  background: linear-gradient(160deg, #d46783 0%, #b84062 100%);
+  background: linear-gradient(160deg, var(--pink) 0%, var(--pink-deep) 100%);
   box-shadow: 0 0 0 1.5px rgba(229, 207, 168, 0.3);
 }
 
@@ -9517,7 +9515,7 @@ main > section {
     inset 0 -7px 14px rgba(105, 20, 50, 0.45),
     inset 0 7px 12px rgba(255, 255, 255, 0.55),
     0 16px 30px rgba(0, 0, 0, 0.5),
-    0 0 30px rgba(239, 126, 164, 0.4);
+    0 0 30px rgba(234, 131, 167, 0.4);
 }
 
 .env-seal:focus-visible {
@@ -9667,10 +9665,10 @@ main > section {
   padding: 0.78rem 1.85rem;
   border: 1px solid rgba(255, 238, 218, 0.5);
   border-radius: 99px;
-  background: linear-gradient(135deg, #f7b6ca 0%, #ea83a7 44%, #d9557f 100%);
+  background: linear-gradient(135deg, var(--pink-2) 0%, var(--pink) 44%, var(--pink-deep) 100%);
   box-shadow:
     0 16px 30px -14px rgba(217, 85, 127, 0.75),
-    0 0 26px rgba(239, 126, 164, 0.28),
+    0 0 26px rgba(234, 131, 167, 0.28),
     inset 0 1px 0 rgba(255, 248, 240, 0.45),
     inset 0 -2px 10px rgba(150, 32, 72, 0.22);
   color: #fff8f1;
@@ -9682,12 +9680,12 @@ main > section {
 
 #cover #openBtn.btn-open:hover,
 #cover #openBtn.btn-open:focus-visible {
-  background: linear-gradient(135deg, #ffc4d6 0%, #f08fb2 44%, #e05c89 100%);
+  background: linear-gradient(135deg, var(--pink-3) 0%, var(--pink-2) 44%, var(--pink) 100%);
   border-color: rgba(255, 248, 236, 0.72);
   color: #fffdf9;
   box-shadow:
     0 18px 34px -14px rgba(217, 85, 127, 0.82),
-    0 0 34px rgba(247, 169, 193, 0.4),
+    0 0 34px rgba(247, 182, 202, 0.4),
     inset 0 1px 0 rgba(255, 250, 244, 0.55);
 }
 
@@ -9755,9 +9753,9 @@ main > section {
   position: absolute;
   width: clamp(150px, 23vw, 330px);
   aspect-ratio: 820 / 210;
-  background: url("assets/sakura-flowers.svg") center / contain no-repeat;
+  background: url("assets/sakura-flowers.svg?v=19") center / contain no-repeat;
   opacity: 0.28;
-  filter: drop-shadow(0 0 20px rgba(239, 126, 164, 0.18));
+  filter: drop-shadow(0 0 20px rgba(234, 131, 167, 0.18));
 }
 
 .env-frame::before {
@@ -9835,8 +9833,8 @@ main > section {
   width: calc(14px * var(--s, 1));
   height: calc(18px * var(--s, 1));
   border-radius: 62% 38% 56% 44% / 62% 56% 44% 38%;
-  background: linear-gradient(155deg, #ffe7ef 0%, #f7a9c1 46%, #e8719a 100%);
-  box-shadow: 0 0 8px rgba(247, 169, 193, 0.28);
+  background: linear-gradient(155deg, var(--pink-3) 0%, var(--pink-2) 46%, var(--pink-deep) 100%);
+  box-shadow: 0 0 8px rgba(247, 182, 202, 0.28);
   opacity: 0;
   rotate: var(--r, 0deg);
   animation: envPetalFall var(--t, 15s) linear var(--d, 0s) infinite;
@@ -9884,13 +9882,14 @@ main > section {
 }
 
 /* ---------------------------------------------------------------------
-   C. Ranting mempelai desktop: satu untaian lurus dari kiri ke kanan
+   C. Ranting mempelai: satu untaian lurus dari kiri ke kanan, dipakai
+   untuk desktop sekaligus tablet agar tidak lagi melengkung di sudut.
    --------------------------------------------------------------------- */
 .sakura-garland {
   display: none;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 600px) {
   #mempelai .sakura-branch {
     display: none;
   }
@@ -9915,8 +9914,16 @@ main > section {
     height: 100%;
     object-fit: contain;
     filter:
-      drop-shadow(0 0 22px rgba(239, 126, 164, 0.18))
+      drop-shadow(0 0 22px rgba(234, 131, 167, 0.18))
       drop-shadow(0 6px 16px rgba(4, 8, 18, 0.4));
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1023.98px) {
+  #mempelai .sakura-garland {
+    width: 118%;
+    bottom: clamp(-2.1rem, -2.6vw, -0.9rem);
+    opacity: 0.46;
   }
 }
 
@@ -10040,7 +10047,7 @@ main > section {
 #cerita .jr-item {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(217, 106, 143, 0.24);
+  border: 1px solid rgba(224, 117, 154, 0.24);
   border-radius: 14px;
   background: rgba(255, 250, 240, 0.82);
   box-shadow: 0 12px 28px -20px rgba(23, 35, 74, 0.28);
@@ -10051,12 +10058,12 @@ main > section {
 }
 
 #cerita .jr-item.open {
-  border-color: rgba(217, 106, 143, 0.48);
+  border-color: rgba(224, 117, 154, 0.48);
   background: linear-gradient(135deg, rgba(255, 252, 246, 0.97), rgba(255, 240, 246, 0.92));
   box-shadow:
     0 16px 34px -20px rgba(23, 35, 74, 0.36),
-    0 0 0 1px rgba(239, 126, 164, 0.1),
-    0 0 22px rgba(239, 126, 164, 0.08);
+    0 0 0 1px rgba(234, 131, 167, 0.1),
+    0 0 22px rgba(234, 131, 167, 0.08);
 }
 
 #cerita .jr-head {
@@ -10119,7 +10126,7 @@ main > section {
   place-items: center;
   width: 1.5rem;
   height: 1.5rem;
-  border: 1px solid rgba(217, 106, 143, 0.3);
+  border: 1px solid rgba(224, 117, 154, 0.3);
   border-radius: 50%;
   color: var(--pink-deep);
   transition:
@@ -10134,7 +10141,7 @@ main > section {
 }
 
 #cerita .jr-item.open .jr-ic {
-  background: rgba(239, 126, 164, 0.14);
+  background: rgba(234, 131, 167, 0.14);
   transform: rotate(180deg);
 }
 
@@ -10257,6 +10264,570 @@ html.js #cerita .jr-item.reveal.is-in,
   #cerita .jr-panel,
   #cerita .jr-panel-in p,
   #cerita .jr-panel-in::before {
+    transition: none !important;
+  }
+}
+
+/* =====================================================================
+   41. KEDALAMAN 4D — MASUK BERLAPIS, CAHAYA MATAHARI, DAN GARIS HIDUP
+   Setiap blok masuk dengan perspektif nyata: naik dari kedalaman, miring
+   tipis seperti lembar kertas, lalu disapu cahaya hangat dari kiri atas.
+   Elemen di dalam kartu menyusul satu per satu agar terasa hidup.
+   ===================================================================== */
+
+/* ---------- Dasar reveal: masuk dari ruang 3D, bukan sekadar naik ---------- */
+html.js .reveal,
+.reveal,
+html.js .sec-head.reveal,
+.sec-head.reveal,
+html.js .card.reveal,
+.card.reveal,
+html.js .person.reveal,
+.person.reveal {
+  opacity: 0;
+  transform: perspective(1100px) translate3d(0, 44px, -70px) rotateX(10deg) scale(0.98);
+  transform-origin: 50% 88%;
+  transition:
+    opacity 0.85s var(--ease-out),
+    transform 1.05s var(--ease-out);
+  transition-delay: var(--d, 0ms);
+}
+
+html.js .reveal.is-in,
+.reveal.is-in,
+html.js .sec-head.reveal.is-in,
+.sec-head.reveal.is-in,
+html.js .card.reveal.is-in,
+.card.reveal.is-in,
+html.js .person.reveal.is-in,
+.person.reveal.is-in {
+  opacity: 1;
+  transform: perspective(1100px) translate3d(0, 0, 0) rotateX(0deg) scale(1);
+}
+
+/* Baris Journey menyapu dari kiri dengan sedikit putaran lembar. */
+html.js #cerita .jr-item.reveal,
+#cerita .jr-item.reveal {
+  opacity: 0;
+  transform: perspective(1000px) translate3d(-34px, 16px, -50px) rotateY(7deg) rotateX(4deg);
+  transform-origin: 0% 50%;
+  transition:
+    opacity 0.8s var(--ease-out),
+    transform 0.95s var(--ease-out);
+  transition-delay: var(--d, 0ms);
+}
+
+html.js #cerita .jr-item.reveal.is-in,
+#cerita .jr-item.reveal.is-in {
+  opacity: 1;
+  transform: perspective(1000px) translate3d(0, 0, 0) rotateY(0deg) rotateX(0deg);
+}
+
+/* ---------- Cahaya matahari yang menyapu permukaan kartu ---------- */
+.sun-sweep {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.reveal.is-in > .sun-sweep,
+.person.is-in .ph > .sun-sweep {
+  opacity: 1;
+}
+
+.sun-sweep::before {
+  content: "";
+  position: absolute;
+  left: -42%;
+  top: -78%;
+  width: 128%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle,
+      rgba(255, 246, 218, 0.72) 0%,
+      rgba(255, 228, 184, 0.34) 34%,
+      rgba(255, 210, 226, 0.16) 56%,
+      transparent 72%);
+  filter: blur(2px);
+  opacity: 0;
+}
+
+.sun-sweep::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(122deg,
+      rgba(255, 247, 222, 0.26) 0%,
+      rgba(255, 228, 190, 0.11) 26%,
+      transparent 54%);
+  opacity: 0;
+}
+
+.reveal.is-in > .sun-sweep::before,
+.person.is-in .ph > .sun-sweep::before {
+  animation: sunRaySweep 1.5s cubic-bezier(0.2, 0.75, 0.25, 1) 0.12s both;
+}
+
+.reveal.is-in > .sun-sweep::after,
+.person.is-in .ph > .sun-sweep::after {
+  animation: sunWash 1.2s ease-out 0.12s both;
+}
+
+@keyframes sunRaySweep {
+  0% {
+    opacity: 0;
+    transform: translate3d(-46%, -52%, 0) rotate(-14deg) scale(0.72);
+  }
+  22% { opacity: 0.88; }
+  55% { opacity: 0.58; }
+  100% {
+    opacity: 0;
+    transform: translate3d(56%, 50%, 0) rotate(-14deg) scale(1.18);
+  }
+}
+
+@keyframes sunWash {
+  0% { opacity: 0; }
+  30% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Tepi kartu menyala lembut saat baru muncul, seolah terkena cahaya. */
+@keyframes rimIn {
+  from {
+    border-color: rgba(247, 182, 202, 0);
+    box-shadow: 0 0 0 0 rgba(255, 230, 190, 0);
+  }
+}
+
+html.js .card.is-in,
+.card.is-in,
+html.js .venue-card.is-in,
+.venue-card.is-in,
+html.js .rsvp-card.is-in,
+.rsvp-card.is-in,
+html.js #cerita .jr-item.is-in,
+#cerita .jr-item.is-in {
+  animation: rimIn 1s var(--ease-out) backwards;
+}
+
+/* ---------- Isi section masuk satu per satu ---------- */
+@keyframes childRise {
+  from {
+    opacity: 0;
+    transform: perspective(800px) translate3d(0, 20px, -38px) rotateX(9deg);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(800px) translate3d(0, 0, 0) rotateX(0deg);
+  }
+}
+
+@keyframes childZoom {
+  from {
+    opacity: 0;
+    transform: perspective(900px) translate3d(0, 22px, -55px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(900px) translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes iconPop {
+  0% {
+    opacity: 0;
+    transform: perspective(700px) translate3d(0, 16px, -34px) scale(0.82) rotate(-7deg);
+  }
+  70% {
+    opacity: 1;
+    transform: perspective(700px) translate3d(0, -2px, 6px) scale(1.04) rotate(1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(700px) translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes photoZoom {
+  from {
+    opacity: 0.35;
+    transform: scale(1.1);
+    filter: brightness(1.16) saturate(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: none;
+  }
+}
+
+@keyframes dotPop {
+  from { opacity: 0; transform: scale(0.55); }
+  70% { opacity: 1; transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes lineGrow {
+  from { opacity: 0; transform: scaleX(0); }
+  to { opacity: 1; transform: scaleX(1); }
+}
+
+/* Judul section: eyebrow, judul, garis, lalu deskripsi menyusul. */
+.sec-head.reveal > * {
+  opacity: 0;
+  transform: perspective(800px) translate3d(0, 20px, -40px) rotateX(10deg);
+  transition:
+    opacity 0.68s var(--ease-out),
+    transform 0.9s var(--ease-out);
+}
+
+.sec-head.reveal.is-in > * {
+  opacity: 1;
+  transform: perspective(800px) translate3d(0, 0, 0) rotateX(0deg);
+}
+
+.sec-head.reveal.is-in > :nth-child(1) { transition-delay: 0.04s; }
+.sec-head.reveal.is-in > :nth-child(2) { transition-delay: 0.14s; }
+.sec-head.reveal.is-in > :nth-child(3) { transition-delay: 0.27s; }
+
+.sec-head.reveal h2::after {
+  opacity: 0;
+  transform: scaleX(0);
+  transition:
+    opacity 0.5s ease 0.42s,
+    transform 0.8s var(--ease-out) 0.42s;
+}
+
+.sec-head.reveal.is-in h2::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* Mempelai: foto masuk lebih dulu, lalu nama dan orang tua. */
+.person.is-in .ph {
+  animation: photoZoom 1.15s var(--ease-out) 0.05s backwards;
+}
+
+.person.is-in .role,
+.person.is-in h3,
+.person.is-in .parents {
+  animation: childRise 0.78s var(--ease-out) backwards;
+}
+
+.person.is-in .role { animation-delay: 0.2s; }
+.person.is-in h3 { animation-delay: 0.3s; }
+.person.is-in .parents { animation-delay: 0.4s; }
+
+/* Acara: foto dan teks kartu Akad/Tasyakuran menyusul bergantian. */
+#acara .evc.is-in .evp img {
+  animation: photoZoom 1.35s var(--ease-out) 0.12s backwards;
+}
+
+#acara .evc.is-in .evb > * {
+  animation: childRise 0.72s var(--ease-out) backwards;
+}
+
+#acara .evc.is-in .evb > :nth-child(1) { animation-delay: 0.12s; }
+#acara .evc.is-in .evb > :nth-child(2) { animation-delay: 0.2s; }
+#acara .evc.is-in .evb > :nth-child(3) { animation-delay: 0.28s; }
+#acara .evc.is-in .evb > :nth-child(4) { animation-delay: 0.36s; }
+
+/* Hadiah: ikon, judul, keterangan, nomor, lalu tombol. */
+#hadiah .gift.is-in .gift-icon,
+#hadiah .gift.is-in .glogo {
+  animation: iconPop 0.85s var(--ease-out) 0.06s backwards;
+}
+
+#hadiah .gift.is-in > b,
+#hadiah .gift.is-in > p,
+#hadiah .gift.is-in .no,
+#hadiah .gift.is-in .btn {
+  animation: childRise 0.72s var(--ease-out) backwards;
+}
+
+#hadiah .gift.is-in > b { animation-delay: 0.16s; }
+#hadiah .gift.is-in > p { animation-delay: 0.24s; }
+#hadiah .gift.is-in .no { animation-delay: 0.32s; }
+#hadiah .gift.is-in .btn { animation-delay: 0.4s; }
+
+/* Journey: nomor menyala, tanggal dan judul menyusul. */
+#cerita .jr-item.is-in .jr-num {
+  animation: dotPop 0.7s var(--ease-out) 0.06s backwards;
+}
+
+#cerita .jr-item.is-in .jr-date,
+#cerita .jr-item.is-in .jr-title,
+#cerita .jr-item.is-in .jr-ic {
+  animation: childRise 0.7s var(--ease-out) backwards;
+}
+
+#cerita .jr-item.is-in .jr-date { animation-delay: 0.14s; }
+#cerita .jr-item.is-in .jr-title { animation-delay: 0.22s; }
+#cerita .jr-item.is-in .jr-ic { animation-delay: 0.3s; }
+
+/* Foto venue dan isi kartunya. */
+#lokasi .venue-card.is-in .venue-photo img,
+#lokasi .venue-card.is-in .venue-photo svg {
+  animation: photoZoom 1.2s var(--ease-out) 0.1s backwards;
+}
+
+/* Ucapan carousel ikut masuk dalam ruang. */
+@keyframes wishIn {
+  from {
+    opacity: 0;
+    transform: perspective(700px) translate3d(0, 16px, -34px) rotateY(5deg) scale(0.96);
+  }
+}
+
+/* Angka countdown masuk dengan kedalaman. */
+@keyframes cdCellIn {
+  from {
+    opacity: 0;
+    transform: perspective(700px) translate3d(0, 18px, -40px) rotateX(10deg) scale(0.94);
+  }
+}
+
+/* Isi kartu venue & RSVP memakai anak bertingkat yang sudah ada. */
+@keyframes rvChild {
+  from {
+    opacity: 0;
+    transform: perspective(750px) translate3d(0, 18px, -32px) rotateX(8deg) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(750px) translate3d(0, 0, 0) rotateX(0deg) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sun-sweep,
+  .sun-sweep::before,
+  .sun-sweep::after,
+  .sec-head.reveal > *,
+  .person.is-in .ph,
+  .person.is-in .role,
+  .person.is-in h3,
+  .person.is-in .parents,
+  #acara .evc.is-in .evp img,
+  #acara .evc.is-in .evb > *,
+  #hadiah .gift.is-in .gift-icon,
+  #hadiah .gift.is-in .glogo,
+  #hadiah .gift.is-in > b,
+  #hadiah .gift.is-in > p,
+  #hadiah .gift.is-in .no,
+  #hadiah .gift.is-in .btn,
+  #cerita .jr-item.is-in .jr-num,
+  #cerita .jr-item.is-in .jr-date,
+  #cerita .jr-item.is-in .jr-title,
+  #cerita .jr-item.is-in .jr-ic,
+  #lokasi .venue-card.is-in .venue-photo img,
+  #lokasi .venue-card.is-in .venue-photo svg {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .sec-head.reveal h2::after {
+    opacity: 1;
+    transform: none;
+    transition: none !important;
+  }
+}
+
+/* =====================================================================
+   42. SENTUHAN AKHIR — garis hidup The Journey, napas Wedding Event,
+   alamat hadiah yang tertata, dan Our Moment tablet.
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   The Journey: garis progres kembali, nomor menjadi titik yang menyala.
+   --------------------------------------------------------------------- */
+#cerita .jr {
+  position: relative;
+}
+
+#cerita .jr-track,
+#cerita .jr-line {
+  position: absolute;
+  z-index: 2;
+  width: 2px;
+  margin-left: -1px;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+#cerita .jr-track {
+  background: rgba(224, 117, 154, 0.18);
+}
+
+#cerita .jr-line {
+  background: linear-gradient(180deg, var(--pink-deep), var(--pink) 55%, var(--pink-2));
+  box-shadow: 0 0 12px rgba(234, 131, 167, 0.45);
+  transform-origin: top center;
+  transform: scaleY(0);
+  transition: transform 0.2s ease-out;
+  will-change: transform;
+}
+
+/* Nomor berubah menjadi lencana bulat; garis berjalan di belakangnya. */
+#cerita .jr-num {
+  position: relative;
+  z-index: 3;
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: clamp(24px, 2.6vw, 30px);
+  height: clamp(24px, 2.6vw, 30px);
+  min-width: 0;
+  border: 1px solid rgba(224, 117, 154, 0.42);
+  border-radius: 50%;
+  background: #fdf7ee;
+  box-shadow: 0 0 0 3px rgba(252, 227, 236, 0.5);
+  opacity: 1;
+  transition:
+    color 0.35s ease,
+    background 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+#cerita .jr-item.lit .jr-num {
+  color: #fff7ea;
+  background: var(--pink-deep);
+  border-color: var(--pink-deep);
+  box-shadow:
+    0 0 0 3px rgba(234, 131, 167, 0.16),
+    0 0 14px rgba(234, 131, 167, 0.42);
+}
+
+/* Teks panel sejajar dengan judul, sehingga tidak tersentuh garis. */
+#cerita .jr-panel-in p {
+  padding-left: calc(
+    clamp(0.75rem, 2.4vw, 1.05rem) +
+    clamp(24px, 2.6vw, 30px) +
+    clamp(0.55rem, 2vw, 0.9rem)
+  );
+}
+
+/* ---------------------------------------------------------------------
+   Wedding Event: buku Akad & Tasyakuran lebih tinggi, padding lega.
+   --------------------------------------------------------------------- */
+#acara {
+  min-height: 108svh;
+  min-height: 108dvh;
+}
+
+#acara .ev {
+  padding: clamp(8px, 1vw, 12px);
+}
+
+#acara .evc {
+  min-height: clamp(252px, 32vh, 320px);
+}
+
+#acara .evb {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(0.95rem, 2.2vw, 1.3rem);
+}
+
+#acara .ev-eyebrow {
+  gap: 0.38rem;
+  font-size: clamp(0.55rem, 0.5rem + 0.12vw, 0.66rem);
+  letter-spacing: 0.12em;
+}
+
+#acara .evb h3 {
+  margin: 0.4rem 0 0.16rem;
+}
+
+#acara .ev-date {
+  font-size: clamp(0.7rem, 0.66rem + 0.12vw, 0.8rem);
+  line-height: 1.6;
+}
+
+#acara .evb .btn {
+  margin-top: clamp(0.75rem, 1.6vh, 1rem);
+  padding: 0.5rem 0.85rem;
+  font-size: clamp(0.6rem, 0.56rem + 0.1vw, 0.68rem);
+}
+
+/* Di bawah 900px foto berada di atas teks; beri tinggi yang cukup. */
+@media (max-width: 899.98px) {
+  #acara .evp {
+    height: clamp(165px, 23vh, 235px);
+  }
+}
+
+/* Desktop: halaman buku lebih lapang dan foto ikut memenuhi tinggi. */
+@media (min-width: 900px) {
+  #acara .evc {
+    min-height: clamp(288px, 36vh, 352px);
+  }
+
+  #acara .evb {
+    padding: clamp(1.1rem, 1.8vw, 1.55rem);
+  }
+
+  #acara .evb h3 {
+    font-size: clamp(1.3rem, 1rem + 0.7vw, 1.75rem);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Hadiah: tombol daftar hadiah diberi jarak dari kartu di atasnya.
+   --------------------------------------------------------------------- */
+#hadiah #reg {
+  margin-top: clamp(0.65rem, 1.6vh, 1rem);
+}
+
+/* Tablet: alamat rumah di tengah, di bawah Transfer & E-Wallet. */
+@media (min-width: 600px) and (max-width: 1023.98px) {
+  #hadiah .gifts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #hadiah .gift:nth-child(3) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: min(100%, 24rem);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Our Moment tablet: sedikit lebih panjang dan beri jeda ke bingkai foto.
+   --------------------------------------------------------------------- */
+@media (min-width: 600px) and (max-width: 1023.98px) {
+  #galeri {
+    min-height: 112svh;
+    min-height: 112dvh;
+    --gal-pad-top: clamp(2.1rem, 4.2vh, 2.9rem);
+  }
+
+  #galeri > .wrap {
+    min-height: calc(112svh - var(--gal-pad-top) - var(--gal-pad-bottom));
+    min-height: calc(112dvh - var(--gal-pad-top) - var(--gal-pad-bottom));
+  }
+
+  #galeri .sec-head {
+    margin-bottom: clamp(0.9rem, 2.4vh, 1.4rem);
+  }
+}
+
+/* Hormati preferensi gerak minimal. */
+@media (prefers-reduced-motion: reduce) {
+  #cerita .jr-line {
     transition: none !important;
   }
 }

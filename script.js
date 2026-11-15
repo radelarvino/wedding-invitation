@@ -387,6 +387,8 @@ function renderContent() {
   renderGallery();
   setupRsvpForm();
   initJourney();
+  initJourneyLine();
+  initDepthLayers();
   initFloral();
   $$(".person h3").forEach(splitText);
 }
@@ -1036,6 +1038,152 @@ function initJourney() {
       const panel = item.querySelector(".jr-panel");
       if (panel) panel.setAttribute("aria-hidden", "false");
     }
+
+    /* Tinggi baris berubah; ukur ulang garis setelah animasi panel. */
+    clearTimeout(el._lineTimer);
+    el._lineTimer = setTimeout(layoutJourneyLine, 520);
+  });
+}
+
+
+/* ====== 7e. GARIS THE JOURNEY ======
+   Garis berisi mengikuti scroll dan titik nomor menyala saat garis
+   mencapainya. Posisi dihitung dari nomor baris yang sebenarnya, jadi
+   tetap sejajar di ponsel, tablet, dan desktop. */
+const JL = { el: null, track: null, line: null, items: [], offs: [], lit: [], top: 0, len: 1, docTop: 0, active: false, raf: 0, lastP: -1 };
+
+/**
+ * Menyiapkan garis dan titik The Journey bila belum ada.
+ */
+function mountJourneyLine() {
+  const el = $("#tl");
+  if (!el) return null;
+
+  if (!el.querySelector(":scope > .jr-track")) {
+    const track = document.createElement("span");
+    track.className = "jr-track";
+    track.setAttribute("aria-hidden", "true");
+    const line = document.createElement("span");
+    line.className = "jr-line";
+    line.setAttribute("aria-hidden", "true");
+    el.prepend(track, line);
+  }
+
+  JL.el = el;
+  JL.track = el.querySelector(":scope > .jr-track");
+  JL.line = el.querySelector(":scope > .jr-line");
+  return JL.track && JL.line ? JL.line : null;
+}
+
+/**
+ * Menghitung posisi garis dari pusat nomor tiap baris.
+ */
+function layoutJourneyLine() {
+  const t = JL;
+  if (!t.el || !mountJourneyLine()) return;
+  t.items = [...t.el.querySelectorAll(".jr-item")];
+  if (!t.items.length) return;
+
+  const ys = t.items.map(it => {
+    const num = it.querySelector(".jr-num");
+    if (!num) return it.offsetTop + 16;
+    return it.offsetTop + num.offsetTop + num.offsetHeight / 2;
+  });
+
+  const firstNum = t.items[0].querySelector(".jr-num");
+  const x = t.items[0].offsetLeft + (firstNum ? firstNum.offsetLeft + firstNum.offsetWidth / 2 : 16);
+
+  t.top = ys[0];
+  t.len = Math.max(1, ys[ys.length - 1] - ys[0]);
+  t.offs = ys.map(y => y - ys[0]);
+  t.docTop = t.el.getBoundingClientRect().top + scrollY;
+
+  [t.track, t.line].forEach(el => {
+    el.style.left = x + "px";
+    el.style.top = t.top + "px";
+    el.style.height = t.len + "px";
+  });
+}
+
+/**
+ * Mengisi garis sesuai posisi scroll dan menyalakan titik yang dilewati.
+ */
+function updateJourneyLine() {
+  const t = JL;
+  t.raf = 0;
+  if (!t.el || !t.items.length) return;
+
+  const y = innerHeight * 0.62 - (t.docTop - scrollY + t.top);
+  const p = Math.min(1, Math.max(0, y / t.len));
+
+  if (Math.abs(p - t.lastP) > 0.0005) {
+    t.line.style.transform = `scaleY(${p.toFixed(4)})`;
+    t.lastP = p;
+  }
+
+  t.items.forEach((it, i) => {
+    const on = y >= t.offs[i];
+    if (on !== t.lit[i]) {
+      t.lit[i] = on;
+      it.classList.toggle("lit", on);
+    }
+  });
+}
+
+/**
+ * Mengaktifkan garis The Journey dan pengamatannya saat scroll.
+ */
+function initJourneyLine() {
+  if (!mountJourneyLine()) return;
+
+  /* renderContent bisa dipanggil ulang saat koneksi gagal; cukup pasang
+     pengamat sekali, lalu segarkan ukuran garisnya. */
+  if (JL.inited) {
+    JL.lit = [];
+    JL.lastP = -1;
+    layoutJourneyLine();
+    updateJourneyLine();
+    return;
+  }
+  JL.inited = true;
+  JL.lit = [];
+  JL.lastP = -1;
+
+  const queue = () => { if (!JL.raf) JL.raf = requestAnimationFrame(updateJourneyLine); };
+
+  layoutJourneyLine();
+  queue();
+
+  new IntersectionObserver(es => {
+    JL.active = es[0].isIntersecting;
+    if (JL.active) layoutJourneyLine();
+    queue();
+  }, { rootMargin: "160px 0px" }).observe(JL.el);
+
+  addEventListener("scroll", () => { if (JL.active) queue(); }, { passive: true });
+
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(() => { layoutJourneyLine(); queue(); }).observe(JL.el);
+  } else {
+    addEventListener("resize", () => { layoutJourneyLine(); queue(); }, { passive: true });
+  }
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => { layoutJourneyLine(); queue(); });
+  }
+}
+
+/**
+ * Menyisipkan lapisan cahaya matahari ke kartu agar masuk terasa 4D.
+ */
+function initDepthLayers() {
+  const targets = $$(".venue-card, .rsvp-card, .s-gift .gift, #acara .evc, #cerita .jr-item, #pair .ph");
+  targets.forEach(el => {
+    if (!el || el.querySelector(":scope > .sun-sweep")) return;
+    const sun = document.createElement("span");
+    sun.className = "sun-sweep";
+    sun.setAttribute("aria-hidden", "true");
+    el.appendChild(sun);
   });
 }
 
@@ -1783,12 +1931,12 @@ const FLORAL_ART = `<svg viewBox="0 0 240 240" aria-hidden="true" focusable="fal
 <g transform="translate(104 50)"><path class="lf" style="--bd:0s" d="M0 0c6-8 16-10 24-6-5 8-15 10-24 6z" fill="#9db9d3"/></g><g transform="translate(160 106)"><path class="lf" style="--bd:-1.1s" d="M0 0c8-5 18-3 23 3-8 6-18 5-23-3z" fill="#9db9d3"/></g><g transform="translate(196 150)"><path class="lf" style="--bd:-2.2s" d="M0 0c4-8 12-12 20-9-2 9-11 13-20 9z" fill="#9db9d3"/></g>
 <g class="tw tw1" style="transform-origin:58px 20px"><path d="M58 20C74 4 98 0 120 12" fill="none" stroke="#8a6b6f" stroke-width="1.8" stroke-linecap="round"/>
 <g transform="translate(119 12)"><g class="br" style="--bd:0s"><use href="#fl-bloom" transform="rotate(20) scale(.85)"/></g></g>
-<ellipse cx="138" cy="24" rx="2.3" ry="3.6" fill="#ee9ab5" transform="rotate(-30 138 24)"/></g>
+<ellipse cx="138" cy="24" rx="2.3" ry="3.6" fill="#f7b6ca" transform="rotate(-30 138 24)"/></g>
 <g transform="translate(86 34)"><g class="br" style="--bd:-1.3s"><use href="#fl-bloom" transform="rotate(40) scale(.8)"/></g></g>
 <g transform="translate(127 67)"><g class="br" style="--bd:-2.6s"><use href="#fl-bloom" transform="rotate(8) scale(1.05)"/></g></g>
 <g class="tw tw2" style="transform-origin:136px 76px"><path d="M136 74C158 66 178 72 192 88" fill="none" stroke="#8a6b6f" stroke-width="1.8" stroke-linecap="round"/>
 <g transform="translate(191 88)"><g class="br" style="--bd:-0.7s"><use href="#fl-bloom" transform="rotate(-10) scale(.85)"/></g></g>
-<ellipse cx="170" cy="62" rx="2.3" ry="3.6" fill="#ee9ab5" transform="rotate(20 170 62)"/></g>
+<ellipse cx="170" cy="62" rx="2.3" ry="3.6" fill="#f7b6ca" transform="rotate(20 170 62)"/></g>
 <g transform="translate(214 186)"><g class="br" style="--bd:-1.9s"><use href="#fl-bloom" transform="rotate(30) scale(.8)"/></g></g>
 </g></svg>`;
 
@@ -1797,7 +1945,7 @@ const FLORAL_ART = `<svg viewBox="0 0 240 240" aria-hidden="true" focusable="fal
    Titik (0,0) = sudut bingkai; sudut lain didapat dengan pencerminan (CSS). */
 const bloomG = (x, y, r, s, d) => `<g transform="translate(${x} ${y})"><g class="br" style="--bd:${d}s"><use href="#fl-bloom" transform="rotate(${r}) scale(${s})"/></g></g>`;
 const leafG = (x, y, r, d) => `<g transform="translate(${x} ${y}) rotate(${r})"><path class="lf" style="--bd:${d}s" d="M0 0c6-8 16-10 24-6-5 8-15 10-24 6z" fill="#9db9d3"/></g>`;
-const budG = (x, y, r) => `<g transform="translate(${x} ${y}) rotate(${r})"><path d="M0 5C-3.6 2 -4 -4 0 -7 4 -4 3.6 2 0 5Z" fill="#f2a0b9" stroke="#e07f9f" stroke-width=".4"/><path d="M0 -6C.6 -3 .6 1 0 3.6" stroke="#d96b90" stroke-width=".4" stroke-linecap="round" fill="none"/></g>`;
+const budG = (x, y, r) => `<g transform="translate(${x} ${y}) rotate(${r})"><path d="M0 5C-3.6 2 -4 -4 0 -7 4 -4 3.6 2 0 5Z" fill="#f7b6ca" stroke="#ea83a7" stroke-width=".4"/><path d="M0 -6C.6 -3 .6 1 0 3.6" stroke="#d9557f" stroke-width=".4" stroke-linecap="round" fill="none"/></g>`;
 const COVER_ART = `<svg viewBox="0 0 260 260" aria-hidden="true" focusable="false"><g class="wind">
 <circle class="halo" cx="46" cy="46" r="96" fill="url(#flHalo)" style="transform-origin:46px 46px"/>
 <g class="tw tw1" style="transform-origin:0px 0px">
@@ -1952,7 +2100,7 @@ function initPetals() {
     const g = s.getContext("2d");
     g.translate(48, 90);
     g.scale(4.2, 4.2);
-    g.fillStyle = "#f5a3bf";
+    g.fillStyle = "#f7b6ca";
     g.fill(new Path2D("M0 0C-5 -5 -8.5 -13 -4.8 -17.5C-3.2 -19 -1.1 -18.2 0 -16C1.1 -18.2 3.2 -19 4.8 -17.5C8.5 -13 5 -5 0 0Z"));
     return s;
   };
