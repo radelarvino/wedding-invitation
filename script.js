@@ -323,7 +323,7 @@ function renderContent() {
 
   const evEl = $("#ev");
   if (evEl) {
-    evEl.innerHTML = evs.map((e, i) => `<article class="evc card tilt reveal" style="--d:${i * 120}ms">
+    evEl.innerHTML = evs.map((e, i) => `<article class="evc card reveal" style="--d:${i * 120}ms">
       <span class="ev-book-frame" aria-hidden="true"></span>
       <div class="evp" style="--ei:${i}">
         ${e.photo ? `<img src="${esc(e.photo)}" alt="${esc(e.name)}" loading="lazy">` : `<div class="evp-fallback"><span class="evp-mono">${esc(a.nick.charAt(0))}<i>&amp;</i>${esc(b.nick.charAt(0))}</span><span class="evp-name">${esc(e.name)}</span></div>`}
@@ -366,7 +366,7 @@ function renderContent() {
       const open = i === 0;
       return `<article class="jr-item reveal${open ? " open" : ""}" style="--d:${i * 70}ms">
       <button class="jr-head" type="button" id="jr-h-${i}" aria-expanded="${open}" aria-controls="jr-p-${i}">
-        <span class="jr-num" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span>
+        <span class="jr-num" aria-hidden="true"></span>
         <span class="jr-meta">
           <span class="jr-date">${esc(s.date)}</span>
           <span class="jr-title">${esc(s.t)}</span>
@@ -1047,13 +1047,30 @@ function initJourney() {
 
 
 /* ====== 7e. GARIS THE JOURNEY ======
-   Garis berisi mengikuti scroll dan titik nomor menyala saat garis
-   mencapainya. Posisi dihitung dari nomor baris yang sebenarnya, jadi
-   tetap sejajar di ponsel, tablet, dan desktop. */
-const JL = { el: null, track: null, line: null, items: [], offs: [], lit: [], top: 0, len: 1, docTop: 0, active: false, raf: 0, lastP: -1 };
+   Titik tanpa nomor menyala saat garis mencapainya. Warna garis, titik,
+   dan butir cahaya bergerak mengikuti scroll dari navy ke rose lalu cream.
+   Posisi dihitung dari titik baris yang sebenarnya, jadi tetap sejajar di
+   ponsel, tablet, dan desktop. */
+const JR_STOPS = [[23, 35, 74], [234, 131, 167], [229, 207, 168]];
+const JL = { el: null, track: null, line: null, spark: null, items: [], offs: [], lit: [], top: 0, len: 1, docTop: 0, active: false, raf: 0, lastP: -1 };
 
 /**
- * Menyiapkan garis dan titik The Journey bila belum ada.
+ * Mencampur warna palet navy → rose → cream sesuai progres scroll.
+ * @param {number} p Progres 0..1
+ * @returns {string} Warna rgb()
+ */
+function journeyColor(p) {
+  const x = Math.min(1, Math.max(0, p)) * (JR_STOPS.length - 1);
+  const i = Math.min(JR_STOPS.length - 2, Math.floor(x));
+  const f = x - i;
+  const a = JR_STOPS[i];
+  const b = JR_STOPS[i + 1];
+  const c = a.map((v, k) => Math.round(v + (b[k] - v) * f));
+  return `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
+}
+
+/**
+ * Menyiapkan garis, butir cahaya, dan titik The Journey bila belum ada.
  */
 function mountJourneyLine() {
   const el = $("#tl");
@@ -1069,14 +1086,22 @@ function mountJourneyLine() {
     el.prepend(track, line);
   }
 
+  if (!el.querySelector(":scope > .jr-spark")) {
+    const spark = document.createElement("span");
+    spark.className = "jr-spark";
+    spark.setAttribute("aria-hidden", "true");
+    el.appendChild(spark);
+  }
+
   JL.el = el;
   JL.track = el.querySelector(":scope > .jr-track");
   JL.line = el.querySelector(":scope > .jr-line");
+  JL.spark = el.querySelector(":scope > .jr-spark");
   return JL.track && JL.line ? JL.line : null;
 }
 
 /**
- * Menghitung posisi garis dari pusat nomor tiap baris.
+ * Menghitung posisi garis dari pusat titik tiap baris.
  */
 function layoutJourneyLine() {
   const t = JL;
@@ -1098,15 +1123,25 @@ function layoutJourneyLine() {
   t.offs = ys.map(y => y - ys[0]);
   t.docTop = t.el.getBoundingClientRect().top + scrollY;
 
+  /* Tiap titik membawa warnanya sendiri, mengikuti urutan perjalanan. */
+  t.items.forEach((it, i) => {
+    const f = t.items.length > 1 ? i / (t.items.length - 1) : 0;
+    it.style.setProperty("--dot-c", journeyColor(f));
+  });
+
   [t.track, t.line].forEach(el => {
     el.style.left = x + "px";
     el.style.top = t.top + "px";
     el.style.height = t.len + "px";
   });
+
+  if (t.spark) t.spark.style.left = x + "px";
+  t.lastP = -1;
 }
 
 /**
- * Mengisi garis sesuai posisi scroll dan menyalakan titik yang dilewati.
+ * Mengisi garis sesuai posisi scroll, menyalakan titik, dan menggeser
+ * butir cahaya yang warnanya ikut berubah.
  */
 function updateJourneyLine() {
   const t = JL;
@@ -1118,6 +1153,11 @@ function updateJourneyLine() {
 
   if (Math.abs(p - t.lastP) > 0.0005) {
     t.line.style.transform = `scaleY(${p.toFixed(4)})`;
+    if (t.spark) {
+      const c = journeyColor(p);
+      t.spark.style.top = (t.top + p * t.len) + "px";
+      t.spark.style.setProperty("--spark-c", c);
+    }
     t.lastP = p;
   }
 
@@ -2003,6 +2043,8 @@ ${budG(132, 52, 26)}${budG(14, 70, -34)}${budG(64, 126, 64)}
 </g>
 </g></svg>`;
 
+const coverFlorals = [];
+
 function initFloral() {
   /* Ranting sampul tetap memakai ilustrasi batang. Untuk bingkai foto mempelai
      serta kartu Akad Nikah & Tasyakuran, dipakai kuntum sakura dari
@@ -2041,10 +2083,17 @@ function initFloral() {
       new IntersectionObserver(es => {
         const on = es[0].isIntersecting;
         items.forEach(el => el.classList.toggle("run", on && !reduceMotion));
-        if (isCover && on) items.forEach(el => el.classList.add("in"));
       }, { threshold: 0.12 }).observe(host);
 
-      if (isCover) return;
+      /* Ranting sampul menunggu tirai terbuka agar mekarnya tidak
+         terlewat di balik layar pembuka. */
+      if (isCover) {
+        coverFlorals.push(...items);
+        if (document.body.classList.contains("env-open")) {
+          items.forEach(el => el.classList.add("in"));
+        }
+        return;
+      }
 
       /* Mekar: tiap kuntum dipantau sendiri, harus terlihat cukup jauh di dalam layar */
       items.forEach(el => {
@@ -2344,7 +2393,7 @@ function enterInvitation() {
   if (isOpen()) return;
 
   document.body.classList.remove("locked");
-  document.body.classList.add("open");
+  document.body.classList.add("open", "env-open");
 
   const cover = $("#cover");
   if (cover) {
@@ -2556,6 +2605,11 @@ function openEnvelope() {
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   envBox.classList.add("opening");
 
+  /* Tirai mulai terbuka: cover di belakangnya ikut memulai alur masuknya,
+     termasuk ranting yang selama ini menunggu di balik tirai. */
+  document.body.classList.add("env-open");
+  coverFlorals.forEach(el => el.classList.add("in"));
+
   /* Musik dimulai dari ketukan segel: gestur pertama pengunjung, jadi
      browser mengizinkan pemutaran tanpa perlu klik kedua. */
   startMusic();
@@ -2581,7 +2635,7 @@ function openEnvelope() {
         btn.focus({ preventScroll: true });
       } catch (_) {}
     }
-  }, reduce ? 240 : 2400);
+  }, reduce ? 260 : 2150);
 }
 
 if (envBox && envSeal) {
