@@ -2638,6 +2638,42 @@ function openEnvelope() {
   }, reduce ? 260 : 2150);
 }
 
+/**
+ * Menggeser plakat dan tirai sedikit mengikuti kursor supaya panggung
+ * pembuka terasa memiliki kedalaman. Hanya aktif di perangkat dengan
+ * penunjuk presisi dan tidak berjalan saat gerak minimal diminta.
+ */
+function initEnvDepth() {
+  if (!envBox || envelopeOpened) return;
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+  let raf = 0;
+  let mx = 0;
+  let my = 0;
+
+  const paint = () => {
+    raf = 0;
+    envBox.style.setProperty("--env-mx", mx.toFixed(3));
+    envBox.style.setProperty("--env-my", my.toFixed(3));
+  };
+
+  const aim = (e) => {
+    if (envelopeOpened) return;
+    const r = envBox.getBoundingClientRect();
+    mx = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width - 0.5) * 2));
+    my = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height - 0.5) * 2));
+    if (!raf) raf = requestAnimationFrame(paint);
+  };
+
+  envBox.addEventListener("pointermove", aim, { passive: true });
+  envBox.addEventListener("pointerleave", () => {
+    mx = 0;
+    my = 0;
+    if (!raf) raf = requestAnimationFrame(paint);
+  }, { passive: true });
+}
+
 if (envBox && envSeal) {
   const cover = $("#cover");
   if (cover) {
@@ -2654,6 +2690,7 @@ if (envBox && envSeal) {
   try {
     envSeal.focus({ preventScroll: true });
   } catch (_) {}
+  initEnvDepth();
 }
 
 

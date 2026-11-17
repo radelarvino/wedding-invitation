@@ -11549,3 +11549,419 @@ body.open main {
     transition: none !important;
   }
 }
+
+/* =====================================================================
+   44. TIRAI SINEMATIK 4D — KAIN BERLIPAT, CAHAYA, DAN KEDALAMAN
+   Tirai tidak lagi hanya bergeser: kain ditarik dengan hentakan kecil,
+   memadat seperti dilipat ke sisi panggung, lalu meluncur keluar. Plakat
+   terangkat menjauh dari layar, segel terlepas dan jatuh, sementara cahaya
+   menyapu lipatan kain. Di perangkat berpenunjuk presisi, plakat dan tirai
+   ikut bergeser halus mengikuti kursor sehingga ruang terasa berkedalaman.
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   A. Kedalaman panggung: kursor menggeser lapisan secara halus
+   --------------------------------------------------------------------- */
+#env {
+  --env-mx: 0;
+  --env-my: 0;
+}
+
+#env .env-curtains {
+  perspective: clamp(900px, 110vw, 1600px);
+  perspective-origin: 50% 46%;
+  transform:
+    rotateX(calc(var(--env-my, 0) * -0.9deg))
+    rotateY(calc(var(--env-mx, 0) * 1.3deg))
+    scale(1.045);
+  transform-origin: 50% 46%;
+  transition: transform 0.65s cubic-bezier(0.22, 0.8, 0.2, 1);
+}
+
+#env.opening .env-curtains {
+  transform: rotateX(0) rotateY(0) scale(1.045);
+  transition: transform 1.15s var(--ease-out);
+}
+
+#env .env-valance {
+  transform:
+    perspective(1300px)
+    rotateX(calc(var(--env-my, 0) * 0.7deg))
+    rotateY(calc(var(--env-mx, 0) * 0.9deg));
+  transform-origin: 50% 0%;
+  transition: transform 0.65s cubic-bezier(0.22, 0.8, 0.2, 1);
+}
+
+#env.opening .env-valance {
+  transform: perspective(1300px) rotateX(0) rotateY(0);
+  transition: none;
+}
+
+#env .env-core {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-style: preserve-3d;
+  transform:
+    perspective(1150px)
+    rotateX(calc(var(--env-my, 0) * -1.7deg))
+    rotateY(calc(var(--env-mx, 0) * 2.1deg))
+    translate3d(calc(var(--env-mx, 0) * -7px), calc(var(--env-my, 0) * -5px), 0);
+  transition: transform 0.5s cubic-bezier(0.22, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+#env.opening .env-core {
+  transform: perspective(1150px) rotateX(0) rotateY(0) translate3d(0, 0, 0);
+  transition: transform 1.05s var(--ease-out);
+}
+
+/* ---------------------------------------------------------------------
+   B. Tirai ditarik: hentakan, lipatan memadat, lalu keluar dari panggung
+   --------------------------------------------------------------------- */
+#env .env-curtain {
+  overflow: visible;
+  transition: none;
+  transform-origin: left center;
+  backface-visibility: hidden;
+  will-change: transform, filter;
+}
+
+#env .env-curtain-r {
+  transform-origin: right center;
+}
+
+#env.opening .env-curtain-l {
+  animation: envCurtainSweepL 1.9s cubic-bezier(0.5, 0.02, 0.2, 1) 0.08s forwards;
+}
+
+#env.opening .env-curtain-r {
+  animation: envCurtainSweepR 1.9s cubic-bezier(0.5, 0.02, 0.2, 1) 0.12s forwards;
+}
+
+@keyframes envCurtainSweepL {
+  0% {
+    transform: translate3d(0, 0, 0) rotateY(0) scaleX(1) skewY(0);
+    filter: brightness(1);
+  }
+  10% {
+    transform: translate3d(1.4%, 0, 0) rotateY(-1.8deg) scaleX(0.994) skewY(0.2deg);
+    filter: brightness(1.05);
+  }
+  30% {
+    transform: translate3d(-18%, 0.15%, 0) rotateY(3deg) scaleX(0.93) skewY(0.35deg);
+    filter: brightness(1.01);
+  }
+  56% {
+    transform: translate3d(-47%, 0.45%, 0) rotateY(6.5deg) scaleX(0.81) skewY(-0.25deg);
+    filter: brightness(0.97);
+  }
+  78% {
+    transform: translate3d(-79%, 0.2%, 0) rotateY(9deg) scaleX(0.66) skewY(0.18deg);
+    filter: brightness(0.92);
+  }
+  100% {
+    transform: translate3d(-112%, 0, 0) rotateY(10deg) scaleX(0.52) skewY(0);
+    filter: brightness(0.86);
+  }
+}
+
+@keyframes envCurtainSweepR {
+  0% {
+    transform: translate3d(0, 0, 0) rotateY(0) scaleX(1) skewY(0);
+    filter: brightness(1);
+  }
+  10% {
+    transform: translate3d(-1.4%, 0, 0) rotateY(1.8deg) scaleX(0.994) skewY(-0.2deg);
+    filter: brightness(1.05);
+  }
+  30% {
+    transform: translate3d(18%, 0.15%, 0) rotateY(-3deg) scaleX(0.93) skewY(-0.35deg);
+    filter: brightness(1.01);
+  }
+  56% {
+    transform: translate3d(47%, 0.45%, 0) rotateY(-6.5deg) scaleX(0.81) skewY(0.25deg);
+    filter: brightness(0.97);
+  }
+  78% {
+    transform: translate3d(79%, 0.2%, 0) rotateY(-9deg) scaleX(0.66) skewY(-0.18deg);
+    filter: brightness(0.92);
+  }
+  100% {
+    transform: translate3d(112%, 0, 0) rotateY(-10deg) scaleX(0.52) skewY(0);
+    filter: brightness(0.86);
+  }
+}
+
+/* Cahaya menyapu lipatan kain saat tirai ditarik. */
+#env .env-sheen {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  opacity: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(103deg,
+      transparent 32%,
+      rgba(255, 246, 228, 0.05) 41%,
+      rgba(255, 248, 236, 0.22) 48%,
+      rgba(255, 255, 255, 0.3) 51%,
+      rgba(255, 240, 210, 0.1) 57%,
+      transparent 66%)
+    0 0 / 250% 100% no-repeat;
+  mix-blend-mode: screen;
+}
+
+#env.opening .env-curtain-l .env-sheen {
+  animation: envClothSheen 1.5s ease-out 0.16s forwards;
+}
+
+#env.opening .env-curtain-r .env-sheen {
+  animation: envClothSheen 1.6s ease-out 0.28s forwards;
+}
+
+@keyframes envClothSheen {
+  0% {
+    opacity: 0;
+    background-position: 135% 0;
+  }
+  18% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    background-position: -85% 0;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   C. Valance terangkat seperti panggung yang dibuka
+   --------------------------------------------------------------------- */
+#env.opening .env-valance {
+  animation: envValanceLift 1.35s cubic-bezier(0.45, 0, 0.2, 1) 0.14s forwards;
+}
+
+@keyframes envValanceLift {
+  0% {
+    transform: perspective(1300px) translate3d(0, 0, 0) rotateX(0);
+    opacity: 1;
+    filter: brightness(1);
+  }
+  12% {
+    transform: perspective(1300px) translate3d(0, 6px, 0) rotateX(2.5deg);
+    filter: brightness(1.04);
+  }
+  100% {
+    transform: perspective(1300px) translate3d(0, -114%, -30px) rotateX(-22deg);
+    opacity: 0;
+    filter: brightness(0.8);
+  }
+}
+
+/* Cahaya panggung menembus celah tirai, lalu meredup saat sampul mengambil
+   alih. Ini mengisi ruang di balik plakat agar transisi tidak terasa kosong. */
+#env .env-light {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  width: min(98vw, 1040px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  background:
+    radial-gradient(closest-side,
+      rgba(255, 247, 228, 0.62) 0%,
+      rgba(255, 230, 192, 0.34) 34%,
+      rgba(247, 182, 202, 0.14) 60%,
+      rgba(247, 182, 202, 0) 78%);
+  filter: blur(20px);
+  opacity: 0.28;
+  transform: translate(-50%, -50%) scale(0.74);
+  transition:
+    opacity 1s ease,
+    transform 1.4s var(--ease-out);
+}
+
+#env.opening .env-light {
+  animation: envLightBloom 1.8s ease-out 0.08s forwards;
+}
+
+@keyframes envLightBloom {
+  0% {
+    opacity: 0.28;
+    transform: translate(-50%, -50%) scale(0.74);
+  }
+  34% {
+    opacity: 0.72;
+    transform: translate(-50%, -50%) scale(1.04);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.56);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   D. Plakat terangkat ke ruang, segel terlepas lalu jatuh
+   --------------------------------------------------------------------- */
+#env .env-plaque {
+  overflow: hidden;
+  transform-origin: 50% 60%;
+  will-change: transform, opacity, filter;
+}
+
+#env.opening .env-plaque {
+  animation: envPlaqueLift 1.05s cubic-bezier(0.33, 0, 0.2, 1) forwards;
+}
+
+@keyframes envPlaqueLift {
+  0% {
+    transform: perspective(900px) translate3d(0, 0, 0) rotateX(0) scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+  12% {
+    transform: perspective(900px) translate3d(0, 4px, 0) rotateX(1.6deg) scale(0.998);
+    filter: brightness(0.98);
+  }
+  46% {
+    transform: perspective(900px) translate3d(0, -22px, -22px) rotateX(-4deg) scale(0.982);
+    opacity: 0.94;
+    filter: blur(0.3px);
+  }
+  100% {
+    transform: perspective(900px) translate3d(0, -74px, -110px) rotateX(-12deg) scale(0.9);
+    opacity: 0;
+    filter: blur(2.4px);
+  }
+}
+
+/* Kilau tipis melintas pada permukaan plakat. */
+#env .env-plaque::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(105deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.42) 47%,
+    rgba(255, 248, 232, 0.18) 54%,
+    transparent 68%);
+  transform: translateX(-70%);
+}
+
+#env.opening .env-plaque::after {
+  animation: envPlaqueSheen 0.85s ease-out 0.08s forwards;
+}
+
+@keyframes envPlaqueSheen {
+  0% {
+    opacity: 0;
+    transform: translateX(-70%);
+  }
+  28% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(70%);
+  }
+}
+
+#env.opening .env-seal {
+  animation: envSealDrop 0.98s cubic-bezier(0.3, 0.7, 0.3, 1) 0.04s forwards;
+}
+
+@keyframes envSealDrop {
+  0% {
+    transform: none;
+    opacity: 1;
+    filter: blur(0);
+  }
+  13% {
+    transform: scale(0.9) rotate(-2deg);
+    filter: brightness(0.92);
+  }
+  30% {
+    transform: scale(1.05) rotate(1.5deg);
+    filter: brightness(1.08);
+  }
+  62% {
+    transform: translate3d(0, 16px, 30px) rotate(6deg) scale(1.02);
+    opacity: 0.86;
+    filter: blur(0.4px);
+  }
+  100% {
+    transform: translate3d(0, 58px, 70px) rotate(14deg) scale(0.86);
+    opacity: 0;
+    filter: blur(2px);
+  }
+}
+
+#env.opening .env-seal-ring {
+  transition-duration: 0.6s;
+}
+
+#env.opening .env-seal::after {
+  animation: none;
+}
+
+/* ---------------------------------------------------------------------
+   E. Layar kecil: kedalaman tetap ada tanpa membuat tata letak bergeser
+   --------------------------------------------------------------------- */
+@media (max-width: 599px) {
+  #env .env-curtains {
+    perspective: 950px;
+    transform:
+      rotateX(calc(var(--env-my, 0) * -0.7deg))
+      rotateY(calc(var(--env-mx, 0) * 0.9deg))
+      scale(1.06);
+  }
+
+  #env.opening .env-curtains {
+    transform: rotateX(0) rotateY(0) scale(1.06);
+  }
+
+  #env .env-core {
+    transform:
+      perspective(950px)
+      rotateX(calc(var(--env-my, 0) * -1.3deg))
+      rotateY(calc(var(--env-mx, 0) * 1.6deg))
+      translate3d(calc(var(--env-mx, 0) * -5px), calc(var(--env-my, 0) * -4px), 0);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   F. Gerak minimal: semua lapisan langsung diam di tempatnya
+   --------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  #env .env-curtains,
+  #env .env-core,
+  #env .env-valance,
+  #env .env-light {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  #env .env-sheen,
+  #env .env-plaque::after {
+    display: none;
+  }
+
+  #env.opening .env-curtain-l,
+  #env.opening .env-curtain-r,
+  #env.opening .env-valance,
+  #env.opening .env-plaque,
+  #env.opening .env-seal,
+  #env.opening .env-seal-ring,
+  #env.opening .env-light {
+    animation: none !important;
+    transition: none !important;
+  }
+}
