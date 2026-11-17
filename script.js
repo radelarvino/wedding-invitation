@@ -2635,7 +2635,7 @@ function openEnvelope() {
         btn.focus({ preventScroll: true });
       } catch (_) {}
     }
-  }, reduce ? 260 : 2150);
+  }, reduce ? 260 : 2900);
 }
 
 /**

@@ -29,7 +29,7 @@
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/gf/jost-var.woff2" crossorigin>
 <link rel="preload" as="image" href="assets/prewed-640.webp" media="(max-width: 599.98px)" fetchpriority="high">
 <link rel="preload" as="image" href="assets/prewed-860.webp" media="(min-width: 600px)" fetchpriority="high">
-<link rel="stylesheet" href="style.css?v=32">
+<link rel="stylesheet" href="style.css?v=34">
 </head>
 <body class="locked">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -113,12 +113,14 @@
     <i style="--x:69%;--t:18s;--d:-7s;--s:.46;--r:12deg;--drift:54px"></i>
     <i style="--x:86%;--t:22s;--d:-17s;--s:.52;--r:-8deg;--drift:-58px"></i>
   </div>
+  <div class="env-sun" aria-hidden="true"></div>
   <div class="env-curtains" aria-hidden="true">
     <span class="env-curtain env-curtain-l"><i class="env-sheen"></i></span>
     <span class="env-curtain env-curtain-r"><i class="env-sheen"></i></span>
   </div>
   <div class="env-valance" aria-hidden="true"></div>
   <div class="env-light" aria-hidden="true"></div>
+  <div class="env-rays" aria-hidden="true"></div>
   <div class="env-glow" aria-hidden="true"></div>
   <div class="env-frame" aria-hidden="true"><i></i></div>
   <div class="env-stage">
@@ -134,12 +136,14 @@
         <span class="env-note-date">13 . 12 . 2026</span>
       </div>
       <button class="env-seal" id="envSeal" type="button" aria-label="Buka undangan">
-        <span class="env-seal-wax" aria-hidden="true"></span>
-        <span class="env-seal-ring" aria-hidden="true"></span>
-        <span class="env-seal-mono" aria-hidden="true">R<em>&amp;</em>D</span>
+        <span class="env-seal-disc" aria-hidden="true">
+          <svg class="env-seal-key" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="8.7" r="3.1"/>
+            <path d="M12 11.8v7.4"/>
+          </svg>
+        </span>
       </button>
     </div>
-    <p class="env-hint" aria-hidden="true">Ketuk segel untuk membuka tirai</p>
   </div>
 </div>
 <noscript><style>#env{display:none}</style></noscript>
@@ -429,6 +433,6 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="config.js"></script>
-<script src="script.js?v=28"></script>
+<script src="script.js?v=30"></script>
 </body>
 </html>
