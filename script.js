@@ -323,8 +323,10 @@ function renderContent() {
 
   const evEl = $("#ev");
   if (evEl) {
-    evEl.innerHTML = evs.map((e, i) => `<article class="evc card reveal" style="--d:${i * 120}ms">
-      <span class="ev-book-frame" aria-hidden="true"></span>
+    /* Satu buku: kedua acara menjadi lembar kiri dan kanan dari satu
+       bingkai. Pembungkus .ev-pages yang membuka dari punggung, bukan
+       tiap kartu yang berputar sendiri-sendiri. */
+    evEl.innerHTML = `<div class="ev-pages">${evs.map((e, i) => `<article class="evc card reveal" style="--d:${i * 120}ms">
       <div class="evp" style="--ei:${i}">
         ${e.photo ? `<img src="${esc(e.photo)}" alt="${esc(e.name)}" loading="lazy">` : `<div class="evp-fallback"><span class="evp-mono">${esc(a.nick.charAt(0))}<i>&amp;</i>${esc(b.nick.charAt(0))}</span><span class="evp-name">${esc(e.name)}</span></div>`}
       </div>
@@ -334,7 +336,7 @@ function renderContent() {
         <p class="ev-date">${esc(e.label)}</p>
         <a class="btn ghost" href="${calendarURL(e)}" target="_blank" rel="noopener">${ic("calendar")} Google Calendar</a>
       </div>
-    </article>`).join("");
+    </article>`).join("")}</div>`;
 
     initEventPointer(evEl);
   }
@@ -1098,7 +1100,12 @@ function layoutJourneyLine() {
   });
 
   const firstNum = t.items[0].querySelector(".jr-num");
-  const x = t.items[0].offsetLeft + (firstNum ? firstNum.offsetLeft + firstNum.offsetWidth / 2 : 16);
+  /* Titik berada di dalam border 1px kartu, sedangkan garis berada di
+     koordinat .jr. Sertakan border itu agar pusat garis benar-benar jatuh
+     di pusat lingkaran, bukan meleset 1px. */
+  const firstBorder = parseFloat(getComputedStyle(t.items[0]).borderLeftWidth) || 0;
+  const x = t.items[0].offsetLeft + firstBorder +
+    (firstNum ? firstNum.offsetLeft + firstNum.offsetWidth / 2 : 16);
 
   t.top = ys[0];
   t.len = Math.max(1, ys[ys.length - 1] - ys[0]);
@@ -1118,6 +1125,9 @@ function layoutJourneyLine() {
   });
 
   t.lastP = -1;
+  /* Panel yang baru terbuka mengubah tinggi baris. Segarkan garis pada
+     frame berikutnya agar titik terakhir (Pelaminan) ikut menyala. */
+  requestAnimationFrame(updateJourneyLine);
 }
 
 /**
@@ -1129,7 +1139,9 @@ function updateJourneyLine() {
   t.raf = 0;
   if (!t.el || !t.items.length) return;
 
-  const y = innerHeight * 0.62 - (t.docTop - scrollY + t.top);
+  /* Baca posisi garis langsung dari layar, bukan dari docTop yang bisa basi
+     setelah gambar/font/panel mengubah tinggi halaman. */
+  const y = innerHeight * 0.62 - (t.el.getBoundingClientRect().top + t.top);
   const p = Math.min(1, Math.max(0, y / t.len));
 
   if (Math.abs(p - t.lastP) > 0.0005) {
@@ -2650,6 +2662,35 @@ function initEnvDepth() {
   }, { passive: true });
 }
 
+/**
+ * Menyelaraskan dua belahan kres dengan tombol #envSeal.
+ * Setiap belahan hidup di dalam tirai masing-masing, jadi saat kain ditarik
+ * kres ikut terbelah tanpa animasi tambahan yang bisa terlihat patah.
+ * Ukuran dipetakan ke koordinat lokal tirai agar skala panggung ikut terhitung.
+ */
+function syncCrestSplit() {
+  if (!envBox || !envSeal || envelopeOpened) return;
+  const left = envBox.querySelector(".env-curtain-l");
+  const right = envBox.querySelector(".env-curtain-r");
+  const sr = envSeal.getBoundingClientRect();
+  if (!left || !right || !sr.width || !sr.height) return;
+
+  [left, right].forEach(curtain => {
+    const cr = curtain.getBoundingClientRect();
+    if (!cr.width || !cr.height) return;
+    const sx = cr.width / (curtain.offsetWidth || 1);
+    const sy = cr.height / (curtain.offsetHeight || 1);
+    const w = sr.width / sx;
+    const h = sr.height / sy;
+    const cx = (sr.left + sr.width / 2 - cr.left) / sx;
+    const cy = (sr.top + sr.height / 2 - cr.top) / sy;
+    curtain.style.setProperty("--crest-x", cx.toFixed(2) + "px");
+    curtain.style.setProperty("--crest-y", cy.toFixed(2) + "px");
+    curtain.style.setProperty("--crest-w", w.toFixed(2) + "px");
+    curtain.style.setProperty("--crest-h", h.toFixed(2) + "px");
+  });
+}
+
 if (envBox && envSeal) {
   const cover = $("#cover");
   if (cover) {
@@ -2666,6 +2707,17 @@ if (envBox && envSeal) {
   try {
     envSeal.focus({ preventScroll: true });
   } catch (_) {}
+  syncCrestSplit();
+  requestAnimationFrame(syncCrestSplit);
+  /* Font dan tata letak panggung bisa bergeser sedikit setelah frame
+     pertama; ukur ulang beberapa kali agar kedua belahan tetap presisi
+     sampai tirai benar-benar dibuka. */
+  [120, 360, 720, 1100].forEach(ms => setTimeout(syncCrestSplit, ms));
+  addEventListener("resize", syncCrestSplit, { passive: true });
+  addEventListener("orientationchange", syncCrestSplit, { passive: true });
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(syncCrestSplit);
+  }
   initEnvDepth();
 }
 

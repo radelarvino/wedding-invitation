@@ -29,7 +29,7 @@
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/gf/jost-var.woff2" crossorigin>
 <link rel="preload" as="image" href="assets/prewed-640.webp" media="(max-width: 599.98px)" fetchpriority="high">
 <link rel="preload" as="image" href="assets/prewed-860.webp" media="(min-width: 600px)" fetchpriority="high">
-<link rel="stylesheet" href="style.css?v=36">
+<link rel="stylesheet" href="style.css?v=37">
 </head>
 <body class="locked">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -115,26 +115,41 @@
   </div>
   <div class="env-sun" aria-hidden="true"></div>
   <div class="env-curtains" aria-hidden="true">
-    <span class="env-curtain env-curtain-l"><i class="env-sheen"></i></span>
-    <span class="env-curtain env-curtain-r"><i class="env-sheen"></i></span>
-  </div>
-  <div class="env-valance" aria-hidden="true"></div>
-  <div class="env-light" aria-hidden="true"></div>
-  <div class="env-rays" aria-hidden="true"></div>
-  <div class="env-glow" aria-hidden="true"></div>
-  <div class="env-frame" aria-hidden="true"><i></i></div>
-  <div class="env-stage">
-    <div class="env-core">
-      <button class="env-crest" id="envSeal" type="button" aria-label="Buka undangan Ramiz dan Denayu">
-        <span class="env-crest-frame" aria-hidden="true"></span>
-        <span class="env-crest-face" aria-hidden="true">
+    <span class="env-curtain env-curtain-l">
+      <i class="env-sheen"></i>
+      <span class="env-crest-aura" aria-hidden="true"></span>
+      <span class="env-crest-half env-crest-half-l" aria-hidden="true">
+        <span class="env-crest-frame"></span>
+        <span class="env-crest-face">
           <span class="env-crest-copy">
             <span class="env-crest-kicker">The Wedding Celebration</span>
             <span class="env-crest-initials">R <em>&amp;</em> D</span>
             <span class="env-crest-date">13 . 12 . 2026</span>
           </span>
         </span>
-      </button>
+      </span>
+    </span>
+    <span class="env-curtain env-curtain-r">
+      <i class="env-sheen"></i>
+      <span class="env-crest-aura" aria-hidden="true"></span>
+      <span class="env-crest-half env-crest-half-r" aria-hidden="true">
+        <span class="env-crest-frame"></span>
+        <span class="env-crest-face">
+          <span class="env-crest-copy">
+            <span class="env-crest-kicker">The Wedding Celebration</span>
+            <span class="env-crest-initials">R <em>&amp;</em> D</span>
+            <span class="env-crest-date">13 . 12 . 2026</span>
+          </span>
+        </span>
+      </span>
+    </span>
+  </div>
+  <div class="env-valance" aria-hidden="true"></div>
+  <div class="env-light" aria-hidden="true"></div>
+  <div class="env-rays" aria-hidden="true"></div>
+  <div class="env-stage">
+    <div class="env-core">
+      <button class="env-crest-hit" id="envSeal" type="button" aria-label="Buka undangan Ramiz dan Denayu"></button>
       <span class="env-crest-hint">Ketuk untuk membuka</span>
     </div>
   </div>
@@ -200,10 +215,9 @@
 </section>
 
 <section id="mempelai" class="s-couple">
-  <span class="sakura-branch left" aria-hidden="true"><img src="assets/sakura-flowers.svg?v=19" alt="" draggable="false"></span>
-  <span class="sakura-branch right" aria-hidden="true"><img src="assets/sakura-flowers.svg?v=19" alt="" draggable="false"></span>
-  <span class="sakura-garland" aria-hidden="true"><img src="assets/sakura-garland.svg?v=2" alt="" draggable="false"></span>
-  <span class="sakura-crown" aria-hidden="true"><img src="assets/sakura-garland.svg?v=2" alt="" draggable="false"></span>
+  <span class="sakura-top left" aria-hidden="true"><img src="assets/sakura-branch.svg?v=20" alt="" draggable="false"></span>
+  <span class="sakura-top right" aria-hidden="true"><img src="assets/sakura-branch.svg?v=20" alt="" draggable="false"></span>
+  <span class="sakura-bottom" aria-hidden="true"><img src="assets/sakura-branch-h.svg?v=20" alt="" draggable="false"></span>
   <div class="wrap">
     <header class="sec-head reveal">
       <div class="eyebrow">Bismillahirrahmanirrahim</div>
@@ -429,6 +443,6 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="config.js"></script>
-<script src="script.js?v=31"></script>
+<script src="script.js?v=32"></script>
 </body>
 </html>

@@ -9144,13 +9144,13 @@ main > section {
 }
 
 @keyframes envStageIn {
+  /* Hanya memudar: kres yang menempel pada tirai tidak boleh bergeser
+     setelah posisinya diukur, kalau tidak belahan akan meleset 26px. */
   from {
     opacity: 0;
-    transform: translateY(26px);
   }
   to {
     opacity: 1;
-    transform: none;
   }
 }
 
@@ -12988,5 +12988,879 @@ body.open main {
     opacity: 0.6;
     mix-blend-mode: multiply;
     filter: saturate(1.15);
+  }
+}
+
+/* =====================================================================
+   47. TIRAI TERBELAH, MATAHARI PENUH, ORNAMEN MEMPELAI, JOURNEY DI LUAR
+   KARTU, DAN SATU BUKU WEDDING EVENT
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   A. Tirai penuh layar: bingkai tipis dihapus, tepi kain hanya bayangan.
+   Kres heksagonal tinggal di dalam kain kiri dan kanan, sehingga saat
+   tirai ditarik kres benar-benar terbelah dua dan ikut tersapu.
+   --------------------------------------------------------------------- */
+#env .env-frame {
+  display: none !important;
+}
+
+#env .env-curtain-r {
+  filter: none;
+}
+
+#env .env-curtain-l::after,
+#env .env-curtain-r::after {
+  width: clamp(16px, 2.2vw, 30px);
+  border: 0;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(2, 5, 12, 0.2) 56%,
+    rgba(2, 5, 12, 0.46));
+  box-shadow: 8px 0 24px rgba(2, 5, 12, 0.3);
+}
+
+#env .env-curtain-l::after {
+  right: 0;
+  border-right: 0;
+}
+
+#env .env-curtain-r::after {
+  left: 0;
+  border-left: 0;
+  background: linear-gradient(270deg,
+    transparent,
+    rgba(2, 5, 12, 0.2) 56%,
+    rgba(2, 5, 12, 0.46));
+  box-shadow: -8px 0 24px rgba(2, 5, 12, 0.3);
+}
+
+/* Tombol tetap menjadi target ketuk dan fokus, tetapi wujudnya diambil
+   alih oleh dua belahan yang menempel pada tirai. */
+#env .env-crest-hit {
+  position: relative;
+  display: block;
+  flex: none;
+  width: clamp(204px, min(31vw, 42vh), 342px);
+  aspect-ratio: 1 / 1.04;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  filter: none;
+  transition: opacity 0.3s ease;
+}
+
+#env .env-crest-hit::-moz-focus-inner {
+  border: 0;
+}
+
+#env .env-crest-hit:focus-visible {
+  /* Kres sudah diberi cahaya fokus lewat aturan :has di bawah. Jangan
+     memakai outline kotak karena merusak siluet heksagon. */
+  outline: none;
+}
+
+#env:has(.env-crest-hit:focus-visible) .env-crest-hint {
+  color: #fff4d6;
+  text-shadow: 0 0 18px rgba(255, 236, 198, 0.55);
+}
+
+#env.opening .env-crest-hit {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#env {
+  --crest-clip: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+}
+
+#env .env-crest-aura {
+  position: absolute;
+  left: var(--crest-x, 50%);
+  top: var(--crest-y, 50%);
+  z-index: 0;
+  width: calc(var(--crest-w, 327px) * 1.6);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle,
+    rgba(255, 244, 216, 0.62) 0%,
+    rgba(255, 220, 170, 0.34) 30%,
+    rgba(247, 182, 202, 0.16) 52%,
+    rgba(247, 182, 202, 0) 72%);
+  filter: blur(16px);
+  opacity: 0.72;
+  pointer-events: none;
+  transition: opacity 0.55s ease 0.12s;
+}
+
+#env.opening .env-crest-aura {
+  opacity: 0;
+}
+
+#env .env-crest-half {
+  position: absolute;
+  left: var(--crest-x, 50%);
+  top: var(--crest-y, 50%);
+  z-index: 2;
+  display: block;
+  width: var(--crest-w, 327px);
+  height: var(--crest-h, 340px);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: drop-shadow(0 20px 32px rgba(0, 0, 0, 0.46));
+  transition: filter 0.4s ease;
+  will-change: transform;
+}
+
+#env .env-crest-half-l {
+  clip-path: polygon(50% 0%, 7% 25%, 7% 75%, 50% 100%);
+}
+
+#env .env-crest-half-r {
+  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%);
+}
+
+#env .env-crest-half .env-crest-frame {
+  position: absolute;
+  inset: 0;
+  display: block;
+  clip-path: var(--crest-clip);
+}
+
+#env .env-crest-half .env-crest-face {
+  position: absolute;
+  inset: 4.4%;
+  display: grid;
+  place-items: center;
+  clip-path: var(--crest-clip);
+}
+
+#env .env-crest-half .env-crest-copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.3rem, 1.1vh, 0.58rem);
+  width: 70%;
+  text-align: center;
+}
+
+#env:has(.env-crest-hit:hover) .env-crest-frame {
+  background:
+    linear-gradient(150deg,
+      #fffdf3 0%,
+      #f6e3bd 24%,
+      #d4ab70 48%,
+      #fff2d5 68%,
+      #c99e64 88%,
+      #f0ddb5 100%);
+}
+
+#env:has(.env-crest-hit:focus-visible) .env-crest-half {
+  filter:
+    drop-shadow(0 20px 32px rgba(0, 0, 0, 0.42))
+    drop-shadow(0 0 26px rgba(255, 236, 198, 0.6));
+}
+
+/* Teks ikut terbelah bersama bingkai, bukan menghilang lebih dulu. */
+#env.opening .env-crest-copy {
+  animation: none !important;
+  clip-path: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Sinar matahari: lapisan ini berada di atas kain supaya berkasnya benar-
+   benar menerpa tirai, bukan tersembunyi di belakangnya. */
+#env .env-rays {
+  position: absolute;
+  left: 50%;
+  top: 71%;
+  z-index: 5;
+  width: 215vmin;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    repeating-conic-gradient(from 4deg at 50% 50%,
+      rgba(255, 252, 238, 0.95) 0deg 1.05deg,
+      rgba(255, 229, 172, 0.4) 1.05deg 2.4deg,
+      rgba(255, 218, 154, 0) 2.4deg 7.4deg),
+    radial-gradient(circle at 50% 50%,
+      rgba(255, 254, 247, 0.98) 0%,
+      rgba(255, 242, 204, 0.9) 9%,
+      rgba(255, 218, 158, 0.46) 24%,
+      rgba(255, 200, 142, 0.14) 42%,
+      rgba(255, 200, 142, 0) 60%);
+  -webkit-mask-image: radial-gradient(closest-side,
+    #000 0 16%,
+    rgba(0, 0, 0, 0.92) 38%,
+    rgba(0, 0, 0, 0.58) 62%,
+    rgba(0, 0, 0, 0.2) 78%,
+    transparent 90%);
+  mask-image: radial-gradient(closest-side,
+    #000 0 16%,
+    rgba(0, 0, 0, 0.92) 38%,
+    rgba(0, 0, 0, 0.58) 62%,
+    rgba(0, 0, 0, 0.2) 78%,
+    transparent 90%);
+  mix-blend-mode: screen;
+  filter: blur(0.5px) saturate(1.12);
+  transform: translate(-50%, -50%) scale(0.6) rotate(-5deg);
+  will-change: transform, opacity;
+}
+
+#env .env-rays::before {
+  content: "";
+  position: absolute;
+  inset: 9%;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from 18deg at 50% 50%,
+    rgba(255, 247, 221, 0.72) 0deg 1.7deg,
+    rgba(255, 233, 184, 0.2) 1.7deg 3.4deg,
+    transparent 3.4deg 12deg);
+  -webkit-mask-image: radial-gradient(closest-side,
+    transparent 7%,
+    #000 22%,
+    rgba(0, 0, 0, 0.52) 56%,
+    transparent 84%);
+  mask-image: radial-gradient(closest-side,
+    transparent 7%,
+    #000 22%,
+    rgba(0, 0, 0, 0.52) 56%,
+    transparent 84%);
+  mix-blend-mode: screen;
+  animation: envRaySpin 28s linear infinite;
+}
+
+#env.opening .env-rays {
+  animation: envSunBlaze 2.65s cubic-bezier(0.18, 0.7, 0.18, 1) 0.05s forwards;
+}
+
+@keyframes envSunBlaze {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.55) rotate(-7deg);
+  }
+  16% {
+    opacity: 0.42;
+  }
+  34% {
+    opacity: 0.96;
+    transform: translate(-50%, -50%) scale(0.98) rotate(-1deg);
+  }
+  58% {
+    opacity: 0.88;
+    transform: translate(-50%, -50%) scale(1.08) rotate(2deg);
+  }
+  82% {
+    opacity: 0.34;
+    transform: translate(-50%, -50%) scale(1.18) rotate(4deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.3) rotate(6deg);
+  }
+}
+
+@keyframes envRaySpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Matahari sendiri dibuat lebih panas; pusatnya nyaris putih. */
+#env .env-sun {
+  width: min(60vmin, 570px);
+  background:
+    radial-gradient(circle,
+      rgba(255, 254, 246, 1) 0%,
+      rgba(255, 242, 198, 0.98) 12%,
+      rgba(255, 218, 150, 0.9) 28%,
+      rgba(255, 186, 116, 0.55) 46%,
+      rgba(246, 158, 116, 0.2) 64%,
+      rgba(246, 158, 116, 0) 78%);
+  filter: blur(5px);
+}
+
+#env.opening .env-sun {
+  animation: envSunriseBlaze 2.7s cubic-bezier(0.2, 0.72, 0.18, 1) 0.02s forwards;
+}
+
+@keyframes envSunriseBlaze {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 36%) scale(0.86);
+    filter: blur(16px);
+  }
+  20% {
+    opacity: 0.72;
+    filter: blur(9px);
+  }
+  52% {
+    opacity: 1;
+    transform: translate(-50%, 8%) scale(1.02);
+    filter: blur(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1.1);
+    filter: blur(1px);
+  }
+}
+
+#env .env-light {
+  z-index: 4;
+}
+
+/* ---------------------------------------------------------------------
+   B. Ornamen Mempelai: dua ranting sakura di sudut atas dan satu untaian
+   mendatar yang menyambung di bawah. Tidak ada mahkota bunga penuh.
+   --------------------------------------------------------------------- */
+#mempelai > .sakura-top,
+#mempelai > .sakura-bottom {
+  position: absolute;
+  z-index: 0;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+#mempelai > .sakura-top {
+  top: clamp(-4.6rem, -5.4vw, -2.2rem);
+  height: clamp(292px, 37vw, 510px);
+  aspect-ratio: 200 / 780;
+  opacity: 0.56;
+  filter:
+    saturate(0.94)
+    drop-shadow(0 0 22px rgba(234, 131, 167, 0.16))
+    drop-shadow(0 14px 25px rgba(3, 7, 18, 0.5));
+}
+
+#mempelai > .sakura-top.left {
+  left: clamp(-54px, -2.4vw, -10px);
+}
+
+#mempelai > .sakura-top.right {
+  right: clamp(-54px, -2.4vw, -10px);
+  transform: scaleX(-1);
+}
+
+#mempelai > .sakura-bottom {
+  left: 50%;
+  bottom: clamp(-3.4rem, -2.8vw, -1.2rem);
+  width: min(1040px, 108vw);
+  aspect-ratio: 820 / 210;
+  transform: translateX(-50%);
+  opacity: 0.62;
+  filter:
+    saturate(1.02)
+    drop-shadow(0 0 24px rgba(234, 131, 167, 0.16))
+    drop-shadow(0 12px 22px rgba(3, 7, 18, 0.44));
+}
+
+#mempelai > .sakura-top img,
+#mempelai > .sakura-bottom img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* Bunga pada bingkai foto lebih kecil di desktop; tablet & ponsel tetap. */
+@media (min-width: 1024px) {
+  /* Selektor dibuat sepanjang aturan lama agar benar-benar menang
+     spesifisitas, bukan sekadar menambah aturan yang kalah. */
+  #mempelai .pair > .person:first-child .ph > .floral.flower {
+    --fw: clamp(70px, 7.2vw, 90px);
+  }
+
+  #mempelai .pair > .person:last-child .ph > .floral.flower {
+    --fw: clamp(64px, 6.6vw, 82px);
+  }
+}
+
+@media (max-width: 1023.98px) {
+  #mempelai > .sakura-top {
+    height: clamp(240px, 32vw, 330px);
+    opacity: 0.46;
+  }
+
+  #mempelai > .sakura-bottom {
+    width: min(780px, 120vw);
+    opacity: 0.54;
+  }
+}
+
+@media (max-width: 599.98px) {
+  #mempelai > .sakura-top {
+    top: -2.4rem;
+    height: 248px;
+    opacity: 0.4;
+  }
+
+  #mempelai > .sakura-top.left {
+    left: -38px;
+  }
+
+  #mempelai > .sakura-top.right {
+    right: -38px;
+  }
+
+  #mempelai > .sakura-bottom {
+    width: 128vw;
+    bottom: -2.1rem;
+    opacity: 0.5;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   C. Bunga penutup tertiup angin kencang tanpa henti.
+   --------------------------------------------------------------------- */
+.s-closing > .floral.flower.run .fl-in {
+  transform-origin: 50% 92%;
+  will-change: transform;
+  animation: closingGale 2.15s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite both;
+}
+
+.s-closing > .floral.flower.run .tw1 {
+  transform-origin: 58% 72%;
+  animation: closingTwist 1.35s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite both;
+}
+
+@keyframes closingGale {
+  0% {
+    transform: rotate(-7deg) translate3d(-2px, 0, 0);
+  }
+  14% {
+    transform: rotate(9deg) translate3d(3px, -3px, 0);
+  }
+  28% {
+    transform: rotate(-3.5deg) translate3d(-1px, 1px, 0);
+  }
+  43% {
+    transform: rotate(12deg) translate3d(4px, -2px, 0);
+  }
+  57% {
+    transform: rotate(-5deg) translate3d(-2px, 0, 0);
+  }
+  71% {
+    transform: rotate(8.5deg) translate3d(2.5px, -2px, 0);
+  }
+  86% {
+    transform: rotate(-2deg) translate3d(-1px, 1px, 0);
+  }
+  100% {
+    transform: rotate(-7deg) translate3d(-2px, 0, 0);
+  }
+}
+
+@keyframes closingTwist {
+  0%, 100% {
+    transform: rotate(-4.5deg);
+  }
+  38% {
+    transform: rotate(5.5deg);
+  }
+  64% {
+    transform: rotate(-2deg);
+  }
+  82% {
+    transform: rotate(3.5deg);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   D. Our Journey: rel di luar kartu, garis tepat di pusat titik.
+   Sebelum tergulir titik berwarna cream; setelah tergulir menjadi pink
+   muda transparan yang minimalis.
+   --------------------------------------------------------------------- */
+#cerita .jr {
+  --jr-gutter: clamp(36px, 4vw, 48px);
+  --jr-dot: clamp(20px, 2vw, 24px);
+  position: relative;
+  max-width: 828px;
+  padding-left: var(--jr-gutter);
+}
+
+#cerita .jr-item {
+  z-index: 1;
+  overflow: visible;
+}
+
+#cerita .jr-track,
+#cerita .jr-line {
+  z-index: 0;
+  width: 3px;
+  margin-left: -1.5px;
+  border-radius: 3px;
+}
+
+#cerita .jr-track {
+  background: rgba(229, 207, 168, 0.46);
+  box-shadow: none;
+}
+
+#cerita .jr-line {
+  background: linear-gradient(180deg,
+    rgba(247, 182, 202, 0.66) 0%,
+    rgba(234, 131, 167, 0.54) 52%,
+    rgba(217, 85, 127, 0.4) 100%);
+  box-shadow: 0 0 8px rgba(234, 131, 167, 0.16);
+}
+
+#cerita .jr-head {
+  position: relative;
+}
+
+#cerita .jr-num {
+  position: absolute;
+  left: calc((var(--jr-gutter) + var(--jr-dot)) / -2);
+  top: 50%;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: var(--jr-dot);
+  height: var(--jr-dot);
+  min-width: 0;
+  margin-top: calc(var(--jr-dot) * -0.5);
+  border: 1px solid rgba(178, 135, 78, 0.38);
+  border-radius: 50%;
+  background: #fbf1dc;
+  box-shadow:
+    0 0 0 3px rgba(255, 250, 240, 0.52),
+    0 3px 9px rgba(23, 35, 74, 0.14);
+  color: transparent;
+  font-size: 0;
+  transition:
+    background 0.45s ease,
+    border-color 0.45s ease,
+    box-shadow 0.45s ease;
+}
+
+#cerita .jr-num::after {
+  content: "";
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(178, 135, 78, 0.58);
+  box-shadow: none;
+  transform: none;
+  transition:
+    background 0.45s ease,
+    box-shadow 0.45s ease;
+}
+
+#cerita .jr-item.lit .jr-num {
+  background: rgba(247, 182, 202, 0.3);
+  border-color: rgba(217, 85, 127, 0.58);
+  box-shadow:
+    0 0 0 3px rgba(247, 182, 202, 0.13),
+    0 0 14px rgba(234, 131, 167, 0.26);
+  animation: jrDotGlow 2.7s ease-in-out infinite;
+}
+
+#cerita .jr-item.lit .jr-num::after {
+  background: var(--pink-deep);
+  box-shadow: 0 0 6px rgba(217, 85, 127, 0.55);
+}
+
+@keyframes jrDotGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 0 3px rgba(247, 182, 202, 0.13),
+      0 0 12px rgba(234, 131, 167, 0.22);
+  }
+  50% {
+    box-shadow:
+      0 0 0 5px rgba(247, 182, 202, 0.06),
+      0 0 20px rgba(234, 131, 167, 0.38);
+  }
+}
+
+/* Teks panel sejajar dengan judul, bukan dengan titik di luar kartu. */
+#cerita .jr-panel-in p {
+  padding-left: clamp(0.75rem, 2.4vw, 1.05rem);
+}
+
+@media (max-width: 599.98px) {
+  #cerita .jr {
+    --jr-gutter: 36px;
+    --jr-dot: 20px;
+    padding-left: var(--jr-gutter);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   E. Wedding Event: satu buku dengan punggung di tengah. Kedua halaman
+   sekarang berisi satu acara utuh; tidak ada bingkai per kartu.
+   --------------------------------------------------------------------- */
+#acara .ev {
+  display: block;
+  max-width: 930px;
+  padding: clamp(8px, 1vw, 12px);
+}
+
+#acara .ev-pages {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-radius: 20px;
+}
+
+#acara .ev:has(.evc:only-child) .ev-pages {
+  grid-template-columns: 1fr;
+}
+
+#acara .evc {
+  display: flex;
+  flex-direction: column;
+  min-height: clamp(288px, 35vh, 346px);
+  overflow: hidden;
+}
+
+#acara .evc:first-child {
+  border-radius: 20px 0 0 20px;
+  box-shadow: inset -22px 0 32px -26px rgba(0, 0, 0, 0.9);
+}
+
+#acara .evc:last-child {
+  border-radius: 0 20px 20px 0;
+  box-shadow: inset 22px 0 32px -26px rgba(0, 0, 0, 0.9);
+}
+
+#acara .evc:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+#acara .evc:first-child:hover {
+  box-shadow: inset -22px 0 32px -26px rgba(0, 0, 0, 0.9);
+}
+
+#acara .evc:last-child:hover {
+  box-shadow: inset 22px 0 32px -26px rgba(0, 0, 0, 0.9);
+}
+
+#acara .ev:has(.evc:only-child) .evc {
+  border-radius: 20px;
+  box-shadow: none;
+}
+
+#acara .evp {
+  width: 100%;
+  height: clamp(150px, 18vw, 206px);
+  min-height: 0;
+  aspect-ratio: auto;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+#acara .evc:first-child .evp {
+  border-radius: 13px 0 0 0;
+}
+
+#acara .evc:last-child .evp {
+  border-radius: 0 13px 0 0;
+}
+
+#acara .ev:has(.evc:only-child) .evp {
+  border-radius: 13px 13px 0 0;
+}
+
+#acara .evb {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0.9rem, 1.6vw, 1.15rem) clamp(0.8rem, 1.4vw, 1.1rem) clamp(1rem, 1.8vw, 1.3rem);
+  text-align: center;
+}
+
+#acara .ev-eyebrow {
+  justify-content: center;
+}
+
+#acara .evb .btn {
+  margin-top: clamp(0.65rem, 1.4vh, 0.9rem);
+}
+
+#acara .ev::before {
+  z-index: 3;
+}
+
+#acara .ev::after {
+  z-index: 4;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Jangan memakai clip-path pada pembungkus: area yang terpotong 50%
+     membuat IntersectionObserver menganggap kedua halaman tidak pernah
+     terlihat, sehingga buku tidak pernah terbuka. Bukaan dari tengah
+     dibentuk oleh rotasi tiap halaman dari punggungnya. */
+  html.js #acara .ev .evc.reveal {
+    opacity: 0;
+    transform: perspective(1200px) rotateY(58deg) translateZ(2px) scale(0.99);
+    transform-origin: 100% 50%;
+    transition:
+      opacity 0.6s ease 0.08s,
+      transform 1.2s cubic-bezier(0.22, 0.75, 0.2, 1) 0.08s;
+    backface-visibility: hidden;
+    will-change: transform;
+  }
+
+  html.js #acara .ev .evc.reveal:last-child {
+    transform: perspective(1200px) rotateY(-58deg) translateZ(2px) scale(0.99);
+    transform-origin: 0% 50%;
+    transition-delay: 0.18s, 0.18s;
+  }
+
+  html.js #acara .ev .evc.reveal.is-in {
+    opacity: 1;
+    transform: perspective(1200px) rotateY(0deg) translateZ(0) scale(1);
+  }
+}
+
+@media (max-width: 899.98px) {
+  #acara .evc {
+    min-height: clamp(270px, 34vh, 320px);
+  }
+
+  #acara .evp {
+    height: clamp(132px, 20vh, 180px);
+  }
+
+  #acara .evb {
+    padding: 0.8rem 0.68rem 0.95rem;
+  }
+}
+
+@media (max-width: 599.98px) {
+  #acara .ev {
+    padding: 6px;
+    border-radius: 18px;
+  }
+
+  #acara .ev-pages,
+  #acara .evc:first-child {
+    border-radius: 14px 0 0 14px;
+  }
+
+  #acara .evc:last-child {
+    border-radius: 0 14px 14px 0;
+  }
+
+  #acara .ev:has(.evc:only-child) .ev-pages,
+  #acara .ev:has(.evc:only-child) .evc {
+    border-radius: 14px;
+  }
+
+  #acara .evc {
+    min-height: 282px;
+  }
+
+  #acara .evp {
+    height: clamp(104px, 15vh, 132px);
+  }
+
+  #acara .evb {
+    justify-content: flex-start;
+    padding: 0.72rem 0.58rem 0.85rem;
+  }
+
+  #acara .evb h3 {
+    font-size: clamp(0.98rem, 0.9rem + 0.4vw, 1.2rem);
+  }
+
+  #acara .ev-date {
+    font-size: 0.62rem;
+  }
+
+  #acara .evb .btn {
+    margin-top: 0.58rem;
+    padding: 0.4rem 0.56rem;
+    font-size: 0.54rem;
+  }
+
+  #acara .evp-fallback .evp-mono {
+    font-size: clamp(1.6rem, 8vw, 2.2rem);
+  }
+
+  #acara .evp-fallback .evp-name {
+    font-size: 0.5rem;
+  }
+}
+
+@media (max-width: 359.98px) {
+  #acara .evb {
+    padding-inline: 0.42rem;
+  }
+
+  #acara .evb h3 {
+    font-size: 0.9rem;
+  }
+
+  #acara .evb .btn {
+    padding-inline: 0.42rem;
+    font-size: 0.5rem;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   F. Gerak minimal: tidak ada kilau yang bergerak atau buku yang berputar.
+   --------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  #env .env-rays,
+  #env .env-sun {
+    display: none !important;
+  }
+
+  #env .env-crest-aura,
+  .s-closing > .floral.flower.run .fl-in,
+  .s-closing > .floral.flower.run .tw1,
+  #cerita .jr-item.lit .jr-num {
+    animation: none !important;
+  }
+
+  html.js #acara .ev-pages,
+  html.js #acara .ev .evc.reveal {
+    clip-path: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Layar sangat pendek tetap memberi ruang untuk sinar dan matahari. */
+@media (max-height: 620px) {
+  #env .env-rays {
+    width: 230vmin;
+    top: 73%;
+  }
+
+  #env .env-sun {
+    width: min(64vmin, 460px);
+  }
+}
+
+@media (max-width: 599.98px) {
+  #env .env-rays {
+    width: 232vmin;
+    top: 73%;
+  }
+
+  #env .env-sun {
+    width: 70vmin;
   }
 }
