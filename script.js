@@ -332,14 +332,10 @@ function renderContent() {
         <div class="ev-eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg> ${esc(e.time)}</div>
         <h3>${esc(e.name)}</h3>
         <p class="ev-date">${esc(e.label)}</p>
-        <button class="btn ghost" type="button" data-ics="${i}">${ic("calendar")} Simpan ke kalender</button>
+        <a class="btn ghost" href="${calendarURL(e)}" target="_blank" rel="noopener">${ic("calendar")} Google Calendar</a>
       </div>
     </article>`).join("");
 
-    evEl.onclick = e => {
-      const btn = e.target.closest("[data-ics]");
-      if (btn) ics(evs[+btn.dataset.ics]);
-    };
     initEventPointer(evEl);
   }
 
@@ -500,30 +496,24 @@ function startCountdown(target) {
 }
 
 
-/* ====== 6. CALENDAR (ICS) ====== */
+/* ====== 6. GOOGLE CALENDAR ====== */
 /**
- * Mengunduh file berkas kalender iCalendar (.ics) untuk jadwal acara
+ * Membuat tautan "Tambah ke Google Calendar" untuk satu jadwal acara.
+ * Tanggal dikirim dalam UTC agar zona waktu Asia/Jakarta tetap tepat.
  * @param {Object} e - Objek jadwal acara
+ * @returns {string} URL template Google Calendar
  */
-function ics(e) {
-  const f = d => new Date(d).toISOString().replace(/[-:]|\.\d{3}/g, "");
-  const text = s => String(s).replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
-  const now = f(new Date());
-  const uid = `${now}-${Math.random().toString(36).slice(2, 10)}@wedding-invitation`;
-  const lines = [
-    "BEGIN:VCALENDAR", "VERSION:2.0", "CALSCALE:GREGORIAN", "PRODID:-//Undangan Pernikahan//ID",
-    "BEGIN:VEVENT", `UID:${uid}`, `DTSTAMP:${now}`,
-    `DTSTART:${f(e.start)}`, `DTEND:${f(e.end)}`,
-    `SUMMARY:${text(`${e.name} ${a.nick} & ${b.nick}`)}`, `LOCATION:${text(C.venue)}`,
-    `DESCRIPTION:${text("Merupakan kehormatan apabila Anda berkenan hadir.")}`,
-    "END:VEVENT", "END:VCALENDAR"
-  ].join("\r\n");
-  const url = URL.createObjectURL(new Blob([lines], { type: "text/calendar" }));
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `${e.name}.ics`;
-  link.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+function calendarURL(e) {
+  const stamp = d => new Date(d).toISOString().replace(/[-:]|\.\d{3}/g, "");
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: `${e.name} — ${a.nick} & ${b.nick}`,
+    dates: `${stamp(e.start)}/${stamp(e.end)}`,
+    details: "Merupakan kehormatan apabila Anda berkenan hadir dan memberikan doa restu.",
+    location: C.venue,
+    ctz: "Asia/Jakarta"
+  });
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 
 
@@ -1047,15 +1037,15 @@ function initJourney() {
 
 
 /* ====== 7e. GARIS THE JOURNEY ======
-   Titik tanpa nomor menyala saat garis mencapainya. Warna garis, titik,
-   dan butir cahaya bergerak mengikuti scroll dari navy ke rose lalu cream.
+   Titik tanpa nomor menyala saat garis mencapainya. Warna garis dan titik
+   bergerak mengikuti scroll dari deep pink ke pink lalu champagne cream.
    Posisi dihitung dari titik baris yang sebenarnya, jadi tetap sejajar di
    ponsel, tablet, dan desktop. */
-const JR_STOPS = [[23, 35, 74], [234, 131, 167], [229, 207, 168]];
-const JL = { el: null, track: null, line: null, spark: null, items: [], offs: [], lit: [], top: 0, len: 1, docTop: 0, active: false, raf: 0, lastP: -1 };
+const JR_STOPS = [[217, 85, 127], [234, 131, 167], [229, 207, 168]];
+const JL = { el: null, track: null, line: null, items: [], offs: [], lit: [], top: 0, len: 1, docTop: 0, active: false, raf: 0, lastP: -1 };
 
 /**
- * Mencampur warna palet navy → rose → cream sesuai progres scroll.
+ * Mencampur warna palet deep pink → pink → champagne cream sesuai progres scroll.
  * @param {number} p Progres 0..1
  * @returns {string} Warna rgb()
  */
@@ -1086,17 +1076,9 @@ function mountJourneyLine() {
     el.prepend(track, line);
   }
 
-  if (!el.querySelector(":scope > .jr-spark")) {
-    const spark = document.createElement("span");
-    spark.className = "jr-spark";
-    spark.setAttribute("aria-hidden", "true");
-    el.appendChild(spark);
-  }
-
   JL.el = el;
   JL.track = el.querySelector(":scope > .jr-track");
   JL.line = el.querySelector(":scope > .jr-line");
-  JL.spark = el.querySelector(":scope > .jr-spark");
   return JL.track && JL.line ? JL.line : null;
 }
 
@@ -1135,13 +1117,12 @@ function layoutJourneyLine() {
     el.style.height = t.len + "px";
   });
 
-  if (t.spark) t.spark.style.left = x + "px";
   t.lastP = -1;
 }
 
 /**
- * Mengisi garis sesuai posisi scroll, menyalakan titik, dan menggeser
- * butir cahaya yang warnanya ikut berubah.
+ * Mengisi garis sesuai posisi scroll dan menyalakan titik saat garis
+ * mencapainya. Titik memakai warna yang sama dengan garis agar menyatu.
  */
 function updateJourneyLine() {
   const t = JL;
@@ -1153,11 +1134,6 @@ function updateJourneyLine() {
 
   if (Math.abs(p - t.lastP) > 0.0005) {
     t.line.style.transform = `scaleY(${p.toFixed(4)})`;
-    if (t.spark) {
-      const c = journeyColor(p);
-      t.spark.style.top = (t.top + p * t.len) + "px";
-      t.spark.style.setProperty("--spark-c", c);
-    }
     t.lastP = p;
   }
 
