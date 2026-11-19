@@ -14255,3 +14255,184 @@ body.open main {
     transform: none;
   }
 }
+
+/* =====================================================================
+   49. AMPERSAND KRES, TOMBOL PINK, JOURNEY PRESISI, SAKURA MENYAMBUNG
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   A. Ampersand di tengah R dan D. Dipasang sebagai satu overlay di atas
+   kedua belahan sehingga tidak ikut terpotong saat tirai terbuka.
+   --------------------------------------------------------------------- */
+#env .env-crest-amp {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 5;
+  display: block;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-script);
+  font-size: clamp(1.5rem, 3.1vw, 2.6rem);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+  background: linear-gradient(180deg, #fff6df 6%, #efd3a0 44%, #d6a45f 76%, #b9813d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter:
+    drop-shadow(0 1px 1px rgba(4, 8, 18, 0.55))
+    drop-shadow(0 0 10px rgba(247, 182, 202, 0.34));
+  opacity: 0.98;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+}
+
+#env:has(.env-crest-hit:focus-visible) .env-crest-amp {
+  filter:
+    drop-shadow(0 1px 1px rgba(4, 8, 18, 0.5))
+    drop-shadow(0 0 14px rgba(255, 236, 198, 0.5));
+}
+
+#env.opening .env-crest-amp {
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+/* ---------------------------------------------------------------------
+   B. Tombol "Buka undangan": pink yang pekat tanpa pita putih lebar.
+   --------------------------------------------------------------------- */
+#cover #openBtn.btn-open {
+  background: linear-gradient(135deg, #f4a1bc 0%, #e97ea7 46%, #cf4f7e 100%);
+}
+
+#cover #openBtn.btn-open:hover,
+#cover #openBtn.btn-open:focus-visible {
+  background: linear-gradient(135deg, #f6a9c2 0%, #e97ca6 46%, #cc4d7c 100%);
+  border-color: rgba(255, 226, 238, 0.72);
+  box-shadow:
+    0 18px 34px -14px rgba(217, 92, 135, 0.78),
+    0 0 34px rgba(249, 173, 195, 0.34),
+    inset 0 1px 0 rgba(255, 232, 242, 0.38),
+    inset 0 -2px 10px rgba(150, 32, 72, 0.18);
+}
+
+/* Kilau putih bawaan .btn tidak dipakai pada tombol pembuka. */
+#cover #openBtn.btn-open::before {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------------
+   C. The Journey: kartu masuk lurus ke atas supaya titik tidak bergeser
+   dari garis, dan titik kecil tumbuh tepat di pusat lingkaran.
+   --------------------------------------------------------------------- */
+html.js #cerita .jr-item.reveal,
+#cerita .jr-item.reveal {
+  transform: translate3d(0, 18px, 0);
+  transform-origin: 50% 0%;
+}
+
+html.js #cerita .jr-item.reveal.is-in,
+#cerita .jr-item.reveal.is-in {
+  transform: translate3d(0, 0, 0);
+}
+
+#cerita .jr-num::after {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes jrDotDown {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   D. Sakura Mempelai: tangkai kiri dan kanan turun menyentuh rangkaian
+   bawah. Garland memakai jumlah petak bulat supaya tepi layar jatuh pada
+   tangkai, bukan memotong bunga.
+   --------------------------------------------------------------------- */
+#mempelai {
+  --sakura-band-h: clamp(78px, 9vw, 132px);
+}
+
+#mempelai > .sakura-top {
+  top: 0;
+  bottom: calc(var(--sakura-band-h) * 0.45);
+  width: auto;
+  height: auto;
+  aspect-ratio: 160 / 1460;
+  opacity: 0.56;
+}
+
+#mempelai > .sakura-top.left {
+  left: -6px;
+  right: auto;
+}
+
+#mempelai > .sakura-top.right {
+  right: -6px;
+  left: auto;
+  transform: scaleX(-1);
+}
+
+#mempelai > .sakura-bottom {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: var(--sakura-band-h);
+  aspect-ratio: auto;
+  transform: none;
+  opacity: 0.52;
+  background: url("assets/sakura-branch-h.svg?v=22") left bottom / calc(100% / 3) 100% repeat-x;
+}
+
+@media (max-width: 1023.98px) {
+  #mempelai > .sakura-top,
+  #mempelai > .sakura-bottom {
+    opacity: 0.46;
+  }
+}
+
+@media (max-width: 699.98px) {
+  #mempelai > .sakura-bottom {
+    background-size: calc(100% / 2) 100%;
+  }
+}
+
+@media (max-width: 599.98px) {
+  #mempelai {
+    --sakura-band-h: clamp(56px, 15vw, 82px);
+  }
+
+  /* Di layar sempit ranting dirapatkan ke tepi supaya bunganya tidak
+     menutupi kartu dan teks, tetapi tetap menyambung ke garland bawah. */
+  #mempelai > .sakura-top.left {
+    left: -4px;
+    transform: scaleX(0.58);
+    transform-origin: left center;
+    opacity: 0.34;
+  }
+
+  #mempelai > .sakura-top.right {
+    right: -4px;
+    transform: scaleX(0.58);
+    transform-origin: right center;
+    opacity: 0.34;
+  }
+
+  #mempelai > .sakura-top.right img {
+    transform: scaleX(-1);
+  }
+}
