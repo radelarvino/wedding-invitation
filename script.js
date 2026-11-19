@@ -1094,24 +1094,35 @@ function layoutJourneyLine() {
   t.items = [...t.el.querySelectorAll(".jr-item")];
   if (!t.items.length) return;
 
-  const ys = t.items.map(it => {
+  /* Ukur dari kotak render sebenarnya, bukan offsetLeft/offsetTop yang
+     dibulatkan ke piksel penuh. Pada lebar tertentu (mis. 1024 dan 1150)
+     pembulatan itu membuat garis meleset setengah piksel dari titik. */
+  const jrRect = t.el.getBoundingClientRect();
+  const pts = t.items.map(it => {
     const num = it.querySelector(".jr-num");
-    if (!num) return it.offsetTop + 16;
-    return it.offsetTop + num.offsetTop + num.offsetHeight / 2;
+    const r = (num || it).getBoundingClientRect();
+    /* Kartu masuk dengan translasi Y. Kurangi agar garis mengacu ke posisi
+       akhir titik, bukan posisi sementara saat animasi reveal berjalan. */
+    let dx = 0, dy = 0;
+    const tr = getComputedStyle(it).transform;
+    if (tr && tr !== "none") {
+      try {
+        const m = new DOMMatrixReadOnly(tr);
+        dx = m.m41;
+        dy = m.m42;
+      } catch (_) {}
+    }
+    return {
+      x: r.left - jrRect.left + r.width / 2 - dx,
+      y: r.top - jrRect.top + r.height / 2 - dy
+    };
   });
 
-  const firstNum = t.items[0].querySelector(".jr-num");
-  /* Titik berada di dalam border 1px kartu, sedangkan garis berada di
-     koordinat .jr. Sertakan border itu agar pusat garis benar-benar jatuh
-     di pusat lingkaran, bukan meleset 1px. */
-  const firstBorder = parseFloat(getComputedStyle(t.items[0]).borderLeftWidth) || 0;
-  const x = t.items[0].offsetLeft + firstBorder +
-    (firstNum ? firstNum.offsetLeft + firstNum.offsetWidth / 2 : 16);
-
-  t.top = ys[0];
-  t.len = Math.max(1, ys[ys.length - 1] - ys[0]);
-  t.offs = ys.map(y => y - ys[0]);
-  t.docTop = t.el.getBoundingClientRect().top + scrollY;
+  const x = pts[0].x;
+  t.top = pts[0].y;
+  t.len = Math.max(1, pts[pts.length - 1].y - t.top);
+  t.offs = pts.map(p => p.y - t.top);
+  t.docTop = jrRect.top + scrollY;
 
   /* Tiap titik membawa warnanya sendiri, mengikuti urutan perjalanan. */
   t.items.forEach((it, i) => {
