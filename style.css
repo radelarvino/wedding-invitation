@@ -14444,3 +14444,12 @@ html.js #cerita .jr-item.lit .jr-num::after {
     transform: scaleX(-1);
   }
 }
+
+/* ---------------------------------------------------------------------
+   E. Ornamen sisi kiri dan kanan Mempelai dihilangkan. Rangkaian sakura
+   bawah tetap dipertahankan.
+   --------------------------------------------------------------------- */
+#mempelai > .sakura-top.left,
+#mempelai > .sakura-top.right {
+  display: none !important;
+}
