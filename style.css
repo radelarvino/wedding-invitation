@@ -13864,3 +13864,394 @@ body.open main {
     width: 70vmin;
   }
 }
+
+/* =====================================================================
+   48. PENYEMPURNAAN AKHIR: TIRAI MENYAMBUNG, KRES TAJAM, PALET SAKURA,
+   JOURNEY TURUN, BUKU EVENT, DAN NAMA FOOTER MASUK-KELUAR
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   A. Tirai: valance lama yang memotong sambungan atas dihapus. Kain kiri
+   dan kanan dibuat saling menimpa sedikit, tanpa bayangan gelap di tengah,
+   sehingga bagian atas tampak satu lembar dan kres tidak ikut keruh.
+   --------------------------------------------------------------------- */
+#env .env-valance {
+  display: none !important;
+}
+
+#env .env-curtains {
+  perspective: 1600px;
+  transform: none;
+}
+
+#env.opening .env-curtains {
+  transform: none;
+}
+
+#env .env-curtain {
+  flex: 0 0 50.5%;
+  width: 50.5%;
+  box-shadow: inset 0 0 90px rgba(2, 5, 12, 0.38);
+}
+
+/* Cermin gradien tirai kanan supaya pertemuan di tengah sama gelapnya
+   dari kedua sisi dan tidak tampak sebagai celah. */
+#env .env-curtain-r {
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(255, 246, 228, 0.075) 0,
+      rgba(255, 246, 228, 0.02) 1.4%,
+      rgba(3, 8, 20, 0.2) 3.2%,
+      rgba(3, 8, 20, 0.06) 5%,
+      transparent 7.2%),
+    radial-gradient(75% 46% at 50% 0%, rgba(234, 131, 167, 0.16), transparent 70%),
+    linear-gradient(202deg, #22345f 0%, #16264c 42%, #0a1430 74%, #050a18 100%);
+  filter: none;
+}
+
+#env .env-curtain-l::after,
+#env .env-curtain-r::after {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------------
+   B. Kres: emas lebih pekat, dua belahan tetap tajam, dan inisial dibagi
+   R di kiri / D di kanan tanpa ampersand.
+   --------------------------------------------------------------------- */
+/* Bayangan di tiap belahan menumpuk ke separuh lainnya dan membuat warna
+   heksagon tampak berbeda. Tidak ada filter: kres sepenuhnya tajam. */
+#env .env-crest-half,
+#env:has(.env-crest-hit:hover) .env-crest-half,
+#env:has(.env-crest-hit:focus-visible) .env-crest-half {
+  filter: none;
+  /* Layer sendiri membuat clip-path dievaluasi setelah frame dan wajah
+     digabung, sehingga tidak ada garis emas tipis di tengah. */
+  will-change: transform;
+}
+
+/* Aura lama hanya ada di tirai kiri, sehingga cahayanya terpotong tepat di
+   tengah dan menodai separuh heksagon. Aura itu dihapus agar isi kres
+   menyatu dari sisi kiri ke kanan. */
+#env .env-crest-aura {
+  display: none;
+}
+
+/* Kedua belahan berbagi tepi tepat di 50%. Tepi clip-path yang bertemu
+   menyisakan garis rambut anti-alias berwarna emas. Tiap belahan kini
+   melewati tengah sedikit sehingga saling menutup tanpa celah. */
+#env .env-crest-half-l {
+  clip-path: polygon(50% 0%, 7% 25%, 7% 75%, 50% 100%, 50.6% 100%, 50.6% 0%);
+}
+
+#env .env-crest-half-r {
+  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 49.4% 100%, 49.4% 0%);
+}
+
+#env .env-crest-frame {
+  background:
+    linear-gradient(150deg,
+      #ffe9b7 0%,
+      #f3c97e 18%,
+      #d0954a 38%,
+      #ffe1a0 54%,
+      #b8772f 72%,
+      #f2cf8e 88%,
+      #d6a251 100%);
+}
+
+#env .env-crest-face {
+  inset: 4%;
+  /* Gradien vertikal: kedua belahan memakai lapisan yang sama persis,
+     sehingga tidak ada perbedaan nada di garis tengah heksagon. */
+  background:
+    radial-gradient(82% 58% at 50% 0%, rgba(234, 131, 167, 0.24), transparent 62%),
+    radial-gradient(90% 64% at 50% 104%, rgba(229, 207, 168, 0.15), transparent 66%),
+    linear-gradient(180deg, #22345c 0%, #16264a 48%, #0a1329 78%, #070d1d 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 240, 203, 0.34),
+    inset 0 0 54px rgba(2, 5, 12, 0.34);
+}
+
+#env .env-crest-copy,
+#env .env-crest-half .env-crest-copy {
+  width: 100%;
+}
+
+#env .env-crest-initials {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  line-height: 1;
+  text-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.42),
+    0 0 12px rgba(255, 219, 166, 0.12);
+}
+
+#env .env-crest-initials > span {
+  display: block;
+  text-align: center;
+}
+
+/* Saat tirai membuka, latar gelap panggung langsung menjadi halaman
+   sampul; bunga DOM ikut memudar agar tidak menutupi cover. */
+#env.env.opening {
+  background: transparent;
+}
+
+#env.opening::before,
+#env.opening::after {
+  opacity: 0;
+  transition: opacity 0.55s ease;
+}
+
+#env.opening .env-petals {
+  opacity: 0;
+  transition: opacity 0.75s ease;
+}
+
+/* Bunga kanvas sedikit lebih tegas agar rona pink sakura terbaca di atas
+   sampul navy, tanpa menjadi ramai. */
+#petals {
+  opacity: 0.7;
+}
+
+/* ---------------------------------------------------------------------
+   C. Tombol "Buka undangan": palet pink diambil dari kelopak sakura.
+   --------------------------------------------------------------------- */
+#cover #openBtn.btn-open {
+  border-color: rgba(255, 225, 234, 0.68);
+  background: linear-gradient(135deg,
+    #f9adc3 0%,
+    #f18aae 44%,
+    #d95c87 100%);
+  box-shadow:
+    0 16px 30px -14px rgba(217, 92, 135, 0.72),
+    0 0 26px rgba(239, 126, 164, 0.3),
+    inset 0 1px 0 rgba(255, 248, 244, 0.52),
+    inset 0 -2px 10px rgba(150, 32, 72, 0.2);
+  color: #fff9f4;
+  text-shadow: 0 1px 2px rgba(138, 25, 59, 0.32);
+}
+
+#cover #openBtn.btn-open:hover,
+#cover #openBtn.btn-open:focus-visible {
+  background: linear-gradient(135deg,
+    #ffe1ea 0%,
+    #f9adc3 46%,
+    #ef7ea4 100%);
+  border-color: rgba(255, 240, 246, 0.82);
+  box-shadow:
+    0 18px 34px -14px rgba(217, 92, 135, 0.78),
+    0 0 34px rgba(249, 173, 195, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.62);
+}
+
+/* ---------------------------------------------------------------------
+   D. Sakura bawah Mempelai: lebih kecil, menyambung penuh satu halaman.
+   --------------------------------------------------------------------- */
+#mempelai > .sakura-bottom {
+  left: 0;
+  right: 0;
+  bottom: clamp(-2.2rem, -2vw, -0.8rem);
+  width: 100%;
+  height: clamp(78px, 9vw, 132px);
+  aspect-ratio: auto;
+  transform: none;
+  opacity: 0.5;
+  background: url("assets/sakura-branch-h.svg?v=21") repeat-x center bottom / auto 100%;
+  filter:
+    saturate(1.02)
+    drop-shadow(0 0 18px rgba(234, 131, 167, 0.14))
+    drop-shadow(0 10px 18px rgba(3, 7, 18, 0.34));
+}
+
+@media (max-width: 1023.98px) {
+  #mempelai > .sakura-bottom {
+    width: 100%;
+    opacity: 0.46;
+  }
+}
+
+@media (max-width: 599.98px) {
+  #mempelai > .sakura-bottom {
+    width: 100%;
+    height: clamp(56px, 15vw, 82px);
+    bottom: -1.1rem;
+    opacity: 0.44;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   E. The Journey: garis dan titik masuk bersama, tumbuh ke bawah.
+   --------------------------------------------------------------------- */
+#cerita .jr.jr-in .jr-track,
+#cerita .jr.jr-in .jr-line {
+  animation: jrTrackDown 1.15s cubic-bezier(0.22, 0.8, 0.2, 1) both;
+}
+
+#cerita .jr.jr-in .jr-num {
+  animation: jrDotDown 0.7s cubic-bezier(0.22, 0.8, 0.2, 1) both;
+  animation-delay: calc(0.12s + var(--d, 0ms));
+}
+
+/* Titik yang sudah terlewati tetap berpendar setelah animasi masuknya usai. */
+#cerita .jr.jr-in .jr-item.lit .jr-num {
+  animation:
+    jrDotDown 0.7s cubic-bezier(0.22, 0.8, 0.2, 1) calc(0.12s + var(--d, 0ms)) both,
+    jrDotGlow 2.7s ease-in-out 1s infinite;
+}
+
+@keyframes jrTrackDown {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes jrDotDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.55);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   F. Wedding Event: halaman buku baru terbuka setelah buku terlihat penuh.
+   Tombol Google Calendar ikut center seperti kartu Akad & Tasyakuran.
+   --------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  html.js #acara .ev:not(.book-in) .evc.reveal.is-in {
+    opacity: 0;
+    transform: perspective(1200px) rotateY(58deg) translateZ(2px) scale(0.99);
+  }
+
+  html.js #acara .ev:not(.book-in) .evc.reveal.is-in:last-child {
+    transform: perspective(1200px) rotateY(-58deg) translateZ(2px) scale(0.99);
+  }
+
+  html.js #acara .ev.book-in .evc.reveal.is-in {
+    opacity: 1;
+    transform: perspective(1200px) rotateY(0deg) translateZ(0) scale(1);
+  }
+
+  #acara .ev::before {
+    clip-path: inset(50% 50% 50% 50%);
+  }
+
+  #acara .ev.book-in:has(.evc.is-in)::before {
+    clip-path: inset(0 0 0 0);
+  }
+
+  #acara .ev::after {
+    clip-path: inset(50% 0 50% 0);
+  }
+
+  #acara .ev.book-in:has(.evc.is-in)::after {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+#acara .ev .evb > .btn {
+  align-self: center;
+  justify-content: center;
+  width: auto;
+  max-width: 100%;
+  margin-inline: auto;
+  text-align: center;
+}
+
+@media (max-width: 599.98px) {
+  #acara .ev .evb > .btn {
+    width: auto;
+    padding-inline: 0.9rem;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   G. Nama footer: wipe keluar berlawanan arah, lalu dapat diputar ulang
+   saat pengunjung kembali ke bagian penutup.
+   --------------------------------------------------------------------- */
+.nick.reveal.nick-out .nick-wipe {
+  animation: nickWipeOut 1.05s cubic-bezier(0.5, 0.05, 0.3, 1) both;
+}
+
+.nick.nick-out::after {
+  transform: scaleX(0);
+  transition: transform 0.7s ease;
+}
+
+@keyframes nickWipeOut {
+  0% {
+    clip-path: polygon(0 0, 112% 0, 100% 100%, 0 100%);
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  100% {
+    clip-path: polygon(0 0, -2% 0, -10% 100%, 0 100%);
+    transform: translate3d(-0.05em, 0, 0);
+    opacity: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   H. Bunga penutup: angin jauh lebih lembut dan lambat.
+   --------------------------------------------------------------------- */
+.s-closing > .floral.flower.run .fl-in {
+  transform-origin: 50% 92%;
+  will-change: transform;
+  animation: closingBreeze 5.8s ease-in-out infinite both;
+}
+
+.s-closing > .floral.flower.run .tw1 {
+  transform-origin: 58% 72%;
+  animation: closingBreezeTwist 4.9s ease-in-out infinite both;
+}
+
+@keyframes closingBreeze {
+  0%, 100% {
+    transform: rotate(-1.4deg) translate3d(0, 0, 0);
+  }
+  32% {
+    transform: rotate(1.2deg) translate3d(1px, -1px, 0);
+  }
+  64% {
+    transform: rotate(-0.7deg) translate3d(0, 1px, 0);
+  }
+}
+
+@keyframes closingBreezeTwist {
+  0%, 100% {
+    transform: rotate(-1.2deg);
+  }
+  42% {
+    transform: rotate(1.4deg);
+  }
+  73% {
+    transform: rotate(-0.6deg);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   I. Gerak minimal: semua tambahan langsung diam.
+   --------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  #cerita .jr.jr-in .jr-track,
+  #cerita .jr.jr-in .jr-line,
+  #cerita .jr.jr-in .jr-num,
+  .nick.reveal.nick-out .nick-wipe,
+  .s-closing > .floral.flower.run .fl-in,
+  .s-closing > .floral.flower.run .tw1 {
+    animation: none !important;
+  }
+
+  #cerita .jr.jr-in .jr-num {
+    opacity: 1;
+    transform: none;
+  }
+}

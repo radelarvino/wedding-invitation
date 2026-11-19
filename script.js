@@ -339,6 +339,7 @@ function renderContent() {
     </article>`).join("")}</div>`;
 
     initEventPointer(evEl);
+    initEventBook(evEl);
   }
 
   startCountdown(new Date(first.start));
@@ -1188,6 +1189,19 @@ function initJourneyLine() {
     queue();
   }, { rootMargin: "160px 0px" }).observe(JL.el);
 
+  /* Animasi masuk: rel dan titik tumbuh ke bawah. Dipasang sekali saja;
+     kelas dilepas saat bagian keluar layar supaya bisa diputar ulang. */
+  if (!JL.entranceWatched) {
+    JL.entranceWatched = true;
+    if (reduceMotion) {
+      JL.el.classList.add("jr-in");
+    } else {
+      new IntersectionObserver(es => {
+        es.forEach(en => JL.el.classList.toggle("jr-in", en.isIntersecting));
+      }, { threshold: 0.22 }).observe(JL.el);
+    }
+  }
+
   addEventListener("scroll", () => { if (JL.active) queue(); }, { passive: true });
 
   if ("ResizeObserver" in window) {
@@ -1949,6 +1963,30 @@ function initEventPointer(scope = document) {
   });
 }
 
+/* ====== 12a-2. BUKU ACARA: BUKA SETELAH SELURUH BUKU TERLIHAT ======
+   Kartu event tetap memakai reveal biasa, tetapi rotasi halaman buku baru
+   dimainkan ketika sekitar 70% buku sudah masuk layar. Jadi buku tidak
+   terbuka setengah jalan saat bagiannya baru menyembul dari bawah. */
+function initEventBook(scope = document) {
+  const ev = scope && scope.matches && scope.matches(".ev")
+    ? scope
+    : (scope.querySelector && scope.querySelector(".ev"));
+  if (!ev || ev.dataset.bookWatch) return;
+  ev.dataset.bookWatch = "1";
+
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    ev.classList.add("book-in");
+    return;
+  }
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      ev.classList.toggle("book-in", entry.isIntersecting);
+    });
+  }, { threshold: 0.7, rootMargin: "0px 0px -4% 0px" });
+  io.observe(ev);
+}
+
 /* ====== 12b. AKSEN BUNGA SAKURA ======
    Ranting sakura menempel di sudut elemen. Muncul (mekar) saat elemen pertama
    kali terlihat, lalu bergoyang pelan seperti tertiup angin selama elemen ada
@@ -2098,13 +2136,10 @@ function initFloral() {
 
 
 /* ====== 12c. HUJAN BUNGA SAKURA ======
-   Satu kanvas ringan. Kuntum dan kelopak diambil langsung dari foto
-   assets/sakura.jpg: latar putihnya dibuat transparan, lalu setiap kuntum
-   dipotong otomatis menjadi sprite. Warna asli foto dipertahankan sehingga
-   hujan bunga tampak sama dengan asetnya. Kecepatan jatuh, ukuran, dan
-   kejernihan mengikuti "kedalaman" (dekat = besar, cepat, jelas) sehingga
-   terasa seperti hujan kelopak yang tertiup angin. Jumlahnya menyesuaikan
-   lebar layar & perangkat, dan loop berhenti total saat tab tersembunyi. */
+   Satu sprite dari assets/sakura-bloom.svg — bentuknya sama dengan bunga
+   yang dipakai di bagian Mempelai. Tiap bunga turun sendiri-sendiri dengan
+   jeda, pelan, dan lembut; tidak ada kelompok yang jatuh bersamaan.
+   Kanvas tetap ringan karena hanya satu gambar yang digambar berulang. */
 function initPetals() {
   const cv = $("#petals");
   if (!cv || reduceMotion) return;
@@ -2127,205 +2162,148 @@ function initPetals() {
   resize();
   addEventListener("resize", resize, { passive: true });
 
-  /* Foto hujan sakura di folder assets menjadi sumber sprite. Versi 640 px
-     dipakai agar unduhan ringan dan pemrosesan piksel tidak berat. */
-  const ART = "assets/sakura-640.jpg";
-  const SRC_W = 640;                    /* cukup tajam untuk sprite <= 44px */
-  const fallbackSprite = () => {
+  const rand = (a, b) => a + Math.random() * (b - a);
+
+  /* Satu bunga digambar ke kanvas kecil supaya SVG tidak diraster ulang
+     setiap frame. 96 px cukup tajam untuk ukuran tampil maksimal ~46 px. */
+  const ART = "assets/sakura-bloom.svg";
+  const SPRITE_PX = 96;
+  const makeSprite = img => {
     const s = document.createElement("canvas");
-    s.width = s.height = 96;
+    s.width = s.height = SPRITE_PX;
     const g = s.getContext("2d");
-    g.translate(48, 90);
-    g.scale(4.2, 4.2);
+    if (img && img.naturalWidth) {
+      g.drawImage(img, 0, 0, SPRITE_PX, SPRITE_PX);
+      return s;
+    }
+    /* Cadangan bila SVG gagal dimuat: lima kelopak sederhana. */
+    g.translate(SPRITE_PX / 2, SPRITE_PX / 2);
     g.fillStyle = "#f7b6ca";
-    g.fill(new Path2D("M0 0C-5 -5 -8.5 -13 -4.8 -17.5C-3.2 -19 -1.1 -18.2 0 -16C1.1 -18.2 3.2 -19 4.8 -17.5C8.5 -13 5 -5 0 0Z"));
+    g.strokeStyle = "#e4779d";
+    g.lineWidth = 0.8;
+    for (let i = 0; i < 5; i++) {
+      g.save();
+      g.rotate((Math.PI * 2 * i) / 5);
+      g.beginPath();
+      g.ellipse(0, -18, 8, 18, 0, 0, Math.PI * 2);
+      g.fill();
+      g.stroke();
+      g.restore();
+    }
+    g.fillStyle = "#f8ddb7";
+    g.beginPath();
+    g.arc(0, 0, 6, 0, Math.PI * 2);
+    g.fill();
     return s;
   };
 
-  const buildSprites = img => {
-    if (!img || !img.naturalWidth) return [fallbackSprite()];
-
-    const w = SRC_W;
-    const h = Math.round(img.naturalHeight * SRC_W / img.naturalWidth);
-    const src = document.createElement("canvas");
-    src.width = w;
-    src.height = h;
-    const sg = src.getContext("2d", { willReadFrequently: true });
-    sg.drawImage(img, 0, 0, w, h);
-
-    let px;
-    try {
-      px = sg.getImageData(0, 0, w, h).data;
-    } catch (e) {
-      return [fallbackSprite()];        /* kanvas tercemar (mis. dibuka via file://) */
-    }
-
-    /* Latar putih dibuat transparan. Nilai alfa mengikuti kadar "bukan putih"
-       agar tepi kelopak tetap halus dan kuntum yang pucat tetap lembut. */
-    const alpha = new Uint8ClampedArray(w * h);
-    for (let i = 0, p = 0; i < px.length; i += 4, p++) {
-      alpha[p] = Math.max(0, Math.min(255, (255 - (px[i] + px[i + 1] + px[i + 2]) / 3) * 4));
-    }
-
-    /* Cari kelompok piksel yang menyatu: satu kuntum atau satu kelopak. */
-    const seen = new Uint8Array(w * h);
-    const stack = new Int32Array(w * h);
-    const blobs = [];
-    for (let p = 0; p < alpha.length; p++) {
-      if (seen[p] || alpha[p] < 40) continue;
-      let top = 0;
-      let x0 = w, y0 = h, x1 = -1, y1 = -1, area = 0;
-      stack[top++] = p;
-      seen[p] = 1;
-      while (top) {
-        const q = stack[--top];
-        const x = q % w;
-        const y = (q / w) | 0;
-        area++;
-        if (x < x0) x0 = x;
-        if (x > x1) x1 = x;
-        if (y < y0) y0 = y;
-        if (y > y1) y1 = y;
-        if (x > 0 && !seen[q - 1] && alpha[q - 1] >= 40) { seen[q - 1] = 1; stack[top++] = q - 1; }
-        if (x < w - 1 && !seen[q + 1] && alpha[q + 1] >= 40) { seen[q + 1] = 1; stack[top++] = q + 1; }
-        if (y > 0 && !seen[q - w] && alpha[q - w] >= 40) { seen[q - w] = 1; stack[top++] = q - w; }
-        if (y < h - 1 && !seen[q + w] && alpha[q + w] >= 40) { seen[q + w] = 1; stack[top++] = q + w; }
-      }
-      const bw = x1 - x0 + 1;
-      const bh = y1 - y0 + 1;
-      if (area >= 90 && bw >= 8 && bh >= 8 && bw <= 200 && bh <= 200) {
-        blobs.push({ x: x0, y: y0, w: bw, h: bh, area });
-      }
-    }
-
-    /* Ambil kuntum yang beragam (buang potongan yang benar-benar sama). */
-    blobs.sort((a, b) => b.area - a.area);
-    const shape = new Set();
-    const picked = [];
-    const step = Math.max(1, Math.floor(blobs.length / 22));
-    for (let i = 0; i < blobs.length && picked.length < 20; i += step) {
-      const b = blobs[i];
-      const key = b.w + "x" + b.h + ":" + b.area;
-      if (shape.has(key)) continue;
-      shape.add(key);
-      picked.push(b);
-    }
-
-    /* Potong tiap kuntum, lalu bersihkan sisa putih di tepinya. */
-    const sprites = picked.map(b => {
-      const pad = 2;
-      const s = document.createElement("canvas");
-      s.width = b.w + pad * 2;
-      s.height = b.h + pad * 2;
-      const sctx = s.getContext("2d");
-      const out = sctx.createImageData(s.width, s.height);
-      for (let y = 0; y < b.h; y++) {
-        for (let x = 0; x < b.w; x++) {
-          const sp = (b.y + y) * w + b.x + x;
-          const a = alpha[sp] / 255;
-          if (a < 0.03) continue;
-          const si = sp * 4;
-          const dp = ((y + pad) * s.width + x + pad) * 4;
-          out.data[dp] = Math.max(0, Math.min(255, (px[si] - 255 * (1 - a)) / a));
-          out.data[dp + 1] = Math.max(0, Math.min(255, (px[si + 1] - 255 * (1 - a)) / a));
-          out.data[dp + 2] = Math.max(0, Math.min(255, (px[si + 2] - 255 * (1 - a)) / a));
-          out.data[dp + 3] = a * 255;
-        }
-      }
-      sctx.putImageData(out, 0, 0);
-      return s;
-    });
-
-    return sprites.length ? sprites : [fallbackSprite()];
-  };
-
-  /* Jumlah kuntum mengikuti lebar layar; ponsel dan tablet dipangkas agar
-     kanvas tetap ringan dan tidak memicu lag saat digulir. */
+  /* Sedikit bunga saja: makin sedikit, makin terasa satu per satu. */
   const small = W < 600;
-  const medium = W < 1024;
-  const cap = small ? 10 : medium ? 16 : 22;
-  const floor = small ? 6 : 10;
-  const per = small ? 40 : medium ? 30 : 24;
-  const N = Math.round(Math.max(floor, Math.min(cap, W / per)) * (lowEnd ? 0.7 : 1));
-  const make = (sprites, fresh) => {
-    const z = Math.random();                       /* 0 = jauh, 1 = dekat */
-    const spr = sprites[(Math.random() * sprites.length) | 0];
-    const base = 16 + z * 20 + Math.random() * 6;   /* lebar tampil (px) */
-    return {
-      x: Math.random() * (W + 160) - 80,
-      y: fresh ? -30 - Math.random() * H * 0.35 : Math.random() * H,
-      w: base,
-      h: base * spr.height / spr.width,
-      vy: 46 + z * 118 + Math.random() * 26,       /* kecepatan jatuh */
-      sw: 6 + Math.random() * 16,                  /* lebar ayunan */
-      sf: 0.5 + Math.random() * 0.9,               /* frekuensi ayunan */
-      ph: Math.random() * 6.283,
-      r: Math.random() * 6.283,
-      rs: (Math.random() - 0.5) * 1.5,             /* putaran */
-      ff: 1 + Math.random() * 1.6,                 /* kecepatan membalik */
-      fp: Math.random() * 6.283,
-      a: 0.62 + z * 0.33,
-      z,
-      spr
-    };
+  const N = Math.round((small ? 4 : lowEnd ? 5 : 7) * (lowEnd ? 0.85 : 1));
+
+  const reset = (p, initial) => {
+    const z = Math.random();                        /* 0 = jauh, 1 = dekat */
+    p.z = z;
+    p.size = 24 + z * 24 + rand(0, 7);              /* lebar kanvas sprite */
+    p.x = rand(-50, W + 50);
+    p.y = initial ? rand(-H * 0.2, H * 0.9) : -p.size - rand(0, 90);
+    p.vy = 22 + z * 22 + rand(0, 9);                /* jatuh pelan & tenang */
+    p.sway = 12 + z * 20;
+    p.swayFreq = rand(0.22, 0.5);
+    p.phase = rand(0, Math.PI * 2);
+    p.rot = rand(0, Math.PI * 2);
+    p.rotSpd = rand(-0.22, 0.22);
+    p.flipFreq = rand(0.42, 0.95);
+    p.flipPhase = rand(0, Math.PI * 2);
+    p.alpha = 0.66 + z * 0.3;
+    p.age = 0;
+    p.active = initial;
+    p.wait = initial ? 0 : rand(1.1, 3.2);
   };
 
-  let ps = [];
-  let SPR = [];
+  const ps = Array.from({ length: N }, (_, i) => {
+    const p = {};
+    reset(p, false);
+    /* Gelombang masuk: satu bunga muncul, bunga berikutnya menyusul
+       beberapa saat kemudian. */
+    p.wait = 0.35 + i * rand(0.85, 1.6);
+    return p;
+  });
+
+  let sprite = makeSprite(null);
   let t = 0;
   let last = 0;
-  let fade = 0;
   let raf = 0;
+
   const frame = now => {
     raf = requestAnimationFrame(frame);
     const gap = now - last;
-    if (lowEnd && last && gap < 30) return;        /* ~30 fps di perangkat sederhana */
+    if (lowEnd && last && gap < 30) return;         /* ~30 fps di perangkat sederhana */
     const dt = last ? Math.min(0.05, gap / 1000) : 0.016;
     last = now;
     t += dt;
-    fade = Math.min(1, fade + dt / 2);
-    /* Angin: arah tetap ke kanan-bawah, dengan hembusan yang datang dan pergi */
-    const gust = Math.max(0, Math.sin(t * 0.31) * Math.sin(t * 0.13 + 1.1));
-    const wind = 22 + Math.sin(t * 0.19) * 10 + gust * 38;
+
+    /* Hembusan angin sangat halus; ayunan bunga yang utama. */
+    const gust = Math.max(0, Math.sin(t * 0.23) * Math.sin(t * 0.11 + 0.8));
+    const drift = 4 + gust * 8;
 
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     ctx.clearRect(0, 0, W, H);
+    ctx.globalCompositeOperation = "source-over";
+
     for (let i = 0; i < ps.length; i++) {
       const p = ps[i];
+
+      if (!p.active) {
+        p.wait -= dt;
+        if (p.wait > 0) continue;
+        reset(p, true);
+      }
+
+      p.age += dt;
       p.y += p.vy * dt;
-      p.x += (wind * (0.4 + p.z * 0.6) + Math.cos(t * p.sf + p.ph) * p.sw) * dt;
-      p.r += p.rs * dt;
-      if (p.y > H + 30 || p.x > W + 90) {
-        const q = make(SPR, true);
-        q.x = Math.random() * (W + 160) - 160;     /* masuk dari kiri-atas agar sebaran tetap rata */
-        ps[i] = q;
+      p.x += drift * (0.4 + p.z * 0.6) * dt;
+      p.rot += p.rotSpd * dt;
+
+      if (p.y > H + p.size + 60 || p.x > W + 120) {
+        p.active = false;
+        p.wait = rand(1.2, 3.4);
         continue;
       }
-      const flip = Math.cos(t * p.ff + p.fp);
-      ctx.globalAlpha = p.a * fade * (0.7 + 0.3 * Math.abs(flip));
-      const c = Math.cos(p.r), s = Math.sin(p.r);
-      const sy = 0.35 + 0.65 * Math.abs(flip);
-      /* matriks: putar lalu pipihkan sumbu-y (efek kelopak berbalik) */
-      ctx.setTransform(DPR * c, DPR * s, -DPR * s * sy, DPR * c * sy, DPR * p.x, DPR * p.y);
-      ctx.drawImage(p.spr, -p.w / 2, -p.h / 2, p.w, p.h);
+
+      const flip = Math.sin(t * p.flipFreq + p.flipPhase);
+      const sway = Math.sin(t * p.swayFreq + p.phase) * p.sway;
+      const fadeIn = Math.min(1, p.age / 1.8);
+      const fadeOut = Math.min(1, Math.max(0, (H + p.size - p.y) / 140));
+      const a = p.alpha * fadeIn * fadeOut;
+      if (a <= 0.01) continue;
+
+      const c = Math.cos(p.rot);
+      const s = Math.sin(p.rot);
+      const sy = 0.62 + 0.38 * Math.abs(flip);       /* bunga sedikit berputar balik */
+      ctx.globalAlpha = a;
+      ctx.setTransform(DPR * c, DPR * s, -DPR * s * sy, DPR * c * sy,
+        DPR * (p.x + sway), DPR * p.y);
+      ctx.drawImage(sprite, -p.size / 2, -p.size / 2, p.size, p.size);
     }
     ctx.globalAlpha = 1;
   };
 
-  const run = () => { if (!raf && !document.hidden && ps.length) { last = 0; raf = requestAnimationFrame(frame); } };
+  const run = () => { if (!raf && !document.hidden) { last = 0; raf = requestAnimationFrame(frame); } };
   const halt = () => { cancelAnimationFrame(raf); raf = 0; };
   document.addEventListener("visibilitychange", () => (document.hidden ? halt() : run()));
 
   const begin = img => {
-    SPR = buildSprites(img);
-    ps = Array.from({ length: N }, () => make(SPR, false));
+    sprite = makeSprite(img);
+    /* Bunga pertama masuk lebih dulu; sisanya menyusul satu per satu. */
+    ps.forEach((p, i) => {
+      p.wait = 0.25 + i * rand(0.9, 1.7);
+    });
     run();
   };
 
   const img = new Image();
   img.decoding = "async";
-  /* Pemotongan sprite memakan puluhan milidetik; jalankan saat mesin sedang
-     lengang supaya tidak menunda layar sampul atau ketukan pertama. */
   img.onload = () => whenIdle(() => begin(img));
   img.onerror = () => begin(null);
   img.src = ART;
@@ -2334,9 +2312,9 @@ initPetals();
 
 
 /* ====== 12d. NAMA FOOTER: MULAI SAAT 85% HALAMAN PENUTUP ======
-   Nama baru "membuka" setelah bagian penutup terlihat 85% dari tinggi
-   halaman footer (bukan begitu tepinya menyentuh layar). Animasi wipe
-   ditangani CSS lewat kelas .nick-in. */
+   Nama "membuka" setelah bagian penutup terlihat 85% dari tinggi halaman
+   footer, lalu menutup lagi dengan arah berlawanan saat pengunjung
+   menggulir ke atas. Animasi wipe ditangani CSS lewat .nick-in/.nick-out. */
 function initFooterName() {
   const section = document.querySelector("#penutup");
   const nick = section && section.querySelector(".nick");
@@ -2345,11 +2323,25 @@ function initFooterName() {
   let raf = 0;
   const check = () => {
     raf = 0;
-    if (!document.body.classList.contains("open") || nick.classList.contains("nick-in")) return;
+    if (!document.body.classList.contains("open")) return;
+
     const rect = section.getBoundingClientRect();
     const visible = Math.min(innerHeight, rect.bottom) - Math.max(0, rect.top);
     const pageSize = Math.min(innerHeight, section.offsetHeight) || 1;
-    if (visible / pageSize >= 0.85) nick.classList.add("nick-in");
+    const shouldShow = visible / pageSize >= 0.85;
+    const isShown = nick.classList.contains("nick-in");
+
+    if (shouldShow && !isShown) {
+      /* Hapus kelas keluar lebih dulu, paksa satu reflow, lalu mainkan
+         wipe masuk lagi. Tanpa reflow, animasi yang sama tidak diputar
+         ulang saat pengunjung kembali ke footer. */
+      nick.classList.remove("nick-out");
+      void nick.offsetWidth;
+      nick.classList.add("nick-in");
+    } else if (!shouldShow && isShown) {
+      nick.classList.add("nick-out");
+      nick.classList.remove("nick-in");
+    }
   };
   const schedule = () => {
     if (!raf) raf = requestAnimationFrame(check);
@@ -2549,7 +2541,7 @@ function returnToCover() {
     el.classList.remove("is-in");
   });
   const footerNick = $("#nick");
-  if (footerNick) footerNick.classList.remove("nick-in");
+  if (footerNick) footerNick.classList.remove("nick-in", "nick-out");
   revealStarted = false;
 }
 
