@@ -14339,11 +14339,19 @@ html.js #cerita .jr-item.reveal.is-in,
   transform: translate3d(0, 0, 0);
 }
 
-#cerita .jr-num::after {
+/* Titik kecil di dalam ring dipusatkan dengan margin, bukan transform.
+   Aturan lama `.jr-item.lit .jr-num::after` memakai transform: scale(1.12)
+   dan menimpa translate(-50%, -50%), membuat titik menyimpang dari ring
+   tepat pada titik yang sudah menyala. */
+html.js #cerita .jr-item .jr-num::after,
+html.js #cerita .jr-item.lit .jr-num::after {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  transform: none !important;
 }
 
 @keyframes jrDotDown {
