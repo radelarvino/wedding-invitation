@@ -1122,7 +1122,10 @@ function layoutJourneyLine() {
      Tanpa ini, lebar gutter desimal membuat garis 2px dan titik 6px jatuh di
      separuh piksel yang berbeda sehingga titik tampak sedikit menyimpang. */
   const dpr = window.devicePixelRatio || 1;
-  const rawX = pts[0].x;
+  /* pts[0].x sudah termasuk snap dari pengukuran sebelumnya; kembalikan ke
+     posisi alami dulu supaya snap tidak berosilasi setiap kali diukur ulang. */
+  const prevSnap = parseFloat(t.el.style.getPropertyValue("--jr-snap")) || 0;
+  const rawX = pts[0].x - prevSnap;
   const x = Math.round(rawX * dpr) / dpr;
   t.el.style.setProperty("--jr-snap", `${(x - rawX).toFixed(3)}px`);
 
