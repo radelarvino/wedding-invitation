@@ -14587,9 +14587,10 @@ html.js #cerita .jr-item.lit .jr-num::after {
 }
 
 /* Ring ikut tersnap ke x garis yang sudah dibulatkan JS, sehingga pusat
-   ring, titik 6px, dan garis 2px benar-benar satu sumbu yang sama. */
+   ring, titik 6px, dan garis 2px benar-benar satu sumbu yang sama. Properti
+   translate dipakai agar tidak bentrok dengan animasi transform. */
 #cerita .jr-num {
-  left: calc((var(--jr-gutter) + var(--jr-dot)) / -2 + var(--jr-snap, 0px));
+  translate: var(--jr-snap, 0px) 0;
 }
 
 @media (min-width: 900px) {
