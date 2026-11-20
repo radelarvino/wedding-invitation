@@ -14453,3 +14453,103 @@ html.js #cerita .jr-item.lit .jr-num::after {
 #mempelai > .sakura-top.right {
   display: none !important;
 }
+
+/* =====================================================================
+   50. WEDDING EVENT: UKURAN DI DESKTOP 100% DISERAGAMKAN DENGAN HALAMAN
+   LAIN. Judul, angka countdown, tipografi kartu, dan radius border kini
+   mengikuti skala standar section (judul 51px, eyebrow 9,92px, tombol
+   12,48px). Aturan tablet/ponsel tidak diubah.
+   ===================================================================== */
+@media (min-width: 900px) {
+  #acara .sec-head h2 {
+    font-size: 3.2rem;
+  }
+
+  /* Countdown: angka lebih proporsional, label setara eyebrow section. */
+  #acara .cd-cell {
+    padding: 0.62rem 0.3rem 0.52rem;
+    border-radius: 12px;
+  }
+
+  #acara .cd-cell b {
+    font-size: 2rem;
+    line-height: 1.06;
+    letter-spacing: 0.01em;
+  }
+
+  #acara .cd-cell span {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+  }
+
+  /* Kartu buku: radius mengikuti kartu Journey (14px). */
+  #acara .ev {
+    border-radius: 18px;
+  }
+
+  #acara .evc,
+  #acara .evc:first-child,
+  #acara .ev:has(.evc:only-child) .evc {
+    border-radius: 14px 0 0 14px;
+  }
+
+  #acara .evc:last-child {
+    border-radius: 0 14px 14px 0;
+  }
+
+  #acara .evp,
+  #acara .evc:first-child .evp,
+  #acara .ev:has(.evc:only-child) .evp {
+    border-radius: 10px 0 0;
+  }
+
+  #acara .evc:last-child .evp {
+    border-radius: 0 10px 10px 0;
+  }
+
+  .ev-book-frame,
+  #acara .ev:has(.evc:only-child) .ev-book-frame {
+    border-radius: 14px 0 0 14px;
+  }
+
+  .evc:last-child .ev-book-frame {
+    border-radius: 0 14px 14px 0;
+  }
+
+  .ev-book-frame::before,
+  #acara .ev:has(.evc:only-child) .ev-book-frame::before {
+    border-radius: 10px 0 0 10px;
+  }
+
+  .evc:last-child .ev-book-frame::before {
+    border-radius: 0 10px 10px 0;
+  }
+
+  /* Tipografi isi kartu setara elemen halaman lain. */
+  #acara .ev-eyebrow {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+  }
+
+  #acara .evb h3 {
+    font-size: 1.5rem;
+  }
+
+  #acara .ev-date {
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+
+  #acara .evb .btn {
+    font-size: 0.78rem;
+    padding: 0.6rem 1.1rem;
+  }
+
+  #acara .evp-fallback .evp-mono {
+    font-size: 2.25rem;
+  }
+
+  #acara .evp-fallback .evp-name {
+    font-size: 0.62rem;
+  }
+}
