@@ -29,12 +29,12 @@ const C = {
     { date: "Maret 2021", t: "Bertemu", d: "Pertemuan pertama di acara kampus, berawal dari obrolan tentang buku.", full: "Kami bertemu di sebuah acara kampus. Awalnya hanya saling menyapa, lalu obrolan tentang buku membuat waktu terasa singkat. Dari pertemuan sederhana itu, kami mulai saling mencari kabar." },
     { date: "Agustus 2022", t: "Saling mengenal", d: "Dari teman diskusi menjadi tempat berbagi cerita setiap hari.", full: "Jarak dan kesibukan sempat memisahkan, tetapi kami tetap berkabar. Obrolan ringan perlahan berubah menjadi tempat pulang untuk berbagi cerita, resah, dan rencana." },
     { date: "Januari 2025", t: "Lamaran", d: "Keluarga bertemu dan kami sepakat melangkah lebih serius.", full: "Dengan niat baik, keluarga kedua belah pihak bertemu. Dalam suasana hangat, kami sepakat melangkah ke jenjang yang lebih serius." },
-    { date: "Desember 2026", t: "Pelaminan", d: "Dengan restu keluarga, kami memulai perjalanan baru.", full: "Setelah persiapan yang dijalani bersama, kami akan mengikat janji suci. Kami memohon doa agar perjalanan ini diberkahi dan dimudahkan." }
+    { date: "Januari 2027", t: "Pelaminan", d: "Dengan restu keluarga, kami memulai perjalanan baru.", full: "Setelah persiapan yang dijalani bersama, kami akan mengikat janji suci. Kami memohon doa agar perjalanan ini diberkahi dan dimudahkan." }
   ],
   /* only:"priority" = hanya tampil untuk tamu prioritas */
   events: [
-    { name: "Akad Nikah", label: "Minggu, 13 Desember 2026", time: "08.00 – 10.00 WIB", start: "2026-12-13T08:00:00+07:00", end: "2026-12-13T10:00:00+07:00", photo: "" },
-    { name: "Tasyakuran", label: "Minggu, 13 Desember 2026", time: "11.00 - 14.00 WIB", start: "2026-12-13T11:00:00+07:00", end: "2026-12-13T14:00:00+07:00", photo: "" }
+    { name: "Akad Nikah", label: "Senin, 11 Januari 2027", time: "09.00 – 10.00 WIB", start: "2027-01-11T09:00:00+07:00", end: "2027-01-11T10:00:00+07:00", photo: "" },
+    { name: "Tasyakuran", label: "Senin, 11 Januari 2027", time: "10.30 – 12.00 WIB", start: "2027-01-11T10:30:00+07:00", end: "2027-01-11T12:00:00+07:00", photo: "" }
   ],
   venueName: "Roemah Kraton",
   venueShort: "Roemah Kraton, Tebet, Jakarta Selatan",
@@ -334,7 +334,7 @@ function renderContent() {
         <div class="ev-eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg> ${esc(e.time)}</div>
         <h3>${esc(e.name)}</h3>
         <p class="ev-date">${esc(e.label)}</p>
-        <a class="btn ghost" href="${calendarURL(e)}" target="_blank" rel="noopener">${ic("calendar")} Google Calendar</a>
+        <a class="btn ghost" href="${calendarURL(e)}" target="_blank" rel="noopener">${ic("calendar")} Simpan Jadwal</a>
       </div>
     </article>`).join("")}</div>`;
 
@@ -1118,7 +1118,14 @@ function layoutJourneyLine() {
     };
   });
 
-  const x = pts[0].x;
+  /* Snap garis ke piksel perangkat, lalu geser ring mengikuti snap yang sama.
+     Tanpa ini, lebar gutter desimal membuat garis 2px dan titik 6px jatuh di
+     separuh piksel yang berbeda sehingga titik tampak sedikit menyimpang. */
+  const dpr = window.devicePixelRatio || 1;
+  const rawX = pts[0].x;
+  const x = Math.round(rawX * dpr) / dpr;
+  t.el.style.setProperty("--jr-snap", `${(x - rawX).toFixed(3)}px`);
+
   t.top = pts[0].y;
   t.len = Math.max(1, pts[pts.length - 1].y - t.top);
   t.offs = pts.map(p => p.y - t.top);
@@ -1419,6 +1426,9 @@ function openRsvpForm({ focus = true } = {}) {
   const ctaH = cta && !cta.hidden ? cta.getBoundingClientRect().height : 0;
 
   form.hidden = false;
+  if (rsvpOpenBtn) rsvpOpenBtn.setAttribute("aria-expanded", "true");
+  const closeBtn = $("#rsvpClose");
+  if (closeBtn) closeBtn.setAttribute("aria-expanded", "true");
   const formH = form.getBoundingClientRect().height;
   form.style.overflow = "hidden";
   form.style.height = "0px";
@@ -1466,9 +1476,67 @@ function openRsvpForm({ focus = true } = {}) {
   }
 }
 
+/**
+ * Menutup formulir RSVP lewat tombol dropdown di dalam kotak form.
+ * Form menyusut halus, lalu tombol konfirmasi muncul kembali.
+ */
+function closeRsvpForm() {
+  const form = $("#rsvpForm");
+  const cta = $("#rsvpCta");
+  if (!form || form.hidden) return;
+
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finish = () => {
+    form.hidden = true;
+    form.style.height = "";
+    form.style.opacity = "";
+    form.style.transform = "";
+    form.style.overflow = "";
+    if (cta) {
+      cta.hidden = false;
+      cta.style.height = "";
+      cta.style.opacity = "";
+      cta.style.overflow = "";
+    }
+    const closeBtn = $("#rsvpClose");
+    if (closeBtn) closeBtn.setAttribute("aria-expanded", "false");
+    const openBtn = $("#rsvpOpen");
+    if (openBtn) {
+      openBtn.setAttribute("aria-expanded", "false");
+      try {
+        openBtn.focus({ preventScroll: true });
+      } catch (_) {}
+    }
+  };
+
+  if (reduce) {
+    finish();
+    return;
+  }
+
+  const formH = form.getBoundingClientRect().height;
+  form.style.overflow = "hidden";
+  const anim = form.animate(
+    [
+      { height: `${formH}px`, opacity: 1, transform: "translateY(0)" },
+      { height: "0px", opacity: 0, transform: "translateY(-6px)" }
+    ],
+    { duration: 340, easing: "cubic-bezier(.4,0,.2,1)", fill: "both" }
+  );
+  anim.onfinish = () => {
+    anim.cancel();
+    finish();
+  };
+}
+
 const rsvpOpenBtn = $("#rsvpOpen");
 if (rsvpOpenBtn) {
   rsvpOpenBtn.onclick = () => openRsvpForm();
+}
+
+const rsvpCloseBtn = $("#rsvpClose");
+if (rsvpCloseBtn) {
+  rsvpCloseBtn.onclick = closeRsvpForm;
 }
 
 const editBtn = $("#edit");
@@ -2613,6 +2681,7 @@ function openEnvelope() {
   setTimeout(() => {
     envBox.hidden = true;
     envBox.classList.add("done");
+    document.body.classList.add("env-entered");
     if (cover) {
       cover.removeAttribute("inert");
       cover.removeAttribute("aria-hidden");

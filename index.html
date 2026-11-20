@@ -10,7 +10,7 @@
 <meta property="og:site_name" content="Ramiz & Denayu">
 <meta property="og:locale" content="id_ID">
 <meta property="og:title" content="Undangan Pernikahan Ramiz & Denayu">
-<meta property="og:description" content="Dengan penuh syukur kami mengundang Anda untuk berbagi kebahagiaan di hari istimewa kami, Minggu, 13 Desember 2026.">
+<meta property="og:description" content="Dengan penuh syukur kami mengundang Anda untuk berbagi kebahagiaan di hari istimewa kami, Senin, 11 Januari 2027.">
 <meta property="og:url" content="https://radelarvino.github.io/wedding-invitation/">
 <meta property="og:image" content="https://radelarvino.github.io/wedding-invitation/assets/og-cover.jpg">
 <meta property="og:image:type" content="image/jpeg">
@@ -19,7 +19,7 @@
 <meta property="og:image:alt" content="Foto prewedding Ramiz dan Denayu">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Undangan Pernikahan Ramiz & Denayu">
-<meta name="twitter:description" content="Dengan penuh syukur kami mengundang Anda untuk berbagi kebahagiaan di hari istimewa kami, Minggu, 13 Desember 2026.">
+<meta name="twitter:description" content="Dengan penuh syukur kami mengundang Anda untuk berbagi kebahagiaan di hari istimewa kami, Senin, 11 Januari 2027.">
 <meta name="twitter:image" content="https://radelarvino.github.io/wedding-invitation/assets/og-cover.jpg">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/icon-192.png" type="image/png" sizes="192x192">
@@ -29,7 +29,7 @@
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/gf/jost-var.woff2" crossorigin>
 <link rel="preload" as="image" href="assets/prewed-640.webp" media="(max-width: 599.98px)" fetchpriority="high">
 <link rel="preload" as="image" href="assets/prewed-860.webp" media="(min-width: 600px)" fetchpriority="high">
-<link rel="stylesheet" href="style.css?v=42">
+<link rel="stylesheet" href="style.css?v=43">
 </head>
 <body class="locked">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -96,6 +96,7 @@
 
 <!-- Tirai pembuka -->
 <div id="env" class="env" role="dialog" aria-modal="true" aria-label="Buka undangan pernikahan Ramiz dan Denayu">
+  <div class="env-veil" aria-hidden="true"></div>
   <div class="env-petals" aria-hidden="true">
     <i style="--x:6%;--t:12s;--d:-2s;--s:1;--r:-24deg;--drift:46px"></i>
     <i style="--x:15%;--t:16s;--d:-8s;--s:.72;--r:18deg;--drift:-32px"></i>
@@ -123,7 +124,7 @@
           <span class="env-crest-copy">
             <span class="env-crest-kicker">The Wedding Celebration</span>
             <span class="env-crest-initials"><span>R</span><span>D</span></span>
-            <span class="env-crest-date">13 . 12 . 2026</span>
+            <span class="env-crest-date">11 . 01 . 2027</span>
           </span>
         </span>
       </span>
@@ -137,7 +138,7 @@
           <span class="env-crest-copy">
             <span class="env-crest-kicker">The Wedding Celebration</span>
             <span class="env-crest-initials"><span>R</span><span>D</span></span>
-            <span class="env-crest-date">13 . 12 . 2026</span>
+            <span class="env-crest-date">11 . 01 . 2027</span>
           </span>
         </span>
       </span>
@@ -146,9 +147,10 @@
   <div class="env-valance" aria-hidden="true"></div>
   <div class="env-stage">
     <div class="env-core">
-      <button class="env-crest-hit" id="envSeal" type="button" aria-label="Buka undangan Ramiz dan Denayu"><span class="env-crest-amp" aria-hidden="true">&amp;</span></button>
+      <button class="env-crest-hit" id="envSeal" type="button" aria-label="Buka undangan Ramiz dan Denayu"><span class="env-crest-amp env-crest-amp-l" aria-hidden="true">&amp;</span><span class="env-crest-amp env-crest-amp-r" aria-hidden="true">&amp;</span></button>
     </div>
   </div>
+  <div class="env-seam" aria-hidden="true"></div>
 </div>
 <noscript><style>#env{display:none}</style></noscript>
 
@@ -343,9 +345,16 @@
       </div>
       <div class="rsvp-cta" id="rsvpCta">
         <p class="rsvp-hint" id="rsvpHint">Mohon konfirmasi kehadiran sebelum hari acara.</p>
-        <button class="btn" id="rsvpOpen" type="button"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg> Konfirmasi kehadiran</button>
+        <button class="btn" id="rsvpOpen" type="button" aria-controls="rsvpForm" aria-expanded="false"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg> Konfirmasi kehadiran</button>
       </div>
       <form id="rsvpForm" hidden>
+        <div class="rsvp-form-head">
+          <span class="rsvp-form-title">Formulir konfirmasi</span>
+          <button class="rsvp-collapse" id="rsvpClose" type="button" aria-controls="rsvpForm" aria-expanded="true">
+            <span>Tutup</span>
+            <svg class="ic" aria-hidden="true"><use href="#i-chevron-up"/></svg>
+          </button>
+        </div>
         <div class="field"><label for="n">Nama</label><input id="n" required maxlength="60" autocomplete="name" placeholder="Nama lengkap Anda"></div>
         <div class="row">
           <div class="field"><label for="k">Kehadiran</label><select id="k"><option>Hadir</option><option>Tidak dapat hadir</option></select></div>
@@ -439,6 +448,6 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="config.js"></script>
-<script src="script.js?v=34"></script>
+<script src="script.js?v=35"></script>
 </body>
 </html>

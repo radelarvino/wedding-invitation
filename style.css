@@ -14553,3 +14553,338 @@ html.js #cerita .jr-item.lit .jr-num::after {
     font-size: 0.62rem;
   }
 }
+
+/* =====================================================================
+   51. PENYEMPURNAAN AKHIR: BUKU EVENT SATU LAYAR, KARTU ACARA LEBIH
+   RAPAT KE BAWAH, BORDER BIRU 10%, TIRAI TERBELAH DENGAN CAHAYA, DAN
+   KILAU TOMBOL BUKA UNDANGAN
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   A. Our Journey: garis 2px dan titik 6px supaya pikselnya jatuh tepat
+   di pusat ring (tidak ada separuh piksel yang membuat titik tampak
+   bergeser saat dibesarkan).
+   --------------------------------------------------------------------- */
+#cerita .jr-track,
+#cerita .jr-line {
+  width: 2px;
+  margin-left: -1px;
+  border-radius: 2px;
+}
+
+#cerita .jr-line {
+  transform-origin: 1px 0;
+}
+
+html.js #cerita .jr-item .jr-num::after,
+html.js #cerita .jr-item.lit .jr-num::after {
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  transform: none !important;
+}
+
+/* Ring ikut tersnap ke x garis yang sudah dibulatkan JS, sehingga pusat
+   ring, titik 6px, dan garis 2px benar-benar satu sumbu yang sama. */
+#cerita .jr-num {
+  left: calc((var(--jr-gutter) + var(--jr-dot)) / -2 + var(--jr-snap, 0px));
+}
+
+@media (min-width: 900px) {
+  #cerita .jr {
+    --jr-dot: 24px;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   B. Wedding Event: satu layar penuh di desktop, isi kartu digeser ke
+   bawah mendekati border, dan sampul buku memakai biru 10% agar foto
+   latar terlihat menembus bingkai.
+   --------------------------------------------------------------------- */
+#acara .ev {
+  border-color: rgba(12, 24, 52, 0.1);
+  background:
+    linear-gradient(180deg, rgba(244, 169, 193, 0.06), transparent 18%, transparent 82%, rgba(244, 169, 193, 0.04)),
+    rgba(12, 24, 52, 0.1);
+}
+
+#acara .ev::before {
+  border-color: rgba(244, 169, 193, 0.14);
+}
+
+@media (min-width: 900px) {
+  #acara {
+    min-height: 100svh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: clamp(2rem, 4.6vh, 3rem);
+    padding-bottom: clamp(2rem, 4.6vh, 3rem);
+  }
+
+  #acara > .wrap {
+    width: 100%;
+  }
+
+  #acara .sec-head {
+    margin-bottom: clamp(1rem, 2.2vh, 1.55rem);
+  }
+
+  #acara .evb {
+    justify-content: flex-end;
+    padding-bottom: clamp(1.05rem, 2.1vh, 1.5rem);
+  }
+
+  #acara .evb .btn {
+    margin-top: clamp(0.7rem, 1.6vh, 0.95rem);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   C. Form RSVP: tombol dropdown untuk menutup formulir.
+   --------------------------------------------------------------------- */
+.rsvp-form-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid rgba(23, 35, 74, 0.14);
+  text-align: left;
+}
+
+.rsvp-form-title {
+  font: 500 0.72rem/1.4 var(--font-ui);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(23, 35, 74, 0.58);
+}
+
+.rsvp-collapse {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.34rem 0.72rem;
+  border: 1px solid rgba(23, 35, 74, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.34);
+  color: rgba(23, 35, 74, 0.8);
+  font: 500 0.64rem/1 var(--font-ui);
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s var(--ease-out);
+}
+
+.rsvp-collapse .ic {
+  width: 0.8rem;
+  height: 0.8rem;
+  transition: transform 0.35s var(--ease-out);
+}
+
+.rsvp-collapse:hover,
+.rsvp-collapse:focus-visible {
+  border-color: rgba(23, 35, 74, 0.42);
+  background: rgba(255, 255, 255, 0.58);
+  color: #17234a;
+}
+
+.rsvp-collapse:active {
+  transform: translateY(1px);
+}
+
+/* Form yang sedang ditutup tidak perlu menyisakan jarak ekstra. */
+#rsvpForm[hidden] + #msg {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------
+   D. Tirai: ampersand terbelah dua, cahaya putih di celah seam, dan
+   halaman sambutan baru muncul setelah tirai terbuka sekitar seperempat.
+   --------------------------------------------------------------------- */
+/* Tombol induk jangan ikut memudar lebih dulu: kedua belahan ampersand
+   perlu waktu untuk benar-benar terpisah sebelum hilang. */
+#env.opening .env-crest-hit {
+  opacity: 1;
+  transition: opacity 0.4s ease 0.2s;
+}
+
+#env .env-crest-amp-l {
+  clip-path: inset(-24% 50% -24% 0);
+}
+
+#env .env-crest-amp-r {
+  clip-path: inset(-24% 0 -24% 50%);
+}
+
+#env.opening .env-crest-amp-l {
+  opacity: 0;
+  transform: translate(calc(-50% - 44px), -50%) rotate(-7deg);
+  transition:
+    transform 0.7s cubic-bezier(0.3, 0.05, 0.2, 1),
+    opacity 0.42s ease 0.16s;
+}
+
+#env.opening .env-crest-amp-r {
+  opacity: 0;
+  transform: translate(calc(-50% + 44px), -50%) rotate(7deg);
+  transition:
+    transform 0.7s cubic-bezier(0.3, 0.05, 0.2, 1),
+    opacity 0.42s ease 0.16s;
+}
+
+/* Cahaya putih yang menyembul dari celah tirai. Keduanya berada di
+   belakang kain sehingga hanya terlihat lewat celah yang terbuka. */
+#env.opening::after {
+  opacity: 0;
+  transition: opacity 0.5s ease 0.06s;
+}
+
+#env .env-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    radial-gradient(26% 78% at 50% 50%,
+      rgba(255, 255, 255, 0.98) 0%,
+      rgba(255, 250, 238, 0.76) 24%,
+      rgba(255, 240, 212, 0.3) 50%,
+      rgba(255, 240, 212, 0) 76%);
+  filter: blur(7px);
+  transform: scaleX(0.35);
+  will-change: opacity, transform;
+}
+
+#env .env-seam {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  z-index: 0;
+  width: 2px;
+  margin-left: -1px;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.98) 14%,
+    #ffffff 50%,
+    rgba(255, 255, 255, 0.98) 86%,
+    rgba(255, 255, 255, 0) 100%);
+  box-shadow:
+    0 0 18px 5px rgba(255, 255, 255, 0.92),
+    0 0 64px 26px rgba(255, 236, 196, 0.5);
+  transform: scaleY(0.75);
+  will-change: opacity, transform;
+}
+
+#env.opening .env-veil {
+  animation: envVeilBloom 1.85s ease-out 0.02s both;
+}
+
+#env.opening .env-seam {
+  animation: envSeamFlash 1.3s ease-out 0.04s both;
+}
+
+@keyframes envVeilBloom {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.22);
+  }
+  6% {
+    opacity: 1;
+    transform: scaleX(0.5);
+  }
+  34% {
+    opacity: 0.82;
+    transform: scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1.6);
+  }
+}
+
+@keyframes envSeamFlash {
+  0% {
+    opacity: 0;
+    transform: scaleY(0.6);
+  }
+  5% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  40% {
+    opacity: 0.9;
+    transform: scaleY(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleY(1);
+  }
+}
+
+/* Halaman sambutan menunggu sampai tirai terbuka sekitar 25-30%.
+   Sebelum itu isinya tetap tersembunyi agar cahaya di celah lebih dulu
+   terlihat. */
+body:not(.env-entered) #cover .cover-content {
+  opacity: 0;
+}
+
+body.env-open:not(.env-entered) #cover .cover-content {
+  opacity: 1;
+  transition: opacity 0.85s ease 0.52s;
+}
+
+/* ---------------------------------------------------------------------
+   E. Tombol "Buka undangan": kilau cahaya menyapu saat hover dan ditekan.
+   --------------------------------------------------------------------- */
+#cover #openBtn.btn-open::before {
+  display: block !important;
+  background: linear-gradient(105deg,
+    transparent 18%,
+    rgba(255, 255, 255, 0.15) 32%,
+    rgba(255, 255, 255, 0.92) 48%,
+    rgba(255, 240, 248, 0.55) 56%,
+    transparent 76%);
+  opacity: 0;
+  transform: translateX(-140%) skewX(-12deg);
+  transition:
+    transform 0.9s cubic-bezier(0.22, 0.8, 0.2, 1),
+    opacity 0.3s ease;
+}
+
+#cover #openBtn.btn-open:hover::before,
+#cover #openBtn.btn-open:focus-visible::before {
+  opacity: 1;
+  transform: translateX(140%) skewX(-12deg);
+}
+
+#cover #openBtn.btn-open:active::before {
+  opacity: 1;
+  transform: translateX(140%) skewX(-12deg);
+  transition:
+    transform 0.5s cubic-bezier(0.22, 0.8, 0.2, 1),
+    opacity 0.12s ease;
+}
+
+#cover #openBtn.btn-open:active {
+  transform: translateY(0) scale(0.985);
+  box-shadow:
+    0 10px 22px -12px rgba(217, 92, 135, 0.7),
+    0 0 22px rgba(249, 173, 195, 0.32),
+    inset 0 2px 10px rgba(120, 18, 52, 0.28);
+}
+
+/* Saat tirai sudah pergi, biarkan sampul memakai transisi aslinya. */
+body.env-entered #cover .cover-content {
+  transition: opacity 0.5s ease, transform 0.7s var(--ease-soft);
+}
