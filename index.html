@@ -29,7 +29,7 @@
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/gf/jost-var.woff2" crossorigin>
 <link rel="preload" as="image" href="assets/prewed-640.webp" media="(max-width: 599.98px)" fetchpriority="high">
 <link rel="preload" as="image" href="assets/prewed-860.webp" media="(min-width: 600px)" fetchpriority="high">
-<link rel="stylesheet" href="style.css?v=46">
+<link rel="stylesheet" href="style.css?v=48">
 </head>
 <body class="locked">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -97,6 +97,11 @@
 <!-- Tirai pembuka -->
 <div id="env" class="env" role="dialog" aria-modal="true" aria-label="Buka undangan pernikahan Ramiz dan Denayu">
   <div class="env-veil" aria-hidden="true"></div>
+  <div class="env-letter" aria-hidden="true">
+    <span class="env-letter-kicker">The Wedding Celebration</span>
+    <span class="env-letter-names" id="envLetterNames">Ramiz &amp; Denayu</span>
+    <span class="env-letter-date">11 . 01 . 2027</span>
+  </div>
   <div class="env-petals" aria-hidden="true">
     <i style="--x:6%;--t:12s;--d:-2s;--s:1;--r:-24deg;--drift:46px"></i>
     <i style="--x:15%;--t:16s;--d:-8s;--s:.72;--r:18deg;--drift:-32px"></i>
@@ -148,6 +153,7 @@
   <div class="env-stage">
     <div class="env-core">
       <button class="env-crest-hit" id="envSeal" type="button" aria-label="Buka undangan Ramiz dan Denayu"><span class="env-crest-amp env-crest-amp-l" aria-hidden="true">&amp;</span><span class="env-crest-amp env-crest-amp-r" aria-hidden="true">&amp;</span></button>
+      <span class="env-seal-hint" aria-hidden="true">Ketuk segel untuk membuka</span>
     </div>
   </div>
   <div class="env-seam" aria-hidden="true"></div>

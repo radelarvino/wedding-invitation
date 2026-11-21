@@ -199,6 +199,8 @@ const coverLetters = (text, offset) => [...text].map((ch, i) =>
  */
 function renderCover() {
   document.title = `Undangan Pernikahan ${a.nick} & ${b.nick}`;
+  const envLetterNames = $("#envLetterNames");
+  if (envLetterNames) envLetterNames.textContent = `${a.nick} & ${b.nick}`;
   const opNames = $("#opNames");
   if (opNames) {
     opNames.setAttribute("aria-label", `${a.nick} & ${b.nick}`);
