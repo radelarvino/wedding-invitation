@@ -15741,17 +15741,12 @@ body.env-entered #cover .cover-content {
   }
 
   #env.opening .env-sheet {
-    animation: envSheetRise 1.15s cubic-bezier(0.22, 0.8, 0.2, 1) 0.55s both;
+    animation: envCardEmergence 1.15s cubic-bezier(0.22, 0.8, 0.2, 1) both;
   }
 
   #env.opening .env-card {
-    animation:
-      envCardGrow 0.95s cubic-bezier(0.55, 0.02, 0.2, 1) 1.35s both,
-      envCardFade 0.8s ease 2.35s both;
-  }
-
-  #env.opening .env-card-body {
-    animation: envCardBodyOut 0.55s ease 1.5s both;
+    /* Body fade setelah emerging selesai (1.15s + 0.1s buffer) */
+    animation: envCardBodyFade 0.4s ease 1.25s both;
   }
 
   #env.opening .env-sky,
@@ -15900,50 +15895,42 @@ body.env-entered #cover .cover-content {
   }
 }
 
-@keyframes envSheetRise {
+/* -- Alur satu: kartu naik dari mulut amplop --
+   0%   : Kartu masih dalam mulut, sedikit terlipat, miring 3deg
+   33%  : Kartu mulai keluar dari mulut, naik turun perlahan, skala masih kecil
+   66%  : Kartu sudah keluar, membesar, mulai datar
+   100% : Kartu penuh ukuran, rotasi menyamai panggung, siap fade isinya
+   Semua langkah dalam 1.15s, lalu body fade 0.4s delay 1.2s
+*/
+@keyframes envCardEmergence {
   0% {
-    transform: translate3d(-50%, 0, 0) scale(0.95) rotateX(3deg) rotateY(1deg);
+    transform: translate3d(-50%, 0, 0) rotateX(3deg) rotateY(1deg) scale(0.85);
+    opacity: 0;
   }
-  14% {
-    transform: translate3d(-50%, -3%, 0) scale(0.95) rotateX(3deg) rotateY(1deg);
+  33% {
+    transform: translate3d(-50%, -8%, 0) rotateX(2deg) rotateY(0deg) scale(0.92);
+    opacity: 0.6;
   }
-  40% {
-    transform: translate3d(-50%, -12%, 0) scale(0.98) rotateX(2deg) rotateY(0deg);
-  }
-  55% {
-    transform: translate3d(-50%, -28%, 0) scale(1.01) rotateX(1deg) rotateY(0deg);
-  }
-  70% {
-    transform: translate3d(-50%, -38%, 0) scale(1.02) rotateX(0deg) rotateY(0deg);
+  66% {
+    transform: translate3d(-50%, -22%, 0) rotateX(0deg) rotateY(0deg) scale(1.05);
+    opacity: 1;
   }
   100% {
-    transform: translate3d(-50%, -48%, 0) scale(var(--env-grow)) rotateX(0deg) rotateY(0deg);
+    transform: translate3d(-50%, -35%, 0) rotateX(0deg) rotateY(0deg) scale(var(--env-grow));
+    opacity: 1;
   }
 }
 
-@keyframes envCardGrow {
-  0% {
-    transform: scale(0.92) rotateX(0deg);
-    border-radius: 3px;
-  }
-  30% {
-    transform: scale(1.08) rotateX(-1.4deg);
-    border-radius: 2px;
-  }
-  100% {
-    transform: scale(var(--env-grow)) rotateX(0deg);
-    border-radius: 0;
-  }
-}
-
-@keyframes envCardBodyOut {
+/* -- Badan kartu fade setelah already full size --
+   0%   : Visible, full size
+   100% : Pudar, persiapkan welcome page
+*/
+@keyframes envCardBodyFade {
   0% {
     opacity: 1;
-    transform: scale(1);
   }
   100% {
     opacity: 0;
-    transform: scale(1);
   }
 }
 
