@@ -14890,6 +14890,12 @@ body.env-entered #cover .cover-content {
   transition: opacity 0.5s ease, transform 0.7s var(--ease-soft);
 }
 
+/* Setelah amplop selesai terbuka, cover sedikit mengambang di atasnya */
+body.env-entered #cover {
+  transform: translateY(-20px);
+  z-index: 150;
+}
+
 /* =====================================================================
    52. TIRAI TERBUKA DARI BAWAH: UJUNG KAIN DITARIK LEBIH DULU, BARU
    BAGIAN ATAS MENYUSUL. Lipatan kain ikut bergeser supaya gerakannya
