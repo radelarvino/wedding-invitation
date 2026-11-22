@@ -29,7 +29,7 @@
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/gf/jost-var.woff2" crossorigin>
 <link rel="preload" as="image" href="assets/prewed-640.webp" media="(max-width: 599.98px)" fetchpriority="high">
 <link rel="preload" as="image" href="assets/prewed-860.webp" media="(min-width: 600px)" fetchpriority="high">
-<link rel="stylesheet" href="style.css?v=48">
+<link rel="stylesheet" href="style.css?v=50">
 </head>
 <body class="locked">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -94,14 +94,10 @@
 
 <audio id="bgm" src="assets/audio/Ed Sheeran - Photograph (Official Lyric Video).mp3" loop preload="metadata"></audio>
 
-<!-- Tirai pembuka -->
+<!-- Tirai pembuka: amplop kertas yang dibuka sungguhan -->
 <div id="env" class="env" role="dialog" aria-modal="true" aria-label="Buka undangan pernikahan Ramiz dan Denayu">
+  <div class="env-sky" aria-hidden="true"></div>
   <div class="env-veil" aria-hidden="true"></div>
-  <div class="env-letter" aria-hidden="true">
-    <span class="env-letter-kicker">The Wedding Celebration</span>
-    <span class="env-letter-names" id="envLetterNames">Ramiz &amp; Denayu</span>
-    <span class="env-letter-date">11 . 01 . 2027</span>
-  </div>
   <div class="env-petals" aria-hidden="true">
     <i style="--x:6%;--t:12s;--d:-2s;--s:1;--r:-24deg;--drift:46px"></i>
     <i style="--x:15%;--t:16s;--d:-8s;--s:.72;--r:18deg;--drift:-32px"></i>
@@ -119,44 +115,72 @@
     <i style="--x:69%;--t:18s;--d:-7s;--s:.46;--r:12deg;--drift:54px"></i>
     <i style="--x:86%;--t:22s;--d:-17s;--s:.52;--r:-8deg;--drift:-58px"></i>
   </div>
-  <div class="env-curtains" aria-hidden="true">
-    <span class="env-curtain env-curtain-l">
-      <i class="env-sheen"></i>
-      <span class="env-crest-aura" aria-hidden="true"></span>
-      <span class="env-crest-half env-crest-half-l" aria-hidden="true">
-        <span class="env-crest-frame"></span>
-        <span class="env-crest-face">
-          <span class="env-crest-copy">
-            <span class="env-crest-kicker">The Wedding Celebration</span>
-            <span class="env-crest-initials"><span>R</span><span>D</span></span>
-            <span class="env-crest-date">11 . 01 . 2027</span>
+  <div class="env-scene">
+    <div class="env-tilt">
+      <div class="env-contact-shadow" aria-hidden="true"></div>
+
+      <div class="env-object" aria-hidden="true">
+        <div class="env-back">
+          <span class="env-lining-glow"></span>
+        </div>
+
+        <!-- Kartu undangan: miniatur halaman welcome yang naik keluar amplop -->
+        <div class="env-sheet">
+          <div class="env-card">
+            <span class="env-card-frame"></span>
+            <span class="env-card-glow"></span>
+            <span class="env-card-body">
+              <span class="env-card-kicker">The Wedding Celebration</span>
+              <span class="env-card-orn"></span>
+              <span class="env-card-name" id="envCardA">Ramiz</span>
+              <span class="env-card-amp" aria-hidden="true">&amp;</span>
+              <span class="env-card-name" id="envCardB">Denayu</span>
+              <span class="env-card-rule"></span>
+              <span class="env-card-date">11 . 01 . 2027</span>
+              <span class="env-card-guest">Kepada Yth. <b id="envCardGuest">Tamu Undangan</b></span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Kantung amplop: tiga lipatan yang menutup bagian bawah kartu -->
+        <div class="env-pocket">
+          <span class="env-pocket-part env-pocket-left"></span>
+          <span class="env-pocket-part env-pocket-right"></span>
+          <span class="env-pocket-part env-pocket-bottom"></span>
+          <span class="env-pocket-lip"></span>
+          <svg class="env-creases" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true">
+            <rect class="env-rim" x="0.35" y="0.35" width="99.3" height="129.3" rx="1.2"></rect>
+            <path class="env-flap-cast" d="M0 0 L50 65 L100 0"></path>
+            <path d="M0 130 L50 65 L100 130"></path>
+            <path d="M0 0 L50 65 L0 130"></path>
+            <path d="M100 0 L50 65 L100 130"></path>
+          </svg>
+        </div>
+
+        <div class="env-mouth-shade"></div>
+
+        <!-- Flap atas berengsel di bibir atas; sisi belakang bergaris lining -->
+        <div class="env-flap">
+          <span class="env-flap-face env-flap-front"></span>
+          <span class="env-flap-face env-flap-back"></span>
+        </div>
+      </div>
+
+      <div class="env-seal-wrap">
+        <button class="env-seal-hit" id="envSeal" type="button" aria-label="Buka undangan Ramiz dan Denayu">
+          <span class="env-seal-half env-seal-half-l" aria-hidden="true">
+            <span class="env-seal-wax"></span>
+            <span class="env-seal-emboss"><span class="env-seal-ring"></span><span class="env-seal-mono">R<i>&amp;</i>D</span></span>
           </span>
-        </span>
-      </span>
-    </span>
-    <span class="env-curtain env-curtain-r">
-      <i class="env-sheen"></i>
-      <span class="env-crest-aura" aria-hidden="true"></span>
-      <span class="env-crest-half env-crest-half-r" aria-hidden="true">
-        <span class="env-crest-frame"></span>
-        <span class="env-crest-face">
-          <span class="env-crest-copy">
-            <span class="env-crest-kicker">The Wedding Celebration</span>
-            <span class="env-crest-initials"><span>R</span><span>D</span></span>
-            <span class="env-crest-date">11 . 01 . 2027</span>
+          <span class="env-seal-half env-seal-half-r" aria-hidden="true">
+            <span class="env-seal-wax"></span>
+            <span class="env-seal-emboss"><span class="env-seal-ring"></span><span class="env-seal-mono">R<i>&amp;</i>D</span></span>
           </span>
-        </span>
-      </span>
-    </span>
-  </div>
-  <div class="env-valance" aria-hidden="true"></div>
-  <div class="env-stage">
-    <div class="env-core">
-      <button class="env-crest-hit" id="envSeal" type="button" aria-label="Buka undangan Ramiz dan Denayu"><span class="env-crest-amp env-crest-amp-l" aria-hidden="true">&amp;</span><span class="env-crest-amp env-crest-amp-r" aria-hidden="true">&amp;</span></button>
-      <span class="env-seal-hint" aria-hidden="true">Ketuk segel untuk membuka</span>
+        </button>
+        <span class="env-seal-hint">Ketuk segel untuk membuka</span>
+      </div>
     </div>
   </div>
-  <div class="env-seam" aria-hidden="true"></div>
 </div>
 <noscript><style>#env{display:none}</style></noscript>
 
@@ -454,6 +478,6 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="config.js"></script>
-<script src="script.js?v=36"></script>
+<script src="script.js?v=37"></script>
 </body>
 </html>

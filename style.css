@@ -15074,456 +15074,930 @@ body.env-entered #cover .cover-content {
 }
 
 /* =====================================================================
-   53. PEMBUKA BERBENTUK AMPLOP ROMANTIS
-   Menggantikan tirai dengan amplop kertas cream-rose bingkai emas.
-   Segel heksagonal tetap menjadi satu-satunya target ketuk, surat di
-   dalamnya naik saat amplop terbuka, lalu halaman sambutan mengambil
-   alih. Palet dan ritmenya mengikuti website: navy, rose, cream, emas.
+   53. AMPLOP KERTAS 3D YANG DIBUKA SUNGGUHAN
+   Amplop portrait seperti amplop undangan A7: flap atas berengsel di
+   bibir atas, lining rose di dalam, lipatan kantung yang bertemu di
+   tengah, dan segel lilin yang pecah jadi dua. Kartu undangan navy
+   (miniatur halaman welcome) naik dari mulut amplop, lalu membesar
+   memenuhi layar dan melebur ke halaman sambutan asli.
    ===================================================================== */
 #env {
-  --env-paper-w: min(88vw, 620px);
-  --env-paper-h: min(54vh, calc(var(--env-paper-w) * 0.62));
-  --env-crest: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+  --env-w: min(84vw, 424px, calc((100dvh - 160px) / 1.3));
+  --env-h: calc(var(--env-w) * 1.3);
+  --env-grow: 4.6;
+  --env-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.07'/%3E%3C/svg%3E");
 }
 
-/* Cahaya hangat di belakang amplop. */
-#env .env-veil {
+#env.env {
+  background: transparent;
+  transition: none;
+}
+
+#env.env.opening {
+  opacity: 1;
+}
+
+/* Langit navy hangat di belakang amplop. Dipisah dari #env supaya bisa
+   memudar sendiri saat kartu undangan sudah memenuhi layar. */
+#env .env-sky {
+  position: absolute;
+  inset: 0;
   z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(54% 42% at 50% 50%, rgba(255, 236, 206, 0.1), transparent 72%),
+    radial-gradient(64% 40% at 50% 108%, rgba(229, 207, 168, 0.2), transparent 72%),
+    radial-gradient(120% 92% at 50% 0%, #1c2c54 0%, #111d3a 42%, #0a1327 72%, #060b16 100%);
+}
+
+#env .env-veil {
+  z-index: 1;
   opacity: 1;
   background:
-    radial-gradient(38% 42% at 50% 54%, rgba(255, 244, 226, 0.3) 0%, rgba(247, 182, 202, 0.16) 44%, transparent 76%),
-    radial-gradient(80% 70% at 50% 110%, rgba(234, 131, 167, 0.14), transparent 70%);
+    radial-gradient(34% 38% at 50% 47%, rgba(255, 242, 220, 0.18) 0%, rgba(247, 182, 202, 0.09) 44%, transparent 74%),
+    radial-gradient(80% 62% at 50% 112%, rgba(234, 131, 167, 0.12), transparent 72%);
   filter: blur(4px);
   transform: none;
   animation: none !important;
 }
 
-/* Badan amplop: melayang di tengah, tidak lagi menutup seluruh layar. */
-#env .env-curtains {
+/* Petals tetap di belakang amplop supaya tidak menutupi kertas. */
+#env .env-petals {
+  z-index: 1;
+}
+
+/* ---------------------------------------------------------------------
+   A. Panggung, kemiringan mengikuti kursor, dan bayangan kontak
+   --------------------------------------------------------------------- */
+#env .env-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  perspective: 1500px;
+  perspective-origin: 50% 38%;
+  pointer-events: none;
+}
+
+#env .env-tilt {
+  position: relative;
+  width: var(--env-w);
+  height: var(--env-h);
+  transform-style: preserve-3d;
+  transform:
+    rotateX(calc(var(--env-my, 0) * -2.2deg))
+    rotateY(calc(var(--env-mx, 0) * 3.4deg));
+  transition: transform 0.8s cubic-bezier(0.22, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+#env.opening .env-tilt {
+  transform: rotateX(0.8deg) rotateY(0deg);
+  transition: transform 1.2s cubic-bezier(0.3, 0, 0.2, 1);
+}
+
+#env .env-contact-shadow {
+  position: absolute;
+  left: 9%;
+  right: 9%;
+  top: calc(100% - 4px);
+  height: 46px;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(50% 50% at 50% 42%, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0) 72%);
+  filter: blur(11px);
+}
+
+/* ---------------------------------------------------------------------
+   B. Badan amplop: lining rose di dalam, kertas cream di luar
+   --------------------------------------------------------------------- */
+#env .env-object {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: 4px;
+  perspective: 1450px;
+  perspective-origin: 50% 16%;
+  transform-style: preserve-3d;
+  box-shadow:
+    0 30px 56px -26px rgba(0, 0, 0, 0.82),
+    0 3px 10px rgba(0, 0, 0, 0.28);
+}
+
+#env .env-back {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 4px;
+  background:
+    radial-gradient(70% 54% at 50% 12%, rgba(255, 226, 196, 0.08), transparent 62%),
+    url("assets/sakura-flowers.svg?v=19") 50% 4% / 118% auto no-repeat,
+    linear-gradient(158deg, #5b2439 0%, #451a2d 50%, #2c1020 100%);
+  box-shadow: inset 0 0 52px rgba(0, 0, 0, 0.52);
+}
+
+#env .env-lining-glow {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 2%;
+  height: 46%;
+  pointer-events: none;
+  background: radial-gradient(50% 54% at 50% 34%, rgba(255, 226, 170, 0.52), rgba(255, 187, 158, 0.14) 50%, transparent 76%);
+  filter: blur(9px);
+  opacity: 0.28;
+}
+
+/* ---------------------------------------------------------------------
+   C. Kartu undangan: miniatur halaman welcome, navy berbingkai emas
+   --------------------------------------------------------------------- */
+#env .env-sheet {
   position: absolute;
   left: 50%;
-  top: 52%;
-  z-index: 3;
-  width: var(--env-paper-w);
-  height: var(--env-paper-h);
-  display: block;
-  margin: 0;
-  transform: translate(-50%, -50%);
-  overflow: visible;
-  perspective: 1100px;
-  background:
-    linear-gradient(150deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 46%),
-    linear-gradient(160deg, #fdf3e4 0%, #f8e2e8 58%, #f3cfdd 100%);
-  border: 1px solid rgba(194, 150, 92, 0.48);
-  border-radius: 6px;
-  box-shadow:
-    0 30px 70px -28px rgba(2, 5, 14, 0.78),
-    0 0 0 1px rgba(255, 250, 240, 0.22) inset,
-    0 0 44px rgba(247, 182, 202, 0.16);
-  animation: none !important;
-}
-
-/* Lipatan dalam: sisi kiri/kanan dan segitiga bawah. */
-#env .env-curtain {
-  position: absolute;
-  top: 0;
+  top: 16%;
   z-index: 2;
-  width: 50%;
+  width: 76%;
+  height: 70%;
+  transform: translate3d(-50%, 0, 0);
+  transform-origin: 50% 55%;
+  will-change: transform;
+  filter: drop-shadow(0 16px 22px rgba(0, 0, 0, 0.36));
+}
+
+#env .env-card {
+  position: absolute;
+  inset: 0;
+  width: 100%;
   height: 100%;
-  margin: 0;
+  max-width: none;
+  max-height: none;
+  overflow: hidden;
+  border-radius: 3px;
+  animation: none;
+  transform-style: flat;
   background:
-    linear-gradient(150deg, rgba(255, 255, 255, 0.48), rgba(255, 255, 255, 0) 55%),
-    linear-gradient(160deg, #fdf5ea 0%, #f8e1e9 62%, #f2cddc 100%);
-  box-shadow: none;
-  filter: none;
-  transform: none;
-  transition: none;
-  animation: none !important;
+    radial-gradient(72% 50% at 50% 0%, rgba(247, 182, 202, 0.13), transparent 62%),
+    radial-gradient(88% 62% at 50% 112%, rgba(229, 207, 168, 0.09), transparent 66%),
+    linear-gradient(164deg, #17264a 0%, #101b38 52%, #0a142c 100%);
+  box-shadow:
+    0 22px 40px -18px rgba(2, 5, 14, 0.78),
+    inset 0 0 0 1px rgba(229, 207, 168, 0.34);
+  transform-origin: 50% 50%;
+  will-change: transform, opacity, border-radius;
 }
 
-#env .env-curtain-l {
-  left: 0;
-  clip-path: polygon(0 0, 100% 50%, 0 100%);
-}
-
-#env .env-curtain-r {
-  right: 0;
-  clip-path: polygon(100% 0, 0 50%, 100% 100%);
-}
-
-#env .env-curtain::before,
-#env .env-curtain::after,
-#env .env-sheen,
-#env .env-crest-half,
-#env .env-crest-aura {
+/* Dekorasi lama pada .env-card tidak dipakai lagi; bingkai baru ada di
+   .env-card-frame supaya ukurannya tetap presisi di dalam kartu. */
+#env .env-card::before,
+#env .env-card::after {
+  content: none !important;
   display: none !important;
 }
 
-/* Segitiga bawah dan garis dalam amplop. */
-#env .env-curtains::before {
-  content: "";
-  position: absolute;
-  inset: 2px;
-  z-index: 1;
-  clip-path: polygon(0 100%, 50% 24%, 100% 100%);
-  background: linear-gradient(180deg, #fdf5ea 0%, #f6dbe5 70%, #efc4d6 100%);
-  box-shadow: none;
-  pointer-events: none;
+#env .env-back::before {
+  display: none !important;
 }
 
-#env .env-curtains::after {
-  content: "";
+#env .env-card-frame {
   position: absolute;
   inset: 7px;
-  z-index: 3;
-  border: 1px solid rgba(194, 150, 92, 0.26);
-  border-radius: 3px;
   pointer-events: none;
+  border: 1px solid rgba(229, 207, 168, 0.55);
+  border-radius: 2px;
 }
 
-/* Penutup atas: segitiga yang dibuka dengan melipat ke atas. */
-#env .env-valance {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  z-index: 4;
-  height: 100%;
-  margin: 0;
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 42%),
-    linear-gradient(160deg, #fdf6ec 0%, #f9e4ec 60%, #f2cad9 100%);
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-  transform-origin: 50% 0;
-  backface-visibility: hidden;
-  animation: none !important;
-  transition: none;
-}
-
-#env .env-valance::before {
+#env .env-card-frame::after {
   content: "";
   position: absolute;
-  inset: 6px 6px auto;
-  height: calc(100% - 12px);
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  border: 0;
-  background: none;
-  box-shadow: inset 0 -1px 0 rgba(194, 150, 92, 0.4);
-  opacity: 0.8;
+  inset: 4px;
+  border: 1px solid rgba(229, 207, 168, 0.18);
+  border-radius: 1px;
 }
 
-#env .env-valance::after {
-  display: none;
-}
-
-/* Surat di dalam amplop. */
-#env .env-letter {
+#env .env-card-glow {
   position: absolute;
   left: 50%;
-  top: 52%;
-  z-index: 5;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.35rem;
-  width: min(82vw, 470px);
-  padding: clamp(0.9rem, 2.6vw, 1.5rem);
-  text-align: center;
-  opacity: 0;
+  top: 42%;
+  width: 82%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
   pointer-events: none;
-  transform: translate(-50%, -50%) translateY(38px);
-  background:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.96), rgba(255, 246, 235, 0.92));
-  border: 1px solid rgba(194, 150, 92, 0.42);
-  border-radius: 8px;
-  box-shadow: 0 18px 44px -20px rgba(10, 18, 38, 0.55);
-  will-change: transform, opacity;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(247, 182, 202, 0.12), rgba(229, 207, 168, 0.05) 44%, transparent 70%);
+  filter: blur(7px);
 }
 
-#env .env-letter-kicker {
-  font: 500 clamp(0.52rem, 1.2vw, 0.68rem) / 1.4 var(--font-ui);
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: rgba(23, 35, 74, 0.5);
-}
-
-#env .env-letter-names {
-  font-family: var(--font-script);
-  font-size: clamp(2rem, 7vw, 3.4rem);
-  line-height: 1.05;
-  color: var(--navy);
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
-}
-
-#env .env-letter-date {
-  font: 500 clamp(0.68rem, 1.8vw, 0.92rem) / 1.4 var(--font-ui);
-  letter-spacing: 0.18em;
-  color: var(--pink-deep);
-}
-
-/* Segel lilin heksagonal tetap menjadi tombol utama. */
-#env .env-stage {
+#env .env-card-body {
   position: absolute;
-  left: 50%;
-  top: 52%;
-  z-index: 7;
+  inset: 12% 12%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: auto;
-  min-height: 0;
-  margin: 0;
-  padding: 0;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  animation: none !important;
+  gap: clamp(2px, 0.5vh, 5px);
+  text-align: center;
+  will-change: opacity, transform;
 }
 
-#env .env-core {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.7rem;
-  pointer-events: none;
-  transform: none !important;
+#env .env-card-kicker {
+  font: 500 clamp(0.4rem, 0.9vh, 0.5rem) / 1.5 var(--font-ui);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(247, 234, 220, 0.72);
 }
 
-#env .env-crest-hit {
+#env .env-card-orn {
   position: relative;
-  isolation: isolate;
-  width: clamp(104px, 15vw, 156px);
+  width: 54px;
+  height: 6px;
+  margin: 1px 0;
+  background: linear-gradient(90deg, transparent, rgba(229, 207, 168, 0.7) 34%, rgba(229, 207, 168, 0.7) 66%, transparent) center / 100% 1px no-repeat;
+}
+
+#env .env-card-orn::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  background: var(--gold);
+  transform: rotate(45deg);
+}
+
+#env .env-card-name {
+  font-family: var(--font-script);
+  font-size: clamp(1.55rem, 3.2vh, 2.15rem);
+  line-height: 1.02;
+  color: var(--ivory);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.28);
+}
+
+#env .env-card-amp {
+  font-family: var(--font-script);
+  font-size: clamp(1rem, 2.1vh, 1.4rem);
+  line-height: 0.9;
+  color: var(--blush);
+}
+
+#env .env-card-rule {
+  width: 28%;
+  height: 1px;
+  margin: clamp(2px, 0.7vh, 6px) 0 1px;
+  background: linear-gradient(90deg, transparent, rgba(229, 207, 168, 0.48), transparent);
+}
+
+#env .env-card-date {
+  font: 500 clamp(0.46rem, 1vh, 0.56rem) / 1.5 var(--font-ui);
+  letter-spacing: 0.24em;
+  color: rgba(247, 234, 220, 0.86);
+}
+
+#env .env-card-guest {
+  max-width: 100%;
+  overflow: hidden;
+  font: 400 clamp(0.4rem, 0.9vh, 0.48rem) / 1.45 var(--font-ui);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(201, 207, 224, 0.6);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#env .env-card-guest b {
+  font-weight: 500;
+  color: var(--gold);
+}
+
+/* ---------------------------------------------------------------------
+   D. Kantung amplop: tiga lipatan tipis yang bertemu di tengah
+   --------------------------------------------------------------------- */
+#env .env-pocket {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow: hidden;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+#env .env-pocket-part {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+#env .env-pocket-left {
+  clip-path: polygon(0 0, 50% 50%, 0 100%);
+  background:
+    var(--env-grain) 0 0 / 180px 180px,
+    linear-gradient(58deg, #efd8c2 0%, #f8ead8 40%, #f4e0cd 72%, #ecd0c1 100%);
+  filter: drop-shadow(1px 0 1px rgba(92, 52, 38, 0.18));
+}
+
+#env .env-pocket-right {
+  clip-path: polygon(100% 0, 50% 50%, 100% 100%);
+  background:
+    var(--env-grain) 0 0 / 180px 180px,
+    linear-gradient(122deg, #f8e9d6 0%, #f2dbc8 52%, #e9cabd 100%);
+  filter: drop-shadow(-1px 0 1px rgba(92, 52, 38, 0.2));
+}
+
+#env .env-pocket-bottom {
+  clip-path: polygon(0 100%, 50% 50%, 100% 100%);
+  background:
+    var(--env-grain) 0 0 / 180px 180px,
+    linear-gradient(0deg, #eed4c0 0%, #f8e8d5 54%, #f5e1cd 100%);
+  filter: drop-shadow(0 -1px 1px rgba(92, 52, 38, 0.16));
+}
+
+/* Garis lipatan: dibuat sebagai SVG supaya tetap tajam di semua ukuran. */
+#env .env-creases {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 0 rgba(255, 252, 244, 0.5));
+}
+
+#env .env-creases path,
+#env .env-creases rect {
+  fill: none;
+  stroke: rgba(126, 79, 58, 0.3);
+  stroke-width: 0.55;
+}
+
+/* Bayangan flap atas jatuh tepat di bawah garis lipatan V. Separuh
+   goresannya tertutup flap, separuh lagi membayang di kertas depan. */
+#env .env-creases .env-flap-cast {
+  stroke: rgba(96, 54, 42, 0.4);
+  stroke-width: 1.15;
+  filter: blur(1px);
+  transform: translateY(0.8px);
+}
+
+#env .env-creases .env-rim {
+  stroke: rgba(255, 252, 244, 0.44);
+  stroke-width: 0.34;
+}
+
+#env .env-pocket-lip {
+  position: absolute;
+  left: 3%;
+  right: 3%;
+  top: 2px;
+  height: 1px;
+  z-index: 5;
+  background: linear-gradient(90deg, transparent, rgba(255, 250, 240, 0.55) 22%, rgba(255, 250, 240, 0.55) 78%, transparent);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Ruang dalam amplop ikut menggelap saat flap terbuka. */
+#env .env-mouth-shade {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 4;
+  height: 50%;
+  clip-path: polygon(0 0, 100% 0, 50% 50%);
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(24, 7, 16, 0.58) 0%, rgba(40, 12, 24, 0.26) 42%, transparent 80%);
+}
+
+/* ---------------------------------------------------------------------
+   E. Flap atas: sisi depan kertas cream, sisi belakang lining rose
+   --------------------------------------------------------------------- */
+#env .env-flap {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  transform-origin: 50% 0;
+  transform-style: preserve-3d;
+  transition: none;
+  will-change: transform;
+}
+
+#env .env-flap-face {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(0 0, 100% 0, 50% 50%);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  pointer-events: none;
+}
+
+/* Sisi belakang baru dipakai setelah flap melewati 90 derajat. */
+#env .env-flap-back {
+  opacity: 0;
+}
+
+#env .env-flap-front {
+  background:
+    var(--env-grain) 0 0 / 180px 180px,
+    radial-gradient(86% 64% at 50% 6%, rgba(255, 255, 255, 0.46), transparent 58%),
+    linear-gradient(161deg, #f9eedd 0%, #f6e3d1 58%, #efd5c6 100%);
+}
+
+#env .env-flap-back {
+  transform: rotateX(180deg);
+  background:
+    radial-gradient(74% 58% at 50% 30%, rgba(255, 226, 196, 0.08), transparent 64%),
+    url("assets/sakura-flowers.svg?v=19") 50% 0% / 118% auto no-repeat,
+    linear-gradient(158deg, #6b2a43 0%, #4b1b2f 54%, #2c1020 100%);
+  box-shadow: inset 0 0 34px rgba(0, 0, 0, 0.42);
+}
+
+/* ---------------------------------------------------------------------
+   F. Segel lilin yang terbelah dua
+   --------------------------------------------------------------------- */
+#env .env-seal-wrap {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 9;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+#env .env-seal-hit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(96px, 13vw, 116px);
   aspect-ratio: 1 / 1;
-  margin: 0;
+  padding: 0;
   border: 0;
   background: none;
+  cursor: pointer;
   pointer-events: auto;
-  transform: none;
+  transform: translate(-50%, -50%);
   transition:
     transform 0.45s var(--ease-out),
     filter 0.45s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
-#env .env-crest-hit::before,
-#env .env-crest-hit::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  clip-path: var(--env-crest);
-  pointer-events: none;
-}
-
-#env .env-crest-hit::before {
-  z-index: -2;
-  background: linear-gradient(150deg, #fff0cb 0%, #e6bd79 28%, #c58e49 52%, #f3d79b 76%, #b97d3a 100%);
-  filter: drop-shadow(0 12px 18px rgba(6, 11, 24, 0.55));
-}
-
-#env .env-crest-hit::after {
-  z-index: -1;
-  inset: 4px;
-  background:
-    radial-gradient(circle at 50% 34%, rgba(247, 182, 202, 0.24), transparent 62%),
-    linear-gradient(155deg, #1a2b55 0%, #101d3f 60%, #0a1430 100%);
-}
-
-#env:has(.env-crest-hit:hover) .env-crest-hit,
-#env:has(.env-crest-hit:focus-visible) .env-crest-hit {
-  transform: translateY(-4px) scale(1.04);
+#env .env-seal-hit:hover,
+#env .env-seal-hit:focus-visible {
+  transform: translate(-50%, -50%) translateY(-3px) scale(1.045);
   filter:
-    drop-shadow(0 0 16px rgba(255, 236, 198, 0.5))
-    drop-shadow(0 0 22px rgba(247, 182, 202, 0.38));
+    drop-shadow(0 0 16px rgba(255, 222, 178, 0.42))
+    drop-shadow(0 0 30px rgba(233, 120, 158, 0.3));
 }
 
-#env .env-crest-hit:focus-visible {
+#env .env-seal-hit:active {
+  transform: translate(-50%, -50%) scale(0.96);
+}
+
+#env .env-seal-hit:focus-visible {
   outline: none;
 }
 
-#env .env-seal-hint {
-  font: 500 clamp(0.58rem, 1.3vw, 0.74rem) / 1.4 var(--font-ui);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: rgba(23, 35, 74, 0.62);
+#env .env-seal-half {
+  position: absolute;
+  inset: 0;
   pointer-events: none;
-  transition: opacity 0.35s ease;
 }
 
-#env .env-crest-amp {
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
-  /* Warna teks padat lebih stabil daripada background-clip:text ketika
-     dua belahan dipotong dengan clip-path. */
-  background: none;
-  -webkit-background-clip: border-box;
-  background-clip: border-box;
-  color: #f0cf94;
-  -webkit-text-fill-color: #f0cf94;
-  text-shadow:
-    0 1px 0 rgba(90, 48, 12, 0.55),
-    0 0 12px rgba(255, 236, 198, 0.42);
+#env .env-seal-half-l {
+  clip-path: polygon(
+    -6% -6%,
+    50.4% -6%,
+    48% 10%,
+    52% 22%,
+    48.5% 35%,
+    51.5% 48%,
+    48.5% 61%,
+    52% 74%,
+    48.5% 87%,
+    50.4% 106%,
+    -6% 106%
+  );
 }
 
-/* Cahaya dari dalam amplop. */
-#env .env-seam {
-  left: 50%;
-  top: 52%;
-  z-index: 6;
-  width: 3px;
-  height: var(--env-paper-h);
-  margin: 0;
-  transform-origin: 50% 100%;
-  background: linear-gradient(180deg, transparent, #fff 22%, #fff 78%, transparent);
+#env .env-seal-half-r {
+  clip-path: polygon(
+    106% -6%,
+    49.6% -6%,
+    52% 10%,
+    48% 22%,
+    51.5% 35%,
+    48.5% 48%,
+    51.5% 61%,
+    48% 74%,
+    51.5% 87%,
+    49.6% 106%,
+    106% 106%
+  );
+}
+
+#env .env-seal-wax {
+  position: absolute;
+  inset: 6%;
+  border-radius: 47% 53% 51% 49% / 52% 48% 52% 48%;
+  background:
+    radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.32), transparent 27%),
+    radial-gradient(circle at 66% 76%, rgba(74, 10, 30, 0.42), transparent 56%),
+    radial-gradient(circle at 50% 44%, #dc6188 0%, #bb4166 44%, #832543 76%, #5c152d 100%);
   box-shadow:
-    0 0 16px 4px rgba(255, 255, 255, 0.9),
-    0 0 52px 20px rgba(255, 236, 196, 0.45);
-  animation: none !important;
+    0 12px 20px -9px rgba(24, 3, 10, 0.85),
+    inset 0 2px 2px rgba(255, 255, 255, 0.24),
+    inset 0 -5px 10px rgba(54, 0, 18, 0.42);
 }
 
-/* ---------- Alur membuka amplop ---------- */
+#env .env-seal-wax::after {
+  content: "";
+  position: absolute;
+  inset: 8%;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 222, 178, 0.16);
+  opacity: 0.8;
+}
+
+#env .env-seal-emboss {
+  position: absolute;
+  inset: 20%;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 226, 178, 0.5);
+  box-shadow:
+    inset 0 0 10px rgba(74, 10, 30, 0.52),
+    0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+#env .env-seal-ring {
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 226, 178, 0.2);
+}
+
+#env .env-seal-mono {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 0.1em;
+  font: 600 clamp(0.86rem, 2.3vh, 1.06rem) / 1 var(--font-display);
+  letter-spacing: 0.04em;
+  color: #f5d8a4;
+  text-shadow:
+    0 1px 0 rgba(72, 12, 30, 0.68),
+    0 0 10px rgba(255, 232, 190, 0.24);
+}
+
+#env .env-seal-mono i {
+  font-family: var(--font-script);
+  font-style: normal;
+  font-size: 1.28em;
+  color: #ffe9c4;
+}
+
+/* Retak halus di tengah segel saat masih utuh. */
+#env .env-seal-hit::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 15%;
+  bottom: 15%;
+  width: 2px;
+  margin-left: -1px;
+  pointer-events: none;
+  opacity: 0.34;
+  background: linear-gradient(180deg, transparent, rgba(54, 8, 22, 0.72) 18%, rgba(255, 224, 190, 0.3) 50%, rgba(54, 8, 22, 0.72) 82%, transparent);
+  clip-path: polygon(34% 0, 72% 12%, 40% 24%, 76% 38%, 42% 52%, 70% 66%, 36% 80%, 64% 100%);
+  transition: opacity 0.2s ease;
+}
+
+#env.opening .env-seal-hit::after {
+  opacity: 0;
+}
+
+#env .env-seal-hint {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--env-h) * 0.5 + 20px);
+  z-index: 8;
+  width: max-content;
+  transform: translateX(-50%);
+  pointer-events: none;
+  font: 500 clamp(0.52rem, 1.1vw, 0.64rem) / 1.5 var(--font-ui);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(247, 240, 225, 0.66);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+  animation: envHintBreathe 3.6s ease-in-out infinite;
+}
+
+/* ---------------------------------------------------------------------
+   G. Alur membuka: segel pecah, flap terlipat, kartu naik, lalu membesar
+   --------------------------------------------------------------------- */
 @media (prefers-reduced-motion: no-preference) {
-  #env.opening .env-valance {
-    animation: envLidLift 1.15s cubic-bezier(0.34, 0.02, 0.18, 1) 0.1s both;
+  #env.opening .env-seal-hit {
+    animation: envSealPress 0.8s cubic-bezier(0.3, 0.1, 0.2, 1) both;
+    pointer-events: none;
+    cursor: default;
   }
 
-  #env.opening .env-curtain-l {
-    animation: envEnvelopeFlapL 0.9s cubic-bezier(0.32, 0.05, 0.2, 1) 0.42s both;
+  #env.opening .env-seal-half-l {
+    animation: envSealHalfL 0.9s cubic-bezier(0.3, 0.42, 0.55, 1) 0.06s both;
   }
 
-  #env.opening .env-curtain-r {
-    animation: envEnvelopeFlapR 0.9s cubic-bezier(0.32, 0.05, 0.2, 1) 0.46s both;
-  }
-
-  #env.opening .env-curtains::before {
-    animation: envEnvelopeBottom 0.8s cubic-bezier(0.32, 0.05, 0.2, 1) 0.6s both;
-  }
-
-  #env.opening .env-seam {
-    animation: envEnvelopeLight 1.45s ease-out 0.24s both;
-  }
-
-  #env.opening .env-veil {
-    animation: envEnvelopeGlow 1.8s ease-out 0.12s both;
-  }
-
-  #env.opening .env-letter {
-    animation: envLetterRise 1s cubic-bezier(0.22, 0.8, 0.2, 1) 0.52s both;
-  }
-
-  #env.opening .env-crest-hit {
-    animation: envSealMelt 0.6s ease 0.06s both;
+  #env.opening .env-seal-half-r {
+    animation: envSealHalfR 0.9s cubic-bezier(0.3, 0.42, 0.55, 1) 0.06s both;
   }
 
   #env.opening .env-seal-hint {
-    animation: envHintFade 0.4s ease 0.06s both;
+    animation: envHintOut 0.3s ease 0.08s both;
+  }
+
+  #env.opening .env-flap {
+    animation:
+      envFlapOpen 1.2s cubic-bezier(0.52, 0.02, 0.2, 1) 0.08s both,
+      envShellFade 0.65s ease 1.25s both;
+  }
+
+  /* Backface culling tidak selalu konsisten pada elemen ber-clip-path,
+     jadi sisi depan dan lining saling menggantikan tepat di 90 derajat. */
+  #env.opening .env-flap-front {
+    animation: envFlapFrontFlip 1.2s linear 0.08s both;
+  }
+
+  #env.opening .env-flap-back {
+    animation: envFlapBackFlip 1.2s linear 0.08s both;
+  }
+
+  #env.opening .env-lining-glow {
+    animation: envLiningGlow 2.1s ease 0.4s both;
+  }
+
+  #env.opening .env-sheet {
+    animation: envSheetRise 1.15s cubic-bezier(0.22, 0.8, 0.2, 1) 0.55s both;
+  }
+
+  #env.opening .env-card {
+    animation:
+      envCardGrow 0.95s cubic-bezier(0.55, 0.02, 0.2, 1) 1.35s both,
+      envCardFade 0.8s ease 2.35s both;
+  }
+
+  #env.opening .env-card-body {
+    animation: envCardBodyOut 0.55s ease 1.5s both;
+  }
+
+  #env.opening .env-sky,
+  #env.opening .env-veil,
+  #env.opening .env-back,
+  #env.opening .env-pocket,
+  #env.opening .env-mouth-shade,
+  #env.opening .env-contact-shadow,
+  #env.opening .env-petals {
+    animation: envShellFade 0.65s ease 1.25s both;
   }
 }
 
-@keyframes envLidLift {
-  0% {
-    transform: rotateX(0deg);
+@keyframes envHintBreathe {
+  0%, 100% {
+    opacity: 0.62;
   }
-  30% {
-    transform: rotateX(-14deg);
-  }
-  100% {
-    transform: rotateX(178deg) translateY(-4%);
+  50% {
+    opacity: 0.95;
   }
 }
 
-@keyframes envEnvelopeFlapL {
+@keyframes envSealPress {
   0% {
-    transform: translate3d(0, 0, 0) rotateY(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translate3d(-104%, 0, 0) rotateY(24deg);
-    opacity: 0.15;
-  }
-}
-
-@keyframes envEnvelopeFlapR {
-  0% {
-    transform: translate3d(0, 0, 0) rotateY(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translate3d(104%, 0, 0) rotateY(-24deg);
-    opacity: 0.15;
-  }
-}
-
-@keyframes envEnvelopeBottom {
-  0% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(102%);
-    opacity: 0;
-  }
-}
-
-@keyframes envEnvelopeLight {
-  0% {
-    opacity: 0;
-    transform: scaleY(0.04);
-  }
-  10% {
-    opacity: 1;
-    transform: scaleY(0.18);
-  }
-  40% {
-    opacity: 0.92;
-    transform: scaleY(0.75);
-  }
-  100% {
-    opacity: 0;
-    transform: scaleY(1);
-  }
-}
-
-@keyframes envEnvelopeGlow {
-  0% {
-    opacity: 0.7;
-    transform: scale(0.85);
+    transform: translate(-50%, -50%) scale(1);
   }
   22% {
-    opacity: 1;
-    transform: scale(1);
+    transform: translate(-50%, -50%) scale(0.92);
+  }
+  42% {
+    transform: translate(-50%, -50%) scale(1.02);
   }
   100% {
-    opacity: 0;
-    transform: scale(1.35);
+    transform: translate(-50%, -50%) scale(1);
   }
 }
 
-@keyframes envLetterRise {
+@keyframes envSealHalfL {
   0% {
-    opacity: 0;
-    transform: translate(-50%, -50%) translateY(38px) scale(0.96);
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  16% {
+    transform: translate(-3px, 1px) rotate(-3deg);
+    opacity: 1;
+  }
+  55% {
+    transform: translate(-56px, 42px) rotate(-32deg);
+    opacity: 1;
   }
   100% {
-    opacity: 1;
-    transform: translate(-50%, -50%) translateY(calc(var(--env-paper-h) * -0.86)) scale(1);
+    transform: translate(-88px, 92px) rotate(-58deg);
+    opacity: 0;
   }
 }
 
-@keyframes envSealMelt {
+@keyframes envSealHalfR {
   0% {
+    transform: translate(0, 0) rotate(0deg);
     opacity: 1;
-    transform: scale(1);
+  }
+  16% {
+    transform: translate(3px, 1px) rotate(3deg);
+    opacity: 1;
+  }
+  55% {
+    transform: translate(58px, 48px) rotate(28deg);
+    opacity: 1;
   }
   100% {
+    transform: translate(92px, 100px) rotate(52deg);
     opacity: 0;
-    transform: scale(0.72) rotate(-8deg);
   }
 }
 
-@keyframes envHintFade {
+@keyframes envHintOut {
   to {
     opacity: 0;
+  }
+}
+
+@keyframes envFlapOpen {
+  0% {
+    transform: rotateX(0deg);
+    z-index: 6;
+  }
+  8% {
+    transform: rotateX(7deg);
+    z-index: 6;
+  }
+  18% {
+    transform: rotateX(-9deg);
+    z-index: 6;
+  }
+  48% {
+    transform: rotateX(-92deg);
+    z-index: 6;
+  }
+  49% {
+    z-index: 0;
+  }
+  78% {
+    transform: rotateX(-176deg);
+    z-index: 0;
+  }
+  100% {
+    transform: rotateX(-172deg);
+    z-index: 0;
+  }
+}
+
+@keyframes envFlapFrontFlip {
+  0%,
+  47.9% {
+    opacity: 1;
+  }
+  48%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes envFlapBackFlip {
+  0%,
+  47.9% {
+    opacity: 0;
+  }
+  48%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes envLiningGlow {
+  0% {
+    opacity: 0.2;
+    transform: scale(0.9);
+  }
+  46% {
+    opacity: 0.62;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.34;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes envSheetRise {
+  0% {
+    transform: translate3d(-50%, 0, 0) scale(0.985) rotateX(0deg);
+  }
+  14% {
+    transform: translate3d(-50%, -6%, 0) scale(0.985) rotateX(0deg);
+  }
+  55% {
+    transform: translate3d(-50%, -62%, 0) scale(1.025) rotateX(-2.5deg);
+  }
+  100% {
+    transform: translate3d(-50%, -72%, 0) scale(1) rotateX(0deg);
+  }
+}
+
+@keyframes envCardGrow {
+  0% {
+    transform: scale(1) rotateX(0deg);
+    border-radius: 3px;
+  }
+  30% {
+    transform: scale(1.12) rotateX(-1.4deg);
+    border-radius: 2px;
+  }
+  100% {
+    transform: scale(var(--env-grow)) rotateX(0deg);
+    border-radius: 0;
+  }
+}
+
+@keyframes envCardBodyOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes envCardFade {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes envShellFade {
+  to {
+    opacity: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   H. Gerak minimal: amplop tetap tampil utuh, lalu langsung ke welcome.
+   --------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  #env .env-seal-hint {
+    animation: none;
+  }
+
+  #env .env-seal-hit,
+  #env .env-seal-half,
+  #env .env-flap,
+  #env .env-sheet,
+  #env .env-card,
+  #env .env-sky,
+  #env .env-veil {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   I. Layar kecil dan pendek: amplop tidak boleh terpotong.
+   --------------------------------------------------------------------- */
+@media (max-width: 520px) {
+  #env {
+    --env-w: min(88vw, 344px, calc((100dvh - 132px) / 1.3));
+  }
+
+  #env .env-seal-hit {
+    width: clamp(88px, 24vw, 104px);
+  }
+
+  #env .env-seal-hint {
+    top: calc(var(--env-h) * 0.5 + 14px);
+    letter-spacing: 0.2em;
+  }
+
+  #env .env-card-name {
+    font-size: clamp(1.45rem, 3.4vh, 1.9rem);
+  }
+}
+
+@media (max-height: 640px) and (min-width: 521px) {
+  #env {
+    --env-w: min(58vw, 300px, calc((100dvh - 120px) / 1.3));
   }
 }
 
@@ -15571,13 +16045,4 @@ body.env-entered #cover .cover-content {
 #cover #openBtn.btn-open:focus-visible::before,
 #cover #openBtn.btn-open:active::before {
   transform: translateX(130%);
-}
-
-/* Pemisahan ampersand disesuaikan dengan ukuran segel yang lebih kecil. */
-#env.opening .env-crest-amp-l {
-  transform: translate(calc(-50% - 26px), -50%) rotate(-8deg);
-}
-
-#env.opening .env-crest-amp-r {
-  transform: translate(calc(-50% + 26px), -50%) rotate(8deg);
 }

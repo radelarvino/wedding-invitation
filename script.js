@@ -221,6 +221,15 @@ function renderCover() {
   const guestEl = $("#guest");
   if (guestEl) guestEl.textContent = guest.name;
 
+  /* Kartu yang keluar dari amplop memakai nama dan tamu yang sama dengan
+     halaman sambutan, jadi transisinya terasa menyambung. */
+  const envCardA = $("#envCardA");
+  const envCardB = $("#envCardB");
+  const envCardGuest = $("#envCardGuest");
+  if (envCardA) envCardA.textContent = a.nick;
+  if (envCardB) envCardB.textContent = b.nick;
+  if (envCardGuest) envCardGuest.textContent = guest.name;
+
   const tagEl = $("#tag");
   if (tagEl) tagEl.hidden = !guest.priority;
 
@@ -2667,6 +2676,18 @@ function openEnvelope() {
 
   const cover = $("#cover");
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Skala kartu dihitung dari ukuran aslinya supaya pada layar apa pun
+     kartu benar-benar menutup seluruh viewport saat membesar. */
+  const card = envBox.querySelector(".env-card");
+  if (card) {
+    const cr = card.getBoundingClientRect();
+    if (cr.width > 0 && cr.height > 0) {
+      const grow = Math.max(innerWidth / cr.width, innerHeight / cr.height) * 1.06;
+      envBox.style.setProperty("--env-grow", grow.toFixed(3));
+    }
+  }
+
   envBox.classList.add("opening");
 
   /* Tirai mulai terbuka: cover di belakangnya ikut memulai alur masuknya,
@@ -2700,7 +2721,7 @@ function openEnvelope() {
         btn.focus({ preventScroll: true });
       } catch (_) {}
     }
-  }, reduce ? 260 : 2900);
+  }, reduce ? 260 : 3200);
 }
 
 /**
