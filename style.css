@@ -15902,26 +15902,32 @@ body.env-entered #cover .cover-content {
 
 @keyframes envSheetRise {
   0% {
-    transform: translate3d(-50%, 0, 0) scale(0.985) rotateX(0deg);
+    transform: translate3d(-50%, 0, 0) scale(0.95) rotateX(3deg) rotateY(1deg);
   }
   14% {
-    transform: translate3d(-50%, -6%, 0) scale(0.985) rotateX(0deg);
+    transform: translate3d(-50%, -3%, 0) scale(0.95) rotateX(3deg) rotateY(1deg);
+  }
+  40% {
+    transform: translate3d(-50%, -12%, 0) scale(0.98) rotateX(2deg) rotateY(0deg);
   }
   55% {
-    transform: translate3d(-50%, -62%, 0) scale(1.025) rotateX(-2.5deg);
+    transform: translate3d(-50%, -28%, 0) scale(1.01) rotateX(1deg) rotateY(0deg);
+  }
+  70% {
+    transform: translate3d(-50%, -38%, 0) scale(1.02) rotateX(0deg) rotateY(0deg);
   }
   100% {
-    transform: translate3d(-50%, -72%, 0) scale(1) rotateX(0deg);
+    transform: translate3d(-50%, -48%, 0) scale(var(--env-grow)) rotateX(0deg) rotateY(0deg);
   }
 }
 
 @keyframes envCardGrow {
   0% {
-    transform: scale(1) rotateX(0deg);
+    transform: scale(0.92) rotateX(0deg);
     border-radius: 3px;
   }
   30% {
-    transform: scale(1.12) rotateX(-1.4deg);
+    transform: scale(1.08) rotateX(-1.4deg);
     border-radius: 2px;
   }
   100% {
@@ -15937,7 +15943,7 @@ body.env-entered #cover .cover-content {
   }
   100% {
     opacity: 0;
-    transform: scale(0.98);
+    transform: scale(1);
   }
 }
 
