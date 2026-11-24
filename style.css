@@ -15195,15 +15195,14 @@ body.env-entered #cover .cover-content {
 #lokasi .venue-photo {
   max-height: 42vh !important;
   overflow: hidden !important;
-  aspect-ratio: 4 / 3 !important;
+  aspect-ratio: 3 / 2 !important;
 }
 
 #lokasi .venue-photo img {
   width: 100% !important;
   height: 100% !important;
-  object-fit: contain !important;
+  object-fit: cover !important;
   object-position: center !important;
-  background: #0f1a36 !important;
 }
 
 @media (min-width: 600px) {
@@ -15253,6 +15252,7 @@ body.env-entered #cover .cover-content {
 
 @media (max-width: 599px) {
   #lokasi .venue-photo {
+    aspect-ratio: 3 / 2 !important;
     max-height: 38vh !important;
   }
   #lokasi .venue-card {
