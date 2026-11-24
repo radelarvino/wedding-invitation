@@ -3616,6 +3616,85 @@ main {
   }
 }
 
+/* =====================================================================
+   VENUE: FIT IN ONE VIEWPORT (desktop, tablet, laptop, mobile)
+   ===================================================================== */
+
+/* Venue section: tighter padding so content fits in one screen */
+#lokasi {
+  padding-top: clamp(2.5rem, 6vw, 4rem);
+  padding-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+
+/* Venue card: constrain height so it never overflows viewport */
+#lokasi .venue-card {
+  max-height: 82vh;
+  overflow: hidden;
+}
+
+/* Venue photo: scale height to fit viewport on all devices */
+#lokasi .venue-photo {
+  max-height: 45vh;
+}
+
+/* Mobile: photo takes width, height scales */
+@media (max-width: 599px) {
+  #lokasi .venue-photo {
+    aspect-ratio: 4 / 3;
+    max-height: 35vh;
+  }
+  #lokasi .venue-info {
+    padding: clamp(1rem, 4vw, 1.5rem);
+  }
+}
+
+/* Tablet: two columns, photo fits card height */
+@media (min-width: 600px) and (max-width: 1023px) {
+  #lokasi .venue-photo {
+    min-height: 300px;
+    max-height: 50vh;
+  }
+}
+
+/* Desktop & laptop: photo fills card but capped */
+@media (min-width: 1024px) {
+  #lokasi .venue-photo {
+    min-height: 350px;
+    max-height: 55vh;
+  }
+}
+
+/* Very short screens: further reduce photo height */
+@media (max-height: 700px) {
+  #lokasi .venue-photo {
+    max-height: 30vh;
+  }
+  #lokasi .venue-card {
+    max-height: 88vh;
+  }
+}
+
+/* Venue info text: clean formatting */
+#lokasi .venue-info h3 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  line-height: 1.2;
+}
+
+#lokasi .venue-info p {
+  margin: 0 0 1.25rem;
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  line-height: 1.6;
+  max-width: 100%;
+}
+
+#lokasi .venue-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
 
 /* =====================================================================
    23. ANIMASI POINTER — KARTU AKAD NIKAH & RESEPSI (.evc)
