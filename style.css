@@ -4544,18 +4544,46 @@ main > section.s-closing {
   font-size: 0.56rem;
 }
 
-/* ---------- Lokasi ---------- */
-#lokasi .venue-card {
-  max-width: 960px;
+/* ---------- Venue Photo ---------- */
+.venue-photo {
+  position: relative;
+  overflow: hidden;
+  align-self: stretch;
+  border-radius: calc(var(--radius) - 2px);
+  background: none;
 }
 
-#lokasi .venue-photo {
-  /* Let base .venue-photo handle aspect-ratio responsively */
+.venue-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
 }
 
-#lokasi .venue-info {
-  gap: 0.5rem;
-  padding: clamp(0.95rem, 2vw, 1.5rem);
+/* Pastikan photo height menyesuaikan card height di desktop */
+@media (min-width: 768px) {
+  .venue-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+  }
+  .venue-photo {
+    border-radius: calc(var(--radius) - 2px) 0 0 calc(var(--radius) - 2px);
+  }
+}
+
+/* Mobile: foto di atas teks, lebar penuh */
+@media (max-width: 599px) {
+  .venue-card {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+  .venue-photo {
+    margin: 0;
+    border-radius: calc(var(--radius) - 2px) calc(var(--radius) - 2px) 0 0;
+    max-height: 320px;
+  }
 }
 
 #lokasi .venue-icon {
@@ -6882,7 +6910,7 @@ main > section.s-closing {
 
 #lokasi .venue-photo {
   min-width: 0;
-  background: var(--navy);
+  /* background: var(--navy) dihapus agar foto full-bleed */
 }
 
 #lokasi .venue-info {
