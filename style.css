@@ -3565,12 +3565,9 @@ main {
 .venue-photo {
   position: relative;
   overflow: hidden;
-  background: #0f1a36;
-  border-bottom: 1px solid var(--line);
-  /* Mobile: full-width photo, height scales with screen width */
-  aspect-ratio: 4 / 3;
-  max-height: 320px;
-}
+  align-self: stretch;
+  border-radius: 20px 20px 0 0;
+  background: none;
 
 .venue-photo svg,
 .venue-photo img {
@@ -15222,19 +15219,17 @@ body.env-entered #cover .cover-content {
   grid-template-rows: auto 1fr !important;
 }
 
-/* Venue photo: taller frame so less of the image is cut off */
+/* Venue photo: fill frame with cover */
 #lokasi .venue-photo {
-  max-height: 44vh !important;
-  overflow: hidden !important;
-  aspect-ratio: 3 / 2 !important;
+  /* background sudah dihapus, height diatur oleh card grid */
 }
 
 #lokasi .venue-photo img {
   width: 100% !important;
   height: 100% !important;
-  object-fit: contain !important;
-  object-position: center !important;
-  background: #0f1a36 !important;
+  object-fit: cover !important;
+  object-position: center 40% !important;
+  background: none !important;
 }
 
 @media (min-width: 600px) {
