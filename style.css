@@ -15196,7 +15196,7 @@ body.env-entered #cover .cover-content {
 
 /* Venue photo: taller frame so less of the image is cut off */
 #lokasi .venue-photo {
-  max-height: 52vh !important;
+  max-height: 44vh !important;
   overflow: hidden !important;
   aspect-ratio: 3 / 2 !important;
 }
@@ -15204,8 +15204,9 @@ body.env-entered #cover .cover-content {
 #lokasi .venue-photo img {
   width: 100% !important;
   height: 100% !important;
-  object-fit: cover !important;
-  object-position: center bottom !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  background: #0f1a36 !important;
 }
 
 @media (min-width: 600px) {
