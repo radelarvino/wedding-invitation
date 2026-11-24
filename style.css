@@ -15196,7 +15196,7 @@ body.env-entered #cover .cover-content {
 
 /* Venue photo: taller frame so less of the image is cut off */
 #lokasi .venue-photo {
-  max-height: 48vh !important;
+  max-height: 52vh !important;
   overflow: hidden !important;
   aspect-ratio: 3 / 2 !important;
 }
