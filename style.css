@@ -3564,10 +3564,12 @@ main {
 
 .venue-photo {
   position: relative;
-  aspect-ratio: 16 / 11;
   overflow: hidden;
   background: #0f1a36;
   border-bottom: 1px solid var(--line);
+  /* Mobile: full-width photo, height scales with screen width */
+  aspect-ratio: 4 / 3;
+  max-height: 320px;
 }
 
 .venue-photo svg,
@@ -3578,6 +3580,7 @@ main {
   object-fit: cover;
 }
 
+/* Tablet & Desktop (>=768px): two-column layout, photo fills card height */
 @media (min-width: 768px) {
   .venue-card {
     grid-template-columns: 1.1fr 0.9fr;
@@ -3585,9 +3588,31 @@ main {
 
   .venue-photo {
     aspect-ratio: auto;
-    min-height: 340px;
+    min-height: 380px;
+    max-height: none;
     border-bottom: 0;
     border-right: 1px solid var(--line);
+  }
+}
+
+/* Laptop & wide desktop (>=900px): tighter two-column layout */
+@media (min-width: 900px) {
+  .venue-photo {
+    min-height: 420px;
+  }
+}
+
+/* Short screens: prevent photo from taking over entire viewport */
+@media (max-height: 700px) {
+  .venue-photo {
+    max-height: 220px;
+  }
+}
+
+/* Short screens on tablet/desktop: reasonable photo height */
+@media (max-height: 700px) and (min-width: 768px) {
+  .venue-photo {
+    min-height: 260px;
   }
 }
 
@@ -4446,8 +4471,7 @@ main > section.s-closing {
 }
 
 #lokasi .venue-photo {
-  aspect-ratio: 16 / 10;
-  max-height: 250px;
+  /* Let base .venue-photo handle aspect-ratio responsively */
 }
 
 #lokasi .venue-info {
