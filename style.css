@@ -15179,11 +15179,13 @@ body.env-entered #cover .cover-content {
 /* =====================================================================
    VENUE: FIT IN ONE VIEWPORT (desktop, tablet, laptop, mobile)
    ===================================================================== */
+/* Venue section: raise header slightly, tighter padding */
 #lokasi {
-  padding-top: clamp(2rem, 5vw, 3rem) !important;
+  padding-top: clamp(1.5rem, 4vw, 2.5rem) !important;
   padding-bottom: clamp(2rem, 5vw, 3rem) !important;
 }
 
+/* Venue card: constrain height so it never overflows viewport */
 #lokasi .venue-card {
   max-height: 78vh !important;
   overflow: hidden !important;
@@ -15192,8 +15194,9 @@ body.env-entered #cover .cover-content {
   grid-template-rows: auto 1fr !important;
 }
 
+/* Venue photo: taller frame so less of the image is cut off */
 #lokasi .venue-photo {
-  max-height: 42vh !important;
+  max-height: 48vh !important;
   overflow: hidden !important;
   aspect-ratio: 3 / 2 !important;
 }
@@ -15221,18 +15224,18 @@ body.env-entered #cover .cover-content {
   display: flex !important;
   flex-direction: column !important;
   justify-content: center !important;
-  padding: clamp(1rem, 3vw, 1.75rem) !important;
-  gap: 0.75rem !important;
+  padding: clamp(0.85rem, 2.5vw, 1.5rem) !important;
+  gap: 0.6rem !important;
 }
 
 #lokasi .venue-info h3 {
-  margin: 0 0 0.4rem !important;
+  margin: 0 0 0.3rem !important;
   font-size: clamp(1.4rem, 4vw, 1.8rem) !important;
   line-height: 1.2 !important;
 }
 
 #lokasi .venue-info p {
-  margin: 0 0 1rem !important;
+  margin: 0 0 0.85rem !important;
   font-size: clamp(0.85rem, 2vw, 1rem) !important;
   line-height: 1.5 !important;
   max-width: 100% !important;
@@ -15240,26 +15243,26 @@ body.env-entered #cover .cover-content {
 
 #lokasi .venue-actions {
   display: flex !important;
-  gap: 0.6rem !important;
+  gap: 0.5rem !important;
   flex-wrap: wrap !important;
   margin-top: auto !important;
 }
 
 #lokasi .venue-actions .btn {
-  padding: 0.55rem 1rem !important;
-  font-size: 0.8rem !important;
+  padding: 0.5rem 0.9rem !important;
+  font-size: 0.78rem !important;
 }
 
 @media (max-width: 599px) {
   #lokasi .venue-photo {
     aspect-ratio: 3 / 2 !important;
-    max-height: 38vh !important;
+    max-height: 42vh !important;
   }
   #lokasi .venue-card {
     max-height: 80vh !important;
   }
   #lokasi .venue-info {
-    padding: clamp(0.9rem, 3vw, 1.25rem) !important;
+    padding: clamp(0.8rem, 3vw, 1.1rem) !important;
   }
 }
 
