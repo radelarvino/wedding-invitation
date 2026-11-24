@@ -15175,3 +15175,97 @@ body.env-entered #cover .cover-content {
     transform: scaleY(1);
   }
 }
+
+/* =====================================================================
+   VENUE: FIT IN ONE VIEWPORT (desktop, tablet, laptop, mobile)
+   ===================================================================== */
+#lokasi {
+  padding-top: clamp(2rem, 5vw, 3rem) !important;
+  padding-bottom: clamp(2rem, 5vw, 3rem) !important;
+}
+
+#lokasi .venue-card {
+  max-height: 78vh !important;
+  overflow: hidden !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  grid-template-rows: auto 1fr !important;
+}
+
+#lokasi .venue-photo {
+  max-height: 42vh !important;
+  overflow: hidden !important;
+  aspect-ratio: 4 / 3 !important;
+}
+
+#lokasi .venue-photo img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+@media (min-width: 600px) {
+  #lokasi .venue-card {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  #lokasi .venue-photo {
+    aspect-ratio: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    height: 100% !important;
+  }
+}
+
+#lokasi .venue-info {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  padding: clamp(1rem, 3vw, 1.75rem) !important;
+  gap: 0.75rem !important;
+}
+
+#lokasi .venue-info h3 {
+  margin: 0 0 0.4rem !important;
+  font-size: clamp(1.4rem, 4vw, 1.8rem) !important;
+  line-height: 1.2 !important;
+}
+
+#lokasi .venue-info p {
+  margin: 0 0 1rem !important;
+  font-size: clamp(0.85rem, 2vw, 1rem) !important;
+  line-height: 1.5 !important;
+  max-width: 100% !important;
+}
+
+#lokasi .venue-actions {
+  display: flex !important;
+  gap: 0.6rem !important;
+  flex-wrap: wrap !important;
+  margin-top: auto !important;
+}
+
+#lokasi .venue-actions .btn {
+  padding: 0.55rem 1rem !important;
+  font-size: 0.8rem !important;
+}
+
+@media (max-width: 599px) {
+  #lokasi .venue-photo {
+    max-height: 30vh !important;
+  }
+  #lokasi .venue-card {
+    max-height: 80vh !important;
+  }
+  #lokasi .venue-info {
+    padding: clamp(0.9rem, 3vw, 1.25rem) !important;
+  }
+}
+
+@media (max-height: 700px) {
+  #lokasi .venue-photo {
+    max-height: 25vh !important;
+  }
+  #lokasi .venue-card {
+    max-height: 85vh !important;
+  }
+}
