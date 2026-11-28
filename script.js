@@ -4,7 +4,7 @@
 /* ====== 1. CONSTANTS & CONFIGURATION ====== */
 const C = {
   SCRIPT_URL: "",                    // opsional; lebih mudah diisi di config.js
-  music: "",                        // kosong = pakai assets/audio/Glory_of_Love.mp3
+  music: "",                        // kosong = pakai src pada <audio id="bgm">
   musicVolume: 0.65,                // 0 - 1
   bgImage: "assets/prewed.webp",    // foto prewedding sebagai latar lembut halaman
   cover: ["assets/prewed.webp"],    // foto prewedding pada layar sampul
@@ -353,8 +353,9 @@ function renderContent() {
 
   const venueName = $("#venueName");
   if (venueName) venueName.textContent = C.venueName || "Lokasi Acara";
-  if (C.venuePhoto && $("#venuePhoto")) {
-    $("#venuePhoto").innerHTML = `<img src="${esc(C.venuePhoto)}" alt="${esc(C.venueName || "Lokasi acara")}" loading="lazy">`;
+  const venuePhoto = C.venuePhoto || CONFIG.venuePhoto;
+  if (venuePhoto && $("#venuePhoto")) {
+    $("#venuePhoto").innerHTML = `<img src="${esc(venuePhoto)}" alt="${esc(C.venueName || "Lokasi acara")}" loading="lazy">`;
   }
 
   const tlEl = $("#tl");

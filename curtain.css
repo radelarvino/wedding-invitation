@@ -1,0 +1,627 @@
+/* =====================================================================
+   TIRAI PANGGUNG — OVERLAY PEMBUKA
+   Kain navy beludru, lapisan cream-pink, sulam pink-cream.
+   Semua warna diturunkan dari --navy, --pink, --cream (color-mix()).
+   ===================================================================== */
+
+#curtain {
+  --c-navy: var(--navy);
+  --c-pink: var(--pink);
+  --c-cream: var(--cream);
+
+  --ct-deep: color-mix(in srgb, var(--c-navy) 96%, var(--c-pink));
+  --ct-mid: color-mix(in srgb, var(--c-navy) 84%, var(--c-cream));
+  --ct-lit: color-mix(in srgb, var(--c-navy) 64%, var(--c-cream));
+  --ct-hi: color-mix(in srgb, var(--c-navy) 52%, var(--c-cream));
+  --ct-line: color-mix(in srgb, var(--c-pink) 54%, var(--c-cream));
+  --ct-glow: color-mix(in srgb, var(--c-cream) 72%, var(--c-pink));
+  --ct-ink: color-mix(in srgb, var(--c-navy) 74%, var(--c-cream));
+
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: transparent;
+  color: var(--c-cream);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: contain;
+}
+
+#curtain[hidden] { display: none !important; }
+
+#curtain.is-live .ct-pleat { animation: none; }
+
+/* Latar panggung: menutup welcome sampai tirai mulai tersingkap */
+.curtain__stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--bd-o, 1);
+  background:
+    radial-gradient(120% 90% at 50% 34%,
+      color-mix(in srgb, var(--c-navy) 88%, var(--c-pink)) 0%,
+      var(--c-navy) 58%,
+      color-mix(in srgb, var(--c-navy) 92%, var(--c-cream)) 100%);
+}
+
+/* ---------- Kanvas panggung ---------- */
+.curtain__stage {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+  cursor: grab;
+}
+
+.curtain__stage:active { cursor: grabbing; }
+
+.curtain__stage:focus-visible {
+  outline: 2px solid var(--ct-line);
+  outline-offset: -6px;
+}
+
+/* Cahaya panggung: sangat terang, menyeluruh dari atas ke bawah, dan tetap
+   mengisi halaman selama tirai bergulir membuka. Dipasang di luar #curtain
+   supaya tidak ikut hilang saat tirai keluar frame. */
+.stage-light {
+  position: fixed;
+  inset: -10% -2%;
+  z-index: 59;
+  pointer-events: none;
+  opacity: var(--light-o, 0);
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--c-cream) 100%, var(--c-pink)) 0%,
+      color-mix(in srgb, var(--c-cream) 100%, var(--c-pink)) 12%,
+      color-mix(in srgb, var(--c-cream) 100%, var(--c-pink)) 50%,
+      color-mix(in srgb, var(--c-cream) 100%, var(--c-pink)) 88%,
+      color-mix(in srgb, var(--c-cream) 92%, var(--c-pink)) 100%);
+  transition: opacity 0.4s ease;
+}
+
+/* Cahaya putih masuk dari tengah ke kiri/kanan, tempo konstan dan simetris. */
+body.curtain-reveal .stage-light {
+  animation: lightWipe 3.4s linear both;
+  -webkit-clip-path: inset(0 50% 0 50%);
+  clip-path: inset(0 50% 0 50%);
+}
+
+@keyframes lightWipe {
+  from { -webkit-clip-path: inset(0 50% 0 50%); clip-path: inset(0 50% 0 50%); }
+  to   { -webkit-clip-path: inset(0 0 0 0); clip-path: inset(0 0 0 0); }
+}
+
+/* Cahaya tidak berkedip: kilaunya statis, kestabilan justru terasa elegan. */
+.stage-light::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(64% 62% at 50% 48%,
+    color-mix(in srgb, var(--c-cream) 100%, var(--c-pink)) 0%,
+    transparent 82%);
+  opacity: 0.68;
+}
+
+/* ---------- Panel tirai ---------- */
+.curtain__panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 3;
+  width: 50.4%;
+  pointer-events: none;
+  /* Kain yang sudah berkumpul di tepi ikut memudar, sehingga tidak ada
+     sisa garis/garis lipatan setelah tirai terbuka. */
+  opacity: var(--panel-o, 1);
+}
+
+.curtain__panel--l {
+  left: 0;
+  transform-origin: left center;
+  transition: transform 0.22s cubic-bezier(0.3, 0.8, 0.3, 1);
+}
+
+.curtain__panel--r {
+  right: 0;
+  transform-origin: right center;
+  transition: transform 0.22s cubic-bezier(0.3, 0.8, 0.3, 1);
+}
+
+/* Anticipation: kain tertarik sedikit ke tengah sebelum membuka */
+#curtain.is-anticipating .curtain__panel--l { transform: translateX(1.5%); }
+#curtain.is-anticipating .curtain__panel--r { transform: translateX(-1.5%); }
+
+.curtain__pleats {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+/* Bayangan atas (di bawah pelmet) dan bawah (dekat lantai) */
+.curtain__pleats::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--c-navy) 62%, transparent) 0%,
+      transparent 16%,
+      transparent 82%,
+      color-mix(in srgb, var(--c-navy) 48%, transparent) 100%);
+}
+
+/* Tekstur beludru HD: noise 320 px + tenunan halus, statis (tanpa filter
+   yang dianimasikan), jadi tetap tajam di layar padat. */
+.curtain__pleats::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.13;
+  mix-blend-mode: soft-light;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23n)'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 1px, transparent 1px 4px);
+  background-size: 320px 320px, 4px 4px;
+}
+
+/* Satu helai kain utuh per lipatan. Kain tidak dipotong atau dihilangkan:
+   tarikan bawah dibuat dengan kemiringan (skew) pada titik atas, sehingga
+   bagian bawah melangkah lebih dulu dan atasnya ikut tertarik. */
+.ct-pleat {
+  --fabric:
+    linear-gradient(90deg,
+      color-mix(in srgb, var(--c-navy) 98%, var(--c-pink)) 0%,
+      color-mix(in srgb, var(--c-navy) 82%, var(--c-cream)) 30%,
+      color-mix(in srgb, var(--c-navy) 72%, var(--c-cream)) 50%,
+      color-mix(in srgb, var(--c-navy) 88%, var(--c-pink)) 76%,
+      color-mix(in srgb, var(--c-navy) 97%, var(--c-pink)) 100%);
+  position: relative;
+  flex: 0 0 calc(var(--w, 8.33) * 1%);
+  height: 100%;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg,
+      color-mix(in srgb, var(--c-navy) 92%, transparent) 0%,
+      transparent 20%),
+    var(--fabric);
+  transform: translate3d(var(--dx, 0), var(--ty, 0), 0)
+    skewY(var(--sk, 0deg)) scaleX(var(--sc, 1));
+}
+
+.ct-pleat:nth-child(2n) {
+  --fabric:
+    linear-gradient(90deg,
+      color-mix(in srgb, var(--c-navy) 96%, var(--c-pink)) 0%,
+      color-mix(in srgb, var(--c-navy) 80%, var(--c-cream)) 26%,
+      color-mix(in srgb, var(--c-navy) 70%, var(--c-cream)) 46%,
+      color-mix(in srgb, var(--c-navy) 86%, var(--c-pink)) 78%,
+      color-mix(in srgb, var(--c-navy) 98%, var(--c-pink)) 100%);
+}
+
+.ct-pleat:nth-child(3n) {
+  --fabric:
+    linear-gradient(90deg,
+      color-mix(in srgb, var(--c-navy) 97%, var(--c-pink)) 0%,
+      color-mix(in srgb, var(--c-navy) 84%, var(--c-cream)) 32%,
+      color-mix(in srgb, var(--c-navy) 74%, var(--c-cream)) 52%,
+      color-mix(in srgb, var(--c-navy) 90%, var(--c-pink)) 74%,
+      color-mix(in srgb, var(--c-navy) 95%, var(--c-pink)) 100%);
+}
+
+/* Titik tumpu di atas: skew membuat kaki kain bergeser lebih jauh dari
+   kepalanya, persis seperti tangan yang menarik gorden dari bawah. */
+.curtain__panel--l .ct-pleat { transform-origin: left top; }
+.curtain__panel--r .ct-pleat { transform-origin: right top; }
+
+#curtain.is-live .ct-pleat { will-change: transform; }
+
+/* Tepi dalam kain sengaja tanpa garis terang: cahaya cukup berupa halo
+   lembut dari balik celah, jadi tidak ada aksen vertikal yang menyala. */
+.curtain__lining {
+  display: none;
+}
+
+/* Hem bordir */
+.curtain__hem {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  height: clamp(30px, 7vh, 72px);
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(90deg,
+      color-mix(in srgb, var(--c-pink) 34%, transparent) 0 1px,
+      transparent 1px 9px),
+    linear-gradient(180deg,
+      transparent 0%,
+      color-mix(in srgb, var(--c-cream) 26%, var(--c-pink)) 46%,
+      color-mix(in srgb, var(--c-pink) 46%, var(--c-cream)) 100%);
+  opacity: 0.42;
+  mask-image: linear-gradient(180deg, transparent 0 18%, #000 62% 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0 18%, #000 62% 100%);
+}
+
+.curtain__panel--l .curtain__hem { transform-origin: left bottom; }
+.curtain__panel--r .curtain__hem { transform-origin: right bottom; }
+
+.curtain__hem::before {
+  content: "";
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: 24%;
+  height: clamp(10px, 1.8vh, 18px);
+  background:
+    repeating-linear-gradient(90deg,
+      color-mix(in srgb, var(--c-cream) 52%, transparent) 0 1px,
+      transparent 1px 10px),
+    radial-gradient(circle at 50% 100%, color-mix(in srgb, var(--c-pink) 54%, var(--c-cream)) 0 38%, transparent 40%) 0 0 / 18px 12px repeat-x;
+  opacity: 0.46;
+}
+
+/* Sapuan kilau kain */
+.curtain__sheen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -30%;
+  z-index: 4;
+  width: 26%;
+  pointer-events: none;
+  background: linear-gradient(105deg,
+    transparent 0%,
+    color-mix(in srgb, var(--c-cream) 16%, transparent) 42%,
+    color-mix(in srgb, var(--c-cream) 30%, transparent) 50%,
+    color-mix(in srgb, var(--c-cream) 16%, transparent) 58%,
+    transparent 100%);
+  mix-blend-mode: screen;
+  animation: ctSheen 8.4s ease-in-out infinite;
+}
+
+@keyframes ctSheen {
+  0%, 62%   { transform: translateX(0); opacity: 0; }
+  68%       { opacity: 1; }
+  86%, 100% { transform: translateX(560%); opacity: 0; }
+}
+
+/* ---------- Monogram heksagonal: cangkangnya terbelah seperti telur ---------- */
+.curtain__mono {
+  position: absolute;
+  top: 44%;
+  left: 50%;
+  z-index: 8;
+  width: clamp(120px, 18vw, 210px);
+  aspect-ratio: 1 / 1.08;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: var(--mono-o, 1);
+  transition: opacity 0.3s ease;
+  animation: monoFloat 5.5s ease-in-out infinite;
+}
+
+@keyframes monoFloat {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -8px; }
+}
+
+/* Ambient lembut di sekeliling heksagon */
+.curtain__mono::before {
+  content: "";
+  position: absolute;
+  inset: -28%;
+  pointer-events: none;
+  background: radial-gradient(closest-side at 50% 50%,
+    color-mix(in srgb, var(--c-cream) 44%, transparent) 0%,
+    color-mix(in srgb, var(--c-pink) 22%, transparent) 48%,
+    transparent 78%);
+  opacity: 0.72;
+}
+
+.mono-hex {
+  position: absolute;
+  inset: 0;
+}
+
+.mono-shell {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(155deg,
+    color-mix(in srgb, var(--c-cream) 84%, var(--c-pink)) 0%,
+    color-mix(in srgb, var(--c-pink) 72%, var(--c-cream)) 46%,
+    color-mix(in srgb, var(--c-cream) 72%, var(--c-pink)) 100%);
+  box-shadow:
+    inset 0 0 0 2px color-mix(in srgb, var(--c-cream) 88%, var(--c-pink)),
+    0 10px 26px color-mix(in srgb, var(--c-navy) 62%, transparent);
+}
+
+.mono-shell::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--c-navy) 88%, var(--c-pink)) 0%,
+    var(--c-navy) 58%,
+    color-mix(in srgb, var(--c-navy) 82%, var(--c-cream)) 100%);
+}
+
+.mono-shell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 10%, color-mix(in srgb, var(--c-pink) 72%, var(--c-cream)) 0 2px, transparent 3px),
+    radial-gradient(circle at 50% 90%, color-mix(in srgb, var(--c-pink) 60%, var(--c-cream)) 0 2px, transparent 3px),
+    linear-gradient(180deg, transparent 18%, color-mix(in srgb, var(--c-cream) 12%, transparent) 50%, transparent 82%);
+}
+
+.mono-shell--l {
+  clip-path: polygon(50% 0, 50% 100%, 4% 75%, 4% 25%);
+  transform: translateX(calc(-22px * var(--shell-o, 0))) rotate(calc(-7deg * var(--shell-o, 0)));
+  opacity: calc(1 - var(--shell-o, 0));
+}
+
+.mono-shell--r {
+  clip-path: polygon(50% 0, 96% 25%, 96% 75%, 50% 100%);
+  transform: translateX(calc(22px * var(--shell-o, 0))) rotate(calc(7deg * var(--shell-o, 0)));
+  opacity: calc(1 - var(--shell-o, 0));
+}
+
+/* Retakan tak beraturan di tengah cangkang, muncul saat heksagon membelah. */
+.mono-crack {
+  position: absolute;
+  left: 50%;
+  top: 2%;
+  bottom: 2%;
+  width: 7px;
+  translate: -50% 0;
+  pointer-events: none;
+  opacity: calc(var(--shell-o, 0) * 0.92);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 120' preserveAspectRatio='none'%3E%3Cpath d='M4 0 L2 11 L6 21 L2 33 L6 44 L2 56 L6 67 L2 79 L6 90 L2 102 L6 111 L4 120' stroke='%23f7b6ca' stroke-width='2.2' fill='none' stroke-linejoin='round'/%3E%3Cpath d='M2 33 L0 38 M6 67 L8 72 M2 79 L0 84' stroke='%23f0e4cc' stroke-width='1' fill='none'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+
+.mono-text {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  font-family: var(--font-script);
+  font-size: clamp(1.5rem, 4.2vw, 3rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--c-cream) 88%, var(--c-pink));
+  text-shadow:
+    0 1px 0 color-mix(in srgb, var(--c-pink) 40%, transparent),
+    0 8px 18px color-mix(in srgb, var(--c-navy) 76%, transparent);
+}
+
+.mono-text--l {
+  clip-path: inset(0 50% 0 0);
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - var(--erase, 0%)), transparent 100%);
+  mask-image: linear-gradient(90deg, #000 calc(100% - var(--erase, 0%)), transparent 100%);
+  transform: translate(-50%, -50%) translateY(-0.05em) translateX(calc(-16px * var(--shell-o, 0)));
+}
+
+.mono-text--r {
+  clip-path: inset(0 0 0 50%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 var(--erase, 0%));
+  mask-image: linear-gradient(90deg, transparent 0%, #000 var(--erase, 0%));
+  transform: translate(-50%, -50%) translateY(-0.05em) translateX(calc(16px * var(--shell-o, 0)));
+}
+
+.mono-text i {
+  font-style: normal;
+  font-size: 0.5em;
+  vertical-align: 0.18em;
+  color: color-mix(in srgb, var(--c-pink) 74%, var(--c-cream));
+}
+
+/* ---------- Bunga sakura jatuh (setelah tirai selesai) ---------- */
+.sakura-fall {
+  position: fixed;
+  inset: 0;
+  z-index: 58;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.sakura-petal {
+  position: absolute;
+  top: -8%;
+  width: clamp(13px, 2vw, 22px);
+  aspect-ratio: 1;
+  background: url("assets/sakura-flower.svg") center / contain no-repeat;
+  opacity: 0;
+  animation: ctSakuraFall linear forwards;
+}
+
+@keyframes ctSakuraFall {
+  0%   { opacity: 0; transform: translate3d(0, 0, 0) rotate(0deg); }
+  10%  { opacity: 0.92; }
+  100% { opacity: 0; transform: translate3d(var(--dx, 30px), 112vh, 0) rotate(var(--rot, 300deg)); }
+}
+
+/* ---------- Keadaan gerak ---------- */
+#curtain.is-live .curtain__mono { opacity: var(--mono-o, 0); }
+
+#curtain.is-leaving {
+  opacity: 0;
+  transition: opacity 0.38s ease;
+  pointer-events: none;
+}
+
+#curtain.is-moving .curtain__sheen { animation: none; opacity: 0; }
+
+/* ---------- Halaman sambutan di belakang ----------
+   Konten ditahan sampai cahaya selesai memudar, lalu membuka dari tengah ke
+   kiri/kanan secara simetris (clip-path), disertai fade dan sedikit naik. */
+body.curtain-reveal #cover .cover-content {
+  opacity: 0;
+  -webkit-clip-path: inset(0 50% 0 50%);
+  clip-path: inset(0 50% 0 50%);
+  transform: translate3d(0, 14px, 0) scale(0.99);
+  transition:
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body.curtain-reveal.curtain-text #cover .cover-content {
+  opacity: 1;
+  transform: none;
+  animation: coverCenterOut 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes coverCenterOut {
+  from { -webkit-clip-path: inset(0 50% 0 50%); clip-path: inset(0 50% 0 50%); }
+  to   { -webkit-clip-path: inset(0 0 0 0); clip-path: inset(0 0 0 0); }
+}
+
+body.curtain-reveal #cover .anim {
+  animation: ctTextIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(0.12s + var(--i, 0) * 0.03s);
+}
+
+/* Setiap kata/masukkan masuk sendiri-sendiri, berurutan dari tengah. */
+.rv-word { display: inline-block; }
+
+body.curtain-text #cover .rv-word {
+  animation: rvWordIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(0.06s + var(--wi, 0) * 0.018s);
+}
+
+@keyframes rvWordIn {
+  from { opacity: 0; transform: translate3d(0, 12px, 0) scale(0.965); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Ranting bingkai ikut masuk mengikuti ritme teks (memakai translate agar
+   tidak mengubah rotasi/posisi asli tiap ranting). */
+body.curtain-text #cover .cover-frame .floral,
+body.curtain-text #cover > .floral {
+  animation: floralReveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(0.18s + var(--i, 0) * 0.03s);
+}
+
+@keyframes floralReveal {
+  from { opacity: 0; translate: 0 12px; }
+  to   { opacity: 1; translate: 0 0; }
+}
+
+/* Angin pada ranting bingkai: tangkai dan kuntum ikut melentur bersama,
+   desain bunganya tidak diubah sama sekali. */
+.floral.run .fl-in {
+  animation-duration: 7.5s;
+}
+
+.floral.run .fl-in svg,
+.floral.run .fl-in img {
+  animation: bloomSway 6.2s ease-in-out infinite;
+  transform-origin: 78% 82%;
+}
+
+@keyframes windMain {
+  0%, 100% { transform: rotate(-2deg) translate(0, 0) skewX(0deg); }
+  22%      { transform: rotate(2.4deg) translate(2px, -2px) skewX(0.6deg); }
+  46%      { transform: rotate(-1.2deg) translate(-1px, 1px) skewX(-0.5deg); }
+  68%      { transform: rotate(3.2deg) translate(3px, -3px) skewX(0.8deg); }
+  84%      { transform: rotate(0.6deg) translate(1px, 0) skewX(-0.3deg); }
+}
+
+@keyframes bloomSway {
+  0%, 100% { transform: rotate(-1.4deg) translate(0, 0); }
+  40%      { transform: rotate(1.8deg) translate(1px, -1px); }
+  72%      { transform: rotate(-0.8deg) translate(-1px, 1px); }
+}
+
+/* Kunci hanya teks, jangan bingkai/ranting bunganya, agar floral tetap beranimasi. */
+body.curtain-done #cover .anim,
+body.curtain-done #cover .cover-names .l,
+body.curtain-done #cover .cover-kicker .orn {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Lepas jeda animasi bingkai bunga sampul yang disiapkan untuk tirai lama. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js body.curtain-anim #cover .anim,
+  html.js body.curtain-anim #cover .cover-frame,
+  html.js body.curtain-anim #cover .cover-frame .cf,
+  html.js body.curtain-anim #cover .cover-kicker .orn,
+  html.js body.curtain-anim #cover .cover-names.ready .l {
+    animation-play-state: running !important;
+  }
+}
+
+@keyframes ctTextIn {
+  from { opacity: 0; transform: translate3d(0, 14px, 0) scale(0.99); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- Responsif ---------- */
+@media (max-width: 599px) {
+  .curtain__mono { top: 44%; width: clamp(108px, 30vw, 150px); }
+  .mono-text { font-size: clamp(1.4rem, 8vw, 2.2rem); }
+  .curtain__pleats::after { background-size: 200px 200px, 4px 4px; }
+}
+
+@media (max-height: 560px) and (orientation: landscape) {
+  .curtain__mono { top: 40%; width: clamp(96px, 18vw, 150px); }
+  .mono-text { font-size: clamp(1.2rem, 5vw, 1.9rem); }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .curtain__sheen,
+  .curtain__mono,
+  .stage-light::before,
+  .sakura-petal,
+  .floral.run .fl-in,
+  .floral.run .fl-in svg,
+  .floral.run .fl-in img {
+    animation: none !important;
+  }
+
+  #curtain {
+    transition: opacity 0.3s ease;
+  }
+
+  #curtain.is-leaving {
+    opacity: 0;
+  }
+
+  body.curtain-reveal #cover .cover-content,
+  body.curtain-reveal.curtain-text #cover .cover-content {
+    -webkit-clip-path: none;
+    clip-path: none;
+    transform: none;
+    opacity: 1;
+    transition: none;
+    animation: none !important;
+  }
+
+  body.curtain-reveal #cover .anim,
+  body.curtain-text #cover .rv-word,
+  body.curtain-text #cover .cover-frame .floral,
+  body.curtain-text #cover > .floral {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    translate: 0 0 !important;
+  }
+}

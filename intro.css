@@ -1,0 +1,705 @@
+/* =====================================================================
+   INTRO SINEMATIK — PINTU GANDA (TIRAI)
+   Berkas khusus sampul. Semua warna diturunkan dari token :root di
+   style.css (--bg, --bg2, --bg3, --card, --ink, --ivory, --blush,
+   --gold, --gold-2). Tidak ada hex baru.
+   ===================================================================== */
+
+/* Sembunyikan sampul lama selama intro aktif (fallback: intro.js gagal). */
+body.intro-mode #cover {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.intro {
+  --intro-line: color-mix(in srgb, var(--gold) 22%, transparent);
+
+  --door-1: color-mix(in srgb, var(--bg2) 92%, var(--bg3));
+  --door-2: color-mix(in srgb, var(--bg) 80%, var(--bg3));
+  --door-3: color-mix(in srgb, var(--bg) 72%, var(--gold-2));
+  --door-line: color-mix(in srgb, var(--gold) 40%, transparent);
+  --door-shade: color-mix(in srgb, var(--ink) 20%, transparent);
+
+  position: fixed;
+  inset: 0;
+  z-index: 130;
+  overflow: hidden;
+  height: 100vh;
+  height: 100dvh;
+  width: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  overscroll-behavior: contain;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- Ruang di balik pintu ---------- */
+.intro-room {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(115% 88% at 50% 40%,
+      color-mix(in srgb, var(--bg3) 94%, var(--gold)) 0%,
+      color-mix(in srgb, var(--bg2) 88%, var(--gold)) 34%,
+      color-mix(in srgb, var(--bg) 72%, var(--ink)) 72%,
+      color-mix(in srgb, var(--bg) 52%, var(--ink)) 100%);
+}
+
+.intro-room::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0 11.7%,
+    color-mix(in srgb, var(--gold) 26%, transparent) 11.7% 11.85%,
+    transparent 11.85% 23.4%
+  );
+}
+
+.intro-room::after {
+  content: "";
+  position: absolute;
+  inset: 2.2vmin;
+  border: 1px solid var(--intro-line);
+  border-radius: 3px;
+  box-shadow: inset 0 0 60px color-mix(in srgb, var(--ink) 14%, transparent);
+}
+
+.intro-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 92% at 50% 44%, transparent 42%, color-mix(in srgb, var(--ink) 52%, transparent) 100%),
+    linear-gradient(180deg, transparent 72%, color-mix(in srgb, var(--ink) 30%, transparent) 100%);
+}
+
+.intro-dust {
+  position: absolute;
+  inset: -4%;
+  pointer-events: none;
+  opacity: 0.55;
+  background:
+    radial-gradient(1.6px 1.6px at 17% 28%, color-mix(in srgb, var(--gold-2) 70%, transparent), transparent 62%),
+    radial-gradient(1.3px 1.3px at 33% 66%, color-mix(in srgb, var(--bg3) 90%, transparent), transparent 62%),
+    radial-gradient(1.9px 1.9px at 61% 21%, color-mix(in srgb, var(--gold) 70%, transparent), transparent 62%),
+    radial-gradient(1.2px 1.2px at 74% 74%, color-mix(in srgb, var(--bg3) 85%, transparent), transparent 62%),
+    radial-gradient(1.7px 1.7px at 88% 39%, color-mix(in srgb, var(--gold-2) 65%, transparent), transparent 62%),
+    radial-gradient(1.4px 1.4px at 46% 87%, color-mix(in srgb, var(--bg3) 82%, transparent), transparent 62%);
+  animation: introDustDrift 22s ease-in-out infinite alternate;
+}
+
+@keyframes introDustDrift {
+  from { transform: translate3d(-1.4%, 1%, 0); }
+  to   { transform: translate3d(1.6%, -1.6%, 0); }
+}
+
+/* ---------- Daun pintu ---------- */
+.intro-doors {
+  position: absolute;
+  inset: 0;
+  perspective: 1400px;
+  perspective-origin: 50% 45%;
+  transform-style: preserve-3d;
+}
+
+.intro-door {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: calc(50% + 1px);
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.intro-door--l { left: 0; transform-origin: left center; }
+.intro-door--r { right: 0; transform-origin: right center; }
+
+.intro-door__face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg,
+      var(--door-3) 0%,
+      var(--door-1) 16%,
+      var(--door-2) 58%,
+      var(--door-3) 100%);
+  box-shadow:
+    inset 0 0 0 1px var(--door-line),
+    inset 0 0 70px color-mix(in srgb, var(--ink) 10%, transparent),
+    0 0 40px color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.intro-door--l .intro-door__face {
+  box-shadow:
+    inset 0 0 0 1px var(--door-line),
+    inset 0 0 70px color-mix(in srgb, var(--ink) 10%, transparent),
+    inset -26px 0 38px -30px color-mix(in srgb, var(--ink) 55%, transparent),
+    0 0 40px color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.intro-door--r .intro-door__face {
+  box-shadow:
+    inset 0 0 0 1px var(--door-line),
+    inset 0 0 70px color-mix(in srgb, var(--ink) 10%, transparent),
+    inset 26px 0 38px -30px color-mix(in srgb, var(--ink) 55%, transparent),
+    0 0 40px color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.intro-door--r .intro-door__face {
+  background:
+    linear-gradient(270deg,
+      var(--door-3) 0%,
+      var(--door-1) 16%,
+      var(--door-2) 58%,
+      var(--door-3) 100%);
+}
+
+/* Tiang dalam di dekat celah */
+.intro-door__face::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4%;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--gold) 14%, transparent));
+}
+
+.intro-door--l .intro-door__face::before {
+  right: 4%;
+  background: linear-gradient(270deg, transparent, color-mix(in srgb, var(--gold) 16%, transparent));
+}
+
+.intro-door--r .intro-door__face::before {
+  left: 4%;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--gold) 16%, transparent));
+}
+
+/* Tekstur kertas/plaster halus */
+.intro-door__face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  background-image:
+    repeating-linear-gradient(96deg, color-mix(in srgb, var(--ink) 16%, transparent) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(4deg, color-mix(in srgb, var(--bg3) 70%, transparent) 0 1px, transparent 1px 4px);
+  mix-blend-mode: soft-light;
+}
+
+/* Panel molding */
+.intro-door__panel {
+  position: absolute;
+  border: 1px solid var(--door-line);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 4px color-mix(in srgb, var(--bg3) 94%, var(--gold)),
+    inset 0 0 0 5px color-mix(in srgb, var(--gold) 32%, transparent),
+    inset 0 10px 26px color-mix(in srgb, var(--bg3) 62%, transparent),
+    inset 0 -16px 30px var(--door-shade);
+}
+
+.intro-door__panel--a { inset: 4.5% 8% 52.5% 8%; }
+.intro-door__panel--b { inset: 52.5% 8% 4.5% 8%; }
+
+/* Relief bunga/sulur sakura */
+.intro-relief {
+  position: absolute;
+  top: 50%;
+  height: min(76vh, 720px);
+  width: auto;
+  pointer-events: none;
+  opacity: 0.92;
+  filter:
+    drop-shadow(0 1px 0 color-mix(in srgb, var(--bg3) 90%, var(--gold)))
+    drop-shadow(0 2px 3px color-mix(in srgb, var(--ink) 26%, transparent));
+}
+
+.intro-door--l .intro-relief { left: 3.5%; right: auto; transform: translateY(-50%); }
+.intro-door--r .intro-relief { right: 3.5%; left: auto; transform: translateY(-50%) scaleX(-1); }
+
+.intro-relief__branch path {
+  fill: none;
+  stroke: color-mix(in srgb, var(--gold-2) 72%, var(--bg3));
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.intro-relief__branch path.leaf {
+  fill: color-mix(in srgb, var(--gold-2) 38%, var(--bg3));
+  stroke: none;
+}
+
+.intro-relief .bloom circle {
+  fill: color-mix(in srgb, var(--blush) 72%, var(--bg3));
+  stroke: color-mix(in srgb, var(--gold-2) 26%, transparent);
+  stroke-width: 0.6;
+}
+
+.intro-relief .bloom .core {
+  fill: color-mix(in srgb, var(--gold-2) 78%, var(--ink));
+  stroke: none;
+}
+
+/* Gagang pintu */
+.intro-door__handle {
+  position: absolute;
+  top: 50%;
+  width: clamp(12px, 1.5vw, 18px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: radial-gradient(circle at 34% 28%,
+    var(--bg3) 0%,
+    var(--bg2) 38%,
+    color-mix(in srgb, var(--bg) 58%, var(--gold-2)) 76%,
+    color-mix(in srgb, var(--ink) 38%, var(--gold-2)) 100%);
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--bg3) 80%, transparent),
+    0 3px 8px color-mix(in srgb, var(--ink) 38%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--gold-2) 55%, transparent);
+}
+
+.intro-door__handle::before {
+  content: "";
+  position: absolute;
+  inset: -55%;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--gold-2) 18%, transparent);
+  box-shadow: inset 0 0 10px color-mix(in srgb, var(--ink) 10%, transparent);
+}
+
+.intro-door--l .intro-door__handle { right: 4.5%; }
+.intro-door--r .intro-door__handle { left: 4.5%; }
+
+/* ---------- Celah & cahaya ---------- */
+.intro-seam {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 4px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--gold) 40%, transparent) 10%,
+    color-mix(in srgb, var(--bg3) 88%, transparent) 50%,
+    color-mix(in srgb, var(--gold) 40%, transparent) 90%,
+    transparent 100%);
+  box-shadow:
+    0 0 2px color-mix(in srgb, var(--ink) 30%, transparent),
+    0 0 16px color-mix(in srgb, var(--gold) 42%, transparent);
+  transition: width 1.1s cubic-bezier(0.22, 0.8, 0.2, 1), opacity 0.9s ease, filter 1.1s ease;
+}
+
+.intro.is-opening .intro-seam {
+  width: min(82vw, 940px);
+  opacity: 0.85;
+  filter: blur(22px);
+}
+
+.intro-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+  background: radial-gradient(closest-side at 50% 42%,
+    color-mix(in srgb, var(--bg3) 90%, var(--gold)) 0%,
+    color-mix(in srgb, var(--gold) 38%, transparent) 46%,
+    transparent 74%);
+  transition: opacity 1s ease;
+}
+
+.intro.is-opening .intro-glow { opacity: 0.7; }
+
+/* ---------- Segel lilin ---------- */
+.intro-seal {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  z-index: 5;
+  width: clamp(108px, 14vw, 150px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: var(--bg3);
+  filter: drop-shadow(0 12px 20px color-mix(in srgb, var(--ink) 42%, transparent));
+  animation: introSealBreath 3.4s ease-in-out infinite;
+}
+
+.intro-seal:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 6px;
+}
+
+/* Rim lilin tidak beraturan di bawah segel utama */
+.intro-seal::before {
+  content: "";
+  position: absolute;
+  inset: -5% -6% -4% -5%;
+  z-index: 0;
+  border-radius: 54% 46% 48% 52% / 47% 55% 45% 53%;
+  background: color-mix(in srgb, var(--blush) 72%, var(--ink));
+  box-shadow:
+    inset 0 -3px 6px color-mix(in srgb, var(--ink) 45%, transparent),
+    0 2px 4px color-mix(in srgb, var(--ink) 28%, transparent);
+  transform: rotate(-6deg);
+}
+
+.intro-seal__wax {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 47% 53% 49% 51% / 52% 48% 52% 48%;
+  background:
+    radial-gradient(circle at 30% 24%, color-mix(in srgb, var(--bg3) 60%, var(--blush)) 0%, transparent 26%),
+    radial-gradient(circle at 68% 82%, color-mix(in srgb, var(--ink) 40%, var(--blush)) 0%, transparent 60%),
+    radial-gradient(circle at 50% 44%,
+      color-mix(in srgb, var(--blush) 76%, var(--bg3)) 0%,
+      color-mix(in srgb, var(--blush) 62%, var(--ink)) 62%,
+      color-mix(in srgb, var(--blush) 50%, var(--ink)) 100%);
+  box-shadow:
+    inset 0 2px 4px color-mix(in srgb, var(--bg3) 55%, transparent),
+    inset 0 -8px 18px color-mix(in srgb, var(--ink) 58%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.intro-seal__wax::before {
+  content: "";
+  position: absolute;
+  inset: 9%;
+  border-radius: 50%;
+  border: 1px dashed color-mix(in srgb, var(--bg) 24%, transparent);
+  opacity: 0.45;
+}
+
+.intro-seal__wax::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background: linear-gradient(115deg,
+    transparent 40%,
+    color-mix(in srgb, var(--bg3) 70%, transparent) 50%,
+    transparent 60%);
+  mix-blend-mode: screen;
+  transform: translateX(-125%);
+  animation: introSealSheen 5.8s ease-in-out infinite;
+}
+
+.intro-seal__mono {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 0.1em;
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 3.2vw, 2.3rem);
+  letter-spacing: 0.05em;
+  color: var(--bg3);
+  text-shadow:
+    0 1px 0 color-mix(in srgb, var(--bg3) 60%, transparent),
+    0 -1px 1px color-mix(in srgb, var(--ink) 60%, transparent);
+}
+
+.intro-seal__mono i {
+  font-style: normal;
+  font-size: 0.62em;
+  color: color-mix(in srgb, var(--bg3) 78%, var(--gold));
+}
+
+@keyframes introSealBreath {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%      { transform: translate(-50%, -50%) scale(1.03); }
+}
+
+@keyframes introSealSheen {
+  0%, 55%   { transform: translateX(-125%); }
+  75%, 100% { transform: translateX(125%); }
+}
+
+/* ---------- Teks & tombol ---------- */
+.intro-ui {
+  position: absolute;
+  left: 50%;
+  top: calc(44% + clamp(92px, 11vw, 118px));
+  z-index: 5;
+  transform: translateX(-50%);
+  width: min(88vw, 420px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1rem, 2.4vh, 1.5rem);
+  text-align: center;
+}
+
+.intro-kicker {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: clamp(0.55rem, 1.1vw, 0.66rem);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--gold-2) 62%, var(--ink));
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--bg3) 70%, transparent);
+}
+
+.intro-open {
+  appearance: none;
+  padding: 0.86rem 1.7rem;
+  border: 1px solid color-mix(in srgb, var(--gold-2) 55%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg3) 38%, transparent);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: clamp(0.64rem, 1.15vw, 0.76rem);
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background 0.35s ease, border-color 0.35s ease, color 0.35s ease,
+    transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.intro-open:hover,
+.intro-open:focus-visible {
+  background: color-mix(in srgb, var(--gold) 82%, var(--bg3));
+  border-color: transparent;
+  color: var(--bg3);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.intro-open:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 4px;
+}
+
+.intro-foot {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(2.4rem, 6vh, 3.6rem);
+  z-index: 5;
+  transform: translateX(-50%);
+  width: min(88vw, 560px);
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-ui);
+  font-size: clamp(0.58rem, 1.05vw, 0.7rem);
+  letter-spacing: 0.14em;
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+.intro-foot strong {
+  display: block;
+  margin-top: 0.3rem;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+
+.intro-skip {
+  position: absolute;
+  top: max(14px, env(safe-area-inset-top));
+  right: max(14px, env(safe-area-inset-right));
+  z-index: 6;
+  appearance: none;
+  padding: 0.48rem 0.82rem;
+  border: 1px solid color-mix(in srgb, var(--gold-2) 30%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg3) 42%, transparent);
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.intro-skip:hover,
+.intro-skip:focus-visible {
+  background: color-mix(in srgb, var(--gold) 78%, var(--bg3));
+  color: var(--bg3);
+}
+
+.intro-skip:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 3px;
+}
+
+/* ---------- Timeline membuka (sekitar 2,6 s) ---------- */
+.intro.is-opening .intro-seal {
+  animation: introSealBreak 0.5s cubic-bezier(0.3, 0.7, 0.2, 1) forwards;
+}
+
+.intro.is-opening .intro-door--l {
+  animation: introDoorL 1.5s 0.4s cubic-bezier(0.22, 0.8, 0.2, 1) forwards;
+}
+
+.intro.is-opening .intro-door--r {
+  animation: introDoorR 1.5s 0.48s cubic-bezier(0.22, 0.8, 0.2, 1) forwards;
+}
+
+.intro.is-opening .intro-ui,
+.intro.is-opening .intro-foot,
+.intro.is-opening .intro-skip {
+  animation: introSoftOut 0.4s 0.1s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes introSealBreak {
+  0%   { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+  32%  { transform: translate(-50%, -51%) scale(1.08) rotate(-3deg); opacity: 1; }
+  100% { transform: translate(-50%, -64%) scale(1.14) rotate(-9deg); opacity: 0; }
+}
+
+@keyframes introDoorL {
+  0%   { transform: rotateY(0deg); }
+  100% { transform: rotateY(-102deg); }
+}
+
+@keyframes introDoorR {
+  0%   { transform: rotateY(0deg); }
+  100% { transform: rotateY(102deg); }
+}
+
+/* Seluruh panggung memudar saat halaman utama menyusul */
+.intro.is-revealing {
+  opacity: 0;
+  transition: opacity 0.75s ease 0.1s;
+  pointer-events: none;
+}
+
+@keyframes introSoftOut {
+  to { opacity: 0; }
+}
+
+/* ---------- Timeline kembali ke sampul ---------- */
+.intro.is-closing .intro-door--l {
+  animation: introDoorCloseL 1.05s cubic-bezier(0.22, 0.8, 0.2, 1) forwards;
+}
+
+.intro.is-closing .intro-door--r {
+  animation: introDoorCloseR 1.05s 0.06s cubic-bezier(0.22, 0.8, 0.2, 1) forwards;
+}
+
+.intro.is-closing .intro-seal {
+  animation: introSealIn 0.6s 0.55s ease both;
+}
+
+.intro.is-closing .intro-ui,
+.intro.is-closing .intro-foot,
+.intro.is-closing .intro-skip {
+  animation: introSoftIn 0.5s 0.5s ease both;
+}
+
+@keyframes introDoorCloseL {
+  from { transform: rotateY(-102deg); opacity: 0; }
+  40%  { opacity: 1; }
+  to   { transform: rotateY(0deg); opacity: 1; }
+}
+
+@keyframes introDoorCloseR {
+  from { transform: rotateY(102deg); opacity: 0; }
+  40%  { opacity: 1; }
+  to   { transform: rotateY(0deg); opacity: 1; }
+}
+
+@keyframes introSealIn {
+  from { opacity: 0; transform: translate(-50%, -64%) scale(1.14) rotate(-9deg); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+}
+
+@keyframes introSoftIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ---------- Selesai / dilewati ---------- */
+.intro.is-done { pointer-events: none; }
+
+.intro.is-skip {
+  opacity: 0 !important;
+  transition: opacity 0.22s ease;
+  pointer-events: none;
+}
+
+.intro.is-skip .intro-door,
+.intro.is-skip .intro-seal,
+.intro.is-skip .intro-ui,
+.intro.is-skip .intro-foot,
+.intro.is-skip .intro-skip,
+.intro.is-skip .intro-glow {
+  animation: none !important;
+  opacity: 0 !important;
+  transition: opacity 0.2s ease;
+}
+
+/* ---------- Responsif ---------- */
+@media (max-width: 599px) {
+  .intro-seal { top: 42%; }
+  .intro-ui { top: calc(42% + 96px); }
+  .intro-relief { height: min(62vh, 520px); opacity: 0.78; }
+  .intro-door__panel--a { inset: 4% 7% 53% 7%; }
+  .intro-door__panel--b { inset: 53% 7% 4% 7%; }
+}
+
+@media (max-height: 560px) and (orientation: landscape) {
+  .intro-seal { width: 78px; top: 38%; }
+  .intro-ui { top: calc(38% + 62px); gap: 0.5rem; }
+  .intro-kicker { display: none; }
+  .intro-foot { bottom: 2rem; }
+  .intro-relief { height: 74vh; }
+}
+
+/* ---------- Hormati prefers-reduced-motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .intro-seal,
+  .intro-seal__wax::after,
+  .intro-dust {
+    animation: none !important;
+  }
+
+  .intro-doors { perspective: none; }
+
+  .intro.is-opening {
+    transition: opacity 0.3s ease;
+    opacity: 0;
+  }
+
+  .intro.is-opening .intro-door,
+  .intro.is-opening .intro-seal,
+  .intro.is-opening .intro-ui,
+  .intro.is-opening .intro-foot,
+  .intro.is-opening .intro-skip,
+  .intro.is-opening .intro-seam,
+  .intro.is-opening .intro-glow,
+  .intro.is-closing .intro-door,
+  .intro.is-closing .intro-seal,
+  .intro.is-closing .intro-ui,
+  .intro.is-closing .intro-foot {
+    animation: none !important;
+  }
+}

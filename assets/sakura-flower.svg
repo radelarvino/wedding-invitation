@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <radialGradient id="petal" cx="50%" cy="78%" r="86%">
+      <stop offset="0%" stop-color="#f7b6ca"/>
+      <stop offset="55%" stop-color="#ea83a7"/>
+      <stop offset="100%" stop-color="#d9557f"/>
+    </radialGradient>
+    <radialGradient id="heart" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f0e4cc"/>
+      <stop offset="100%" stop-color="#f7b6ca"/>
+    </radialGradient>
+  </defs>
+  <g fill="url(#petal)" stroke="#f0e4cc" stroke-opacity=".55" stroke-width="1.5">
+    <path d="M60 58 C49 52 41 40 43 27 C45 15 53 8 60 12 C67 8 75 15 77 27 C79 40 71 52 60 58 Z"/>
+    <path d="M60 58 C49 52 41 40 43 27 C45 15 53 8 60 12 C67 8 75 15 77 27 C79 40 71 52 60 58 Z" transform="rotate(72 60 60)"/>
+    <path d="M60 58 C49 52 41 40 43 27 C45 15 53 8 60 12 C67 8 75 15 77 27 C79 40 71 52 60 58 Z" transform="rotate(144 60 60)"/>
+    <path d="M60 58 C49 52 41 40 43 27 C45 15 53 8 60 12 C67 8 75 15 77 27 C79 40 71 52 60 58 Z" transform="rotate(216 60 60)"/>
+    <path d="M60 58 C49 52 41 40 43 27 C45 15 53 8 60 12 C67 8 75 15 77 27 C79 40 71 52 60 58 Z" transform="rotate(288 60 60)"/>
+  </g>
+  <circle cx="60" cy="60" r="13" fill="url(#heart)"/>
+  <g fill="#d9557f">
+    <circle cx="60" cy="49" r="2.2"/><circle cx="70" cy="56" r="2.2"/>
+    <circle cx="66" cy="68" r="2.2"/><circle cx="54" cy="68" r="2.2"/>
+    <circle cx="50" cy="56" r="2.2"/>
+  </g>
+  <circle cx="60" cy="60" r="3.4" fill="#f0e4cc"/>
+</svg>

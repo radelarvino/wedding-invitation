@@ -30,6 +30,7 @@
 <link rel="preload" as="image" href="assets/prewed-640.webp" media="(max-width: 599.98px)" fetchpriority="high">
 <link rel="preload" as="image" href="assets/prewed-860.webp" media="(min-width: 600px)" fetchpriority="high">
 <link rel="stylesheet" href="style.css?v=46">
+<link rel="stylesheet" href="curtain.css?v=1">
 </head>
 <body class="locked">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -92,67 +93,65 @@
 
 <canvas id="petals" aria-hidden="true"></canvas>
 
-<audio id="bgm" src="assets/audio/Ed Sheeran - Photograph (Official Lyric Video).mp3" loop preload="metadata"></audio>
+<audio id="bgm" src="assets/audio/Justice - Flower In A Hurricane.mp3" loop preload="metadata"></audio>
 
-<!-- Tirai pembuka -->
-<div id="env" class="env" role="dialog" aria-modal="true" aria-label="Buka undangan pernikahan Ramiz dan Denayu">
-  <div class="env-veil" aria-hidden="true"></div>
-  <div class="env-petals" aria-hidden="true">
-    <i style="--x:6%;--t:12s;--d:-2s;--s:1;--r:-24deg;--drift:46px"></i>
-    <i style="--x:15%;--t:16s;--d:-8s;--s:.72;--r:18deg;--drift:-32px"></i>
-    <i style="--x:23%;--t:14s;--d:-4s;--s:.88;--r:-12deg;--drift:58px"></i>
-    <i style="--x:34%;--t:18s;--d:-11s;--s:.62;--r:26deg;--drift:-46px"></i>
-    <i style="--x:44%;--t:13s;--d:-6s;--s:.78;--r:-30deg;--drift:36px"></i>
-    <i style="--x:55%;--t:17s;--d:-1s;--s:.94;--r:14deg;--drift:-54px"></i>
-    <i style="--x:64%;--t:12s;--d:-9s;--s:.66;--r:-20deg;--drift:42px"></i>
-    <i style="--x:73%;--t:15s;--d:-5s;--s:.84;--r:28deg;--drift:-38px"></i>
-    <i style="--x:82%;--t:19s;--d:-13s;--s:.58;--r:-16deg;--drift:50px"></i>
-    <i style="--x:90%;--t:14s;--d:-3s;--s:.9;--r:22deg;--drift:-44px"></i>
-    <i style="--x:97%;--t:16s;--d:-10s;--s:.7;--r:-26deg;--drift:32px"></i>
-    <i style="--x:11%;--t:20s;--d:-15s;--s:.5;--r:30deg;--drift:64px"></i>
-    <i style="--x:48%;--t:21s;--d:-12s;--s:.56;--r:-34deg;--drift:-62px"></i>
-    <i style="--x:69%;--t:18s;--d:-7s;--s:.46;--r:12deg;--drift:54px"></i>
-    <i style="--x:86%;--t:22s;--d:-17s;--s:.52;--r:-8deg;--drift:-58px"></i>
-  </div>
-  <div class="env-curtains" aria-hidden="true">
-    <span class="env-curtain env-curtain-l">
-      <i class="env-sheen"></i>
-      <span class="env-crest-aura" aria-hidden="true"></span>
-      <span class="env-crest-half env-crest-half-l" aria-hidden="true">
-        <span class="env-crest-frame"></span>
-        <span class="env-crest-face">
-          <span class="env-crest-copy">
-            <span class="env-crest-kicker">The Wedding Celebration</span>
-            <span class="env-crest-initials"><span>R</span><span>D</span></span>
-            <span class="env-crest-date">11 . 01 . 2027</span>
-          </span>
-        </span>
+<!-- Tirai panggung pembuka -->
+<div id="curtain" class="curtain" role="dialog" aria-modal="true" aria-label="Tirai undangan pernikahan Ramiz dan Denayu">
+  <div class="curtain__stage" tabindex="0" role="button" aria-label="Buka tirai undangan">
+    <div class="curtain__panel curtain__panel--l" aria-hidden="true">
+      <div class="curtain__pleats">
+        <span class="ct-pleat" style="--i:0;--w:10.5"></span>
+        <span class="ct-pleat" style="--i:1;--w:8"></span>
+        <span class="ct-pleat" style="--i:2;--w:9.5"></span>
+        <span class="ct-pleat" style="--i:3;--w:7.5"></span>
+        <span class="ct-pleat" style="--i:4;--w:10"></span>
+        <span class="ct-pleat" style="--i:5;--w:8"></span>
+        <span class="ct-pleat" style="--i:6;--w:9.5"></span>
+        <span class="ct-pleat" style="--i:7;--w:8.5"></span>
+        <span class="ct-pleat" style="--i:8;--w:7.5"></span>
+        <span class="ct-pleat" style="--i:9;--w:10"></span>
+        <span class="ct-pleat" style="--i:10;--w:7"></span>
+        <span class="ct-pleat" style="--i:11;--w:4"></span>
+      </div>
+      <span class="curtain__lining"></span>
+      <span class="curtain__hem"></span>
+    </div>
+
+    <div class="curtain__panel curtain__panel--r" aria-hidden="true">
+      <div class="curtain__pleats">
+        <span class="ct-pleat" style="--i:0;--w:10.5"></span>
+        <span class="ct-pleat" style="--i:1;--w:8"></span>
+        <span class="ct-pleat" style="--i:2;--w:9.5"></span>
+        <span class="ct-pleat" style="--i:3;--w:7.5"></span>
+        <span class="ct-pleat" style="--i:4;--w:10"></span>
+        <span class="ct-pleat" style="--i:5;--w:8"></span>
+        <span class="ct-pleat" style="--i:6;--w:9.5"></span>
+        <span class="ct-pleat" style="--i:7;--w:8.5"></span>
+        <span class="ct-pleat" style="--i:8;--w:7.5"></span>
+        <span class="ct-pleat" style="--i:9;--w:10"></span>
+        <span class="ct-pleat" style="--i:10;--w:7"></span>
+        <span class="ct-pleat" style="--i:11;--w:4"></span>
+      </div>
+      <span class="curtain__lining"></span>
+      <span class="curtain__hem"></span>
+    </div>
+
+    <div class="curtain__sheen" aria-hidden="true"></div>
+
+    <div class="curtain__mono" aria-hidden="true">
+      <span class="mono-hex">
+        <span class="mono-shell mono-shell--l"></span>
+        <span class="mono-shell mono-shell--r"></span>
+        <span class="mono-crack"></span>
       </span>
-    </span>
-    <span class="env-curtain env-curtain-r">
-      <i class="env-sheen"></i>
-      <span class="env-crest-aura" aria-hidden="true"></span>
-      <span class="env-crest-half env-crest-half-r" aria-hidden="true">
-        <span class="env-crest-frame"></span>
-        <span class="env-crest-face">
-          <span class="env-crest-copy">
-            <span class="env-crest-kicker">The Wedding Celebration</span>
-            <span class="env-crest-initials"><span>R</span><span>D</span></span>
-            <span class="env-crest-date">11 . 01 . 2027</span>
-          </span>
-        </span>
-      </span>
-    </span>
-  </div>
-  <div class="env-valance" aria-hidden="true"></div>
-  <div class="env-stage">
-    <div class="env-core">
-      <button class="env-crest-hit" id="envSeal" type="button" aria-label="Buka undangan Ramiz dan Denayu"><span class="env-crest-amp env-crest-amp-l" aria-hidden="true">&amp;</span><span class="env-crest-amp env-crest-amp-r" aria-hidden="true">&amp;</span></button>
+      <span class="mono-text mono-text--l">R <i>&amp;</i> D</span>
+      <span class="mono-text mono-text--r">R <i>&amp;</i> D</span>
     </div>
   </div>
-  <div class="env-seam" aria-hidden="true"></div>
 </div>
-<noscript><style>#env{display:none}</style></noscript>
+<div class="stage-light" id="stageLight" aria-hidden="true"></div>
+<div class="sakura-fall" id="sakuraFall" aria-hidden="true"></div>
+<noscript><style>#curtain{display:none}</style></noscript>
 
 <!-- Cover -->
 <div id="cover">
@@ -204,7 +203,7 @@
   <div class="wrap narrow">
     <p class="eyebrow reveal">Bismillahirrahmanirrahim</p>
     <div class="ayat reveal" style="--d:80ms" lang="ar" dir="rtl">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً</div>
-    <p class="ayat-id reveal" style="--d:220ms">Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. <span>(QS. Ar-Rum: 21)</span></p>
+    <p class="ayat-id reveal" style="--d:220ms">Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.<br> <span>(QS. Ar-Rum: 21)</span></p>
     <div class="invite-note reveal" style="--d:300ms">
       <span class="mini-orn" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-flower"/></svg></span>
       <p>Dengan memohon rahmat dan ridha Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa restu pada hari bahagia kami.</p>
@@ -259,13 +258,65 @@
       <p class="lead">Temukan kami di tempat di mana janji suci akan diucapkan.</p>
     </header>
     <div class="venue-card reveal">
-      <div class="venue-photo" id="venuePhoto" role="img" aria-label="Foto ruangan Utama Roemah Kraton">
-        <img src="assets/venue-photo.jpeg" alt="Foto ruangan Utama Roemah Kraton" loading="lazy" decoding="async" sizes="(max-width: 599px) 100vw, (min-width: 600px) 50vw, 33vw">
-      </div>
+      <div class="venue-photo" id="venuePhoto" role="img" aria-label="Foto tampak depan Roemah Kraton"><svg viewBox="0 0 480 330" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="vSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#08122b"/><stop offset=".55" stop-color="#122146"/><stop offset="1" stop-color="#1c2e58"/></linearGradient>
+<linearGradient id="vFacade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fce3ec"/><stop offset=".52" stop-color="#f7b6ca"/><stop offset="1" stop-color="#ea83a7"/></linearGradient>
+<linearGradient id="vRoof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fdf5e7"/><stop offset="1" stop-color="#ecdcc5"/></linearGradient>
+<linearGradient id="vGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2d8"/><stop offset="1" stop-color="#f6c98d"/></linearGradient>
+<linearGradient id="vGround" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a2a53"/><stop offset="1" stop-color="#0a132d"/></linearGradient>
+<radialGradient id="vMoon" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff4dc"/><stop offset=".55" stop-color="#ffe9c4"/><stop offset="1" stop-color="#ffe9c4" stop-opacity="0"/></radialGradient>
+<radialGradient id="vGlow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#f7b6ca" stop-opacity=".42"/><stop offset="1" stop-color="#f7b6ca" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="480" height="330" fill="url(#vSky)"/>
+<circle cx="390" cy="58" r="46" fill="url(#vMoon)" opacity=".42"/>
+<circle cx="390" cy="58" r="17" fill="#fff2d8" opacity=".88"/>
+<g fill="#fff4dc" opacity=".75">
+<circle cx="34" cy="36" r="1.2"/><circle cx="82" cy="64" r="1"/><circle cx="138" cy="28" r="1.2"/><circle cx="196" cy="54" r="1"/><circle cx="252" cy="22" r="1.1"/><circle cx="318" cy="48" r="1"/><circle cx="452" cy="30" r="1.1"/><circle cx="438" cy="94" r=".9"/><circle cx="114" cy="92" r=".9"/>
+</g>
+<ellipse cx="240" cy="250" rx="238" ry="122" fill="url(#vGlow)"/>
+<path d="M0 238C54 218 96 226 142 238S238 218 292 232 382 218 480 240V282H0Z" fill="#132348"/>
+<path d="M0 264C72 244 128 254 188 266S312 246 480 268V330H0Z" fill="url(#vGround)"/>
+<g fill="#0d1b3c">
+<path d="M18 236c12-38 30-54 47-56-5 18 2 34 12 44-18 10-39 14-59 12z"/>
+<path d="M445 234c-10-42-28-58-44-62 4 20-4 36-13 46 18 12 38 17 57 16z"/>
+</g>
+<path d="M96 246V164L240 106l144 58v82Z" fill="url(#vFacade)"/>
+<path d="M80 168 240 96l160 72-12 14-148-66-148 66Z" fill="url(#vRoof)"/>
+<path d="M240 96v22" stroke="#d8c4aa" stroke-width="2" opacity=".7"/>
+<rect x="106" y="168" width="268" height="78" fill="#fce3ec" opacity=".28"/>
+<g fill="url(#vGlass)" stroke="#ea83a7" stroke-width="1.6">
+<path d="M127 238v-50c0-6 4-10 10-10h30c6 0 10 4 10 10v50Z"/>
+<path d="M189 238v-50c0-6 4-10 10-10h30c6 0 10 4 10 10v50Z"/>
+<path d="M251 238v-50c0-6 4-10 10-10h30c6 0 10 4 10 10v50Z"/>
+<path d="M313 238v-50c0-6 4-10 10-10h30c6 0 10 4 10 10v50Z"/>
+</g>
+<g stroke="#ea83a7" stroke-width="1" opacity=".7">
+<path d="M152 178v60M214 178v60M276 178v60M338 178v60"/>
+<path d="M127 208h50M189 208h50M251 208h50M313 208h50"/>
+</g>
+<rect x="220" y="230" width="40" height="16" rx="3" fill="#fce3ec"/>
+<path d="M240 246v-12" stroke="#d9557f" stroke-width="1.4"/>
+<path d="M206 258h68" stroke="#fce3ec" stroke-width="2" opacity=".55" stroke-linecap="round"/>
+<g stroke="#e7d4b8" stroke-width="1" opacity=".8">
+<path d="M24 156C100 132 380 132 456 156"/>
+<path d="M24 156v10M456 156v10"/>
+</g>
+<g fill="#ffeccb">
+<circle cx="76" cy="146" r="2.4"/><circle cx="128" cy="140" r="2.2"/><circle cx="180" cy="136" r="2.4"/><circle cx="232" cy="134" r="2.2"/><circle cx="284" cy="134" r="2.4"/><circle cx="336" cy="136" r="2.2"/><circle cx="388" cy="141" r="2.4"/><circle cx="436" cy="148" r="2.2"/>
+</g>
+<g opacity=".9">
+<ellipse cx="88" cy="262" rx="28" ry="9" fill="#213863"/><ellipse cx="406" cy="262" rx="28" ry="9" fill="#213863"/>
+<circle cx="78" cy="252" r="12" fill="#2b4472"/><circle cx="100" cy="254" r="15" fill="#263e69"/><circle cx="396" cy="252" r="13" fill="#2b4472"/><circle cx="418" cy="254" r="15" fill="#263e69"/>
+</g>
+<g fill="#f7b6ca" opacity=".85">
+<circle cx="54" cy="116" r="2"/><circle cx="168" cy="112" r="1.6"/><circle cx="292" cy="108" r="1.8"/><circle cx="424" cy="120" r="1.6"/><circle cx="238" cy="86" r="1.4"/>
+</g>
+</svg></div>
       <div class="venue-info">
         <span class="venue-icon"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg></span>
         <h3 id="venueName">Roemah Kraton</h3>
-        <p id="venue">Jl. Tebet Barat Dalam Raya No.34, RT.14/RW.3, Tebet Barat, Kec. Tebet, Kota Jakarta Selatan, DKI Jakarta 12810</p>
+        <p id="venue"></p>
         <div class="venue-actions">
           <a class="btn" id="mapBtn" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg> Buka di Maps</a>
           <button class="btn ghost" id="copyVenue" type="button"><svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg> Salin alamat</button>
@@ -397,5 +448,6 @@
 
 <script src="config.js"></script>
 <script src="script.js?v=36"></script>
+<script src="curtain.js?v=1"></script>
 </body>
 </html>

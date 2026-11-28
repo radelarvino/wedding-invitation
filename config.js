@@ -10,6 +10,8 @@ window.WEDDING_CONFIG = {
   SCRIPT_URL: "https://script.google.com/macros/s/AKfycby9CtkDD1whUHg2zRWfBZiUahjtdKxR019-lh8E16YDcwSFxQX144t_5uCQSGijQLLszA/exec",
   // Opsional: alamat halaman undangan yang sudah online (dipakai tombol bagikan)
   SITE_URL: "https://radelarvino.github.io/wedding-invitation/",
+  // Foto asli tampak depan Roemah Kraton (menggantikan ilustrasi SVG)
+  venuePhoto: "assets/img/roemah-kraton.jpg",
   // Nomor WhatsApp administrator untuk pengajuan akun moderator.
   // Tulis dengan kode negara, misalnya 6281234567890.
   ADMIN_WA: "6285591546882",

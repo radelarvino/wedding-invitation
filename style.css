@@ -3564,10 +3564,11 @@ main {
 
 .venue-photo {
   position: relative;
+  aspect-ratio: 16 / 11;
   overflow: hidden;
-  align-self: stretch;
-  border-radius: 20px 20px 0 0;
-  background: none;
+  background: #0f1a36;
+  border-bottom: 1px solid var(--line);
+}
 
 .venue-photo svg,
 .venue-photo img {
@@ -3577,7 +3578,6 @@ main {
   object-fit: cover;
 }
 
-/* Tablet & Desktop (>=768px): two-column layout, photo fills card height */
 @media (min-width: 768px) {
   .venue-card {
     grid-template-columns: 1.1fr 0.9fr;
@@ -3585,111 +3585,10 @@ main {
 
   .venue-photo {
     aspect-ratio: auto;
-    min-height: 380px;
-    max-height: none;
+    min-height: 340px;
     border-bottom: 0;
     border-right: 1px solid var(--line);
   }
-}
-
-/* Laptop & wide desktop (>=900px): tighter two-column layout */
-@media (min-width: 900px) {
-  .venue-photo {
-    min-height: 420px;
-  }
-}
-
-/* Short screens: prevent photo from taking over entire viewport */
-@media (max-height: 700px) {
-  .venue-photo {
-    max-height: 220px;
-  }
-}
-
-/* Short screens on tablet/desktop: reasonable photo height */
-@media (max-height: 700px) and (min-width: 768px) {
-  .venue-photo {
-    min-height: 260px;
-  }
-}
-
-/* =====================================================================
-   VENUE: FIT IN ONE VIEWPORT (desktop, tablet, laptop, mobile)
-   ===================================================================== */
-
-/* Venue section: tighter padding so content fits in one screen */
-#lokasi {
-  padding-top: clamp(2.5rem, 6vw, 4rem);
-  padding-bottom: clamp(2.5rem, 6vw, 4rem);
-}
-
-/* Venue card: constrain height so it never overflows viewport */
-#lokasi .venue-card {
-  max-height: 82vh;
-  overflow: hidden;
-}
-
-/* Venue photo: scale height to fit viewport on all devices */
-#lokasi .venue-photo {
-  max-height: 45vh;
-}
-
-/* Mobile: photo takes width, height scales */
-@media (max-width: 599px) {
-  #lokasi .venue-photo {
-    aspect-ratio: 4 / 3;
-    max-height: 35vh;
-  }
-  #lokasi .venue-info {
-    padding: clamp(1rem, 4vw, 1.5rem);
-  }
-}
-
-/* Tablet: two columns, photo fits card height */
-@media (min-width: 600px) and (max-width: 1023px) {
-  #lokasi .venue-photo {
-    min-height: 300px;
-    max-height: 50vh;
-  }
-}
-
-/* Desktop & laptop: photo fills card but capped */
-@media (min-width: 1024px) {
-  #lokasi .venue-photo {
-    min-height: 350px;
-    max-height: 55vh;
-  }
-}
-
-/* Very short screens: further reduce photo height */
-@media (max-height: 700px) {
-  #lokasi .venue-photo {
-    max-height: 30vh;
-  }
-  #lokasi .venue-card {
-    max-height: 88vh;
-  }
-}
-
-/* Venue info text: clean formatting */
-#lokasi .venue-info h3 {
-  margin: 0 0 0.5rem;
-  font-size: clamp(1.5rem, 4vw, 2rem);
-  line-height: 1.2;
-}
-
-#lokasi .venue-info p {
-  margin: 0 0 1.25rem;
-  font-size: clamp(0.9rem, 2vw, 1.1rem);
-  line-height: 1.6;
-  max-width: 100%;
-}
-
-#lokasi .venue-actions {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  margin-top: auto;
 }
 
 
@@ -4541,46 +4440,19 @@ main > section.s-closing {
   font-size: 0.56rem;
 }
 
-/* ---------- Venue Photo ---------- */
-.venue-photo {
-  position: relative;
-  overflow: hidden;
-  align-self: stretch;
-  border-radius: calc(var(--radius) - 2px);
-  background: none;
+/* ---------- Lokasi ---------- */
+#lokasi .venue-card {
+  max-width: 960px;
 }
 
-.venue-photo img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 40%;
+#lokasi .venue-photo {
+  aspect-ratio: 16 / 10;
+  max-height: 250px;
 }
 
-/* Pastikan photo height menyesuaikan card height di desktop */
-@media (min-width: 768px) {
-  .venue-card {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: stretch;
-  }
-  .venue-photo {
-    border-radius: calc(var(--radius) - 2px) 0 0 calc(var(--radius) - 2px);
-  }
-}
-
-/* Mobile: foto di atas teks, lebar penuh */
-@media (max-width: 599px) {
-  .venue-card {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-  }
-  .venue-photo {
-    margin: 0;
-    border-radius: calc(var(--radius) - 2px) calc(var(--radius) - 2px) 0 0;
-    max-height: 320px;
-  }
+#lokasi .venue-info {
+  gap: 0.5rem;
+  padding: clamp(0.95rem, 2vw, 1.5rem);
 }
 
 #lokasi .venue-icon {
@@ -6907,7 +6779,7 @@ main > section.s-closing {
 
 #lokasi .venue-photo {
   min-width: 0;
-  /* background: var(--navy) dihapus agar foto full-bleed */
+  background: var(--navy);
 }
 
 #lokasi .venue-info {
@@ -6931,6 +6803,7 @@ main > section.s-closing {
   border-color: rgba(224, 117, 154, 0.38);
   background: rgba(234, 131, 167, 0.1);
   box-shadow: 0 0 24px rgba(234, 131, 167, 0.14);
+  
 }
 
 #lokasi .venue-info h3 {
@@ -15202,99 +15075,230 @@ body.env-entered #cover .cover-content {
 }
 
 /* =====================================================================
-   VENUE: FIT IN ONE VIEWPORT (desktop, tablet, laptop, mobile)
+   FOTO VENUE — Roemah Kraton (spesifik, tanpa menyentuh aturan lain)
    ===================================================================== */
-/* Venue section: raise header slightly, tighter padding */
+#lokasi .venue-card .venue-photo {
+  position: relative;
+  overflow: hidden;
+  align-self: stretch;
+  background: none;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+#lokasi .venue-card .venue-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 28%;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Mobile: foto di atas teks, lebar penuh kartu, tinggi ~260px */
+@media (max-width: 767px) {
+  #lokasi .venue-card .venue-photo {
+    width: 100%;
+    max-height: none;
+    height: 260px;
+  }
+}
+
+/* =====================================================================
+   LOKASI: PAS SATU LAYAR (desktop, tablet, mobile)
+   ===================================================================== */
 #lokasi {
-  padding-top: clamp(1.5rem, 4vw, 2.5rem) !important;
-  padding-bottom: clamp(2rem, 5vw, 3rem) !important;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  scroll-margin-top: 0;
 }
 
-/* Venue card: constrain height so it never overflows viewport */
+#lokasi .wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+
+#lokasi .sec-head {
+  margin-bottom: 1rem;
+}
+
+/* Desktop: kartu dibatasi agar judul + kartu muat di 1366x768 */
 #lokasi .venue-card {
-  max-height: 78vh !important;
-  overflow: hidden !important;
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  grid-template-rows: auto 1fr !important;
+  max-height: calc(100vh - 220px);
+  max-height: calc(100dvh - 220px);
+  overflow: hidden;
 }
 
-/* Venue photo: fill frame with cover */
-#lokasi .venue-photo {
-  /* background sudah dihapus, height diatur oleh card grid */
+/* Foto mengikuti tinggi kartu */
+#lokasi .venue-card .venue-photo {
+  height: 100%;
+  overflow: hidden;
+  aspect-ratio: auto;
+  background: none;
 }
 
-#lokasi .venue-photo img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  object-position: center 40% !important;
-  background: none !important;
+#lokasi .venue-card .venue-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 28%;
+  display: block;
 }
 
-@media (min-width: 600px) {
+/* Desktop (>1024px): foto kiri, teks kanan, sama tinggi */
+@media (min-width: 1025px) {
   #lokasi .venue-card {
-    grid-template-columns: 1fr 1fr !important;
-  }
-  #lokasi .venue-photo {
-    aspect-ratio: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    height: 100% !important;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
   }
 }
 
-#lokasi .venue-info {
+/* Tablet (768–1024px): dua kolom, foto maks 40dvh */
+@media (min-width: 768px) and (max-width: 1024px) {
+  #lokasi .venue-card .venue-photo {
+    max-height: 40vh;
+    max-height: 40dvh;
+  }
+}
+
+/* Mobile (<768px): foto di atas teks, 32–38dvh, teks & tombol di bawah */
+@media (max-width: 767px) {
+  #lokasi .venue-card .venue-photo {
+    width: 100%;
+    height: 32vh;
+    height: 32dvh;
+  }
+  #lokasi .venue-info {
+    padding: 0.9rem;
+    gap: 0.5rem;
+  }
+  #lokasi .venue-info h3 {
+    font-size: 1.25rem;
+  }
+  #lokasi .venue-info p {
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
+  #lokasi .venue-actions .btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.72rem;
+  }
+  #lokasi .venue-card {
+    max-height: calc(100vh - 140px);
+    max-height: calc(100dvh - 140px);
+  }
+}
+
+/* =====================================================================
+   VENUE INFO — CENTER DI DALAM BINGKAI (paksa, semua layar)
+   ===================================================================== */
+#lokasi .venue-card .venue-info {
   display: flex !important;
   flex-direction: column !important;
   justify-content: center !important;
-  padding: clamp(0.85rem, 2.5vw, 1.5rem) !important;
-  gap: 0.6rem !important;
+  align-items: flex-start !important;
+  align-self: stretch !important;
+  padding-top: 0.5rem !important;
+  padding-right: clamp(1rem, 3vw, 2rem) !important;
+  padding-bottom: 1.5rem !important;
+  padding-left: clamp(1rem, 3vw, 2rem) !important;
+  gap: 0.75rem !important;
 }
 
-#lokasi .venue-info h3 {
-  margin: 0 0 0.3rem !important;
-  font-size: clamp(1.4rem, 4vw, 1.8rem) !important;
-  line-height: 1.2 !important;
+#lokasi .venue-card .venue-info h3 {
+  margin: 0 !important;
 }
 
-#lokasi .venue-info p {
-  margin: 0 0 0.85rem !important;
-  font-size: clamp(0.85rem, 2vw, 1rem) !important;
-  line-height: 1.5 !important;
-  max-width: 100% !important;
+#lokasi .venue-card .venue-info p {
+  margin: 0 !important;
 }
 
-#lokasi .venue-actions {
-  display: flex !important;
-  gap: 0.5rem !important;
-  flex-wrap: wrap !important;
-  margin-top: auto !important;
+#lokasi .venue-card .venue-actions {
+  margin-top: 0 !important;
 }
 
-#lokasi .venue-actions .btn {
-  padding: 0.5rem 0.9rem !important;
-  font-size: 0.78rem !important;
-}
-
-@media (max-width: 599px) {
-  #lokasi .venue-photo {
-    aspect-ratio: 3 / 2 !important;
-    max-height: 42vh !important;
-  }
-  #lokasi .venue-card {
-    max-height: 80vh !important;
-  }
-  #lokasi .venue-info {
-    padding: clamp(0.8rem, 3vw, 1.1rem) !important;
+/* Desktop (>1024px): paksa info venue terpusat di bingkai putih */
+@media (min-width: 1025px) {
+  #lokasi .venue-card .venue-info {
+    justify-content: center !important;
+    align-content: center !important;
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
   }
 }
 
-@media (max-height: 700px) {
-  #lokasi .venue-photo {
-    max-height: 25vh !important;
+/* =====================================================================
+   PENYESUAIAN TERAKHIR — tipografi ayat & proporsi kartu venue
+   ===================================================================== */
+#home .ayat-id {
+  font-size: clamp(1rem, 0.94rem + 0.3vw, 1.2rem) !important;
+  line-height: 1.75 !important;
+}
+
+#home .invite-note p {
+  font-size: clamp(0.95rem, 0.9rem + 0.25vw, 1.08rem) !important;
+  line-height: 1.75 !important;
+}
+
+@media (min-width: 1025px) {
+  #lokasi .venue-card .venue-info {
+    padding-top: 0.5rem !important;
+    padding-bottom: 1.6rem !important;
   }
-  #lokasi .venue-card {
-    max-height: 85vh !important;
+}
+
+/* =====================================================================
+   OUR JOURNEY — napas header & keterbacaan deskripsi
+   Header digeser sedikit ke bawah lewat padding-atas, lalu jarak ke
+   daftar cerita disamakan agar seluruh blok tetap proporsional.
+   ===================================================================== */
+#cerita .sec-head {
+  padding-top: clamp(0.9rem, 2.6vh, 1.6rem);
+  margin-bottom: clamp(1.5rem, 3.4vh, 2.3rem);
+}
+
+#cerita .sec-head .lead {
+  max-width: 34rem;
+  font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.08rem);
+  line-height: 1.68;
+}
+
+#cerita .jr-panel-in p {
+  font-size: clamp(0.9rem, 0.86rem + 0.2vw, 1.02rem);
+  line-height: 1.72;
+}
+
+/* Layar pendek: tetap terbaca tanpa mendorong daftar keluar layar. */
+@media (max-height: 720px) {
+  #cerita .sec-head {
+    padding-top: 0.75rem;
+    margin-bottom: 1.05rem;
+  }
+
+  #cerita .jr-panel-in p {
+    font-size: clamp(0.85rem, 0.82rem + 0.15vw, 0.94rem);
+    line-height: 1.62;
+  }
+
+  /* Jangan sembunyikan deskripsi pembuka bila masih ada ruang. */
+  #cerita .sec-head .lead {
+    display: block;
+  }
+}
+
+/* Hanya layar sangat pendek yang benar-benar kehabisan ruang. */
+@media (max-height: 620px) {
+  #cerita .sec-head .lead {
+    display: none;
   }
 }
